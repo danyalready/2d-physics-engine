@@ -1,0 +1,3 @@
+class Gravity {
+    constructor(ctx) {}
+}

@@ -1,0 +1,27 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --color-primary: #ece3ce;
+    --color-green-1x: #739072;
+    --color-green-2x: #4f6f52;
+    --color-green-3x: #3a4d39;
+}
+
+html {
+    font-size: 8px;
+}
+
+canvas {
+    display: block;
+    margin-top: 1rem;
+    margin-inline: auto;
+    background-color: var(--color-primary);
+}
+
+body {
+    background-color: var(--color-green-1x);
+}
