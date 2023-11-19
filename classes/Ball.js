@@ -4,6 +4,7 @@ class Ball {
         this.positionX = params.x;
         this.positionY = params.y;
         this.radius = params.r;
+        this.color = params.c || 'black';
         this.velocityX = 0;
         this.velocityY = 0;
         this.acceleration = params.a;
@@ -48,6 +49,7 @@ class Ball {
             Math.PI * 2,
             true
         );
+        this.canvasCtx.fillStyle = this.color;
         this.canvasCtx.fill();
         this.canvasCtx.closePath();
     }

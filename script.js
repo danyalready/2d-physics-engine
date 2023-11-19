@@ -1,6 +1,5 @@
 import Ball from './classes/Ball.js';
 
-const GRAVITY = 0;
 const FRICTION = 0.025;
 
 const START_TIME = Date.now();
