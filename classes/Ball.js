@@ -1,59 +1,31 @@
+import Vector from "./Vector.js";
+
 class Ball {
-    constructor(ctx, params) {
-        this.canvasCtx = ctx;
-        this.positionX = params.x;
-        this.positionY = params.y;
+    constructor(params) {
         this.radius = params.r;
-        this.color = params.c || 'black';
-        this.velocityX = 0;
-        this.velocityY = 0;
-        this.acceleration = params.a;
-        this.accelerationX = 0;
-        this.accelerationY = 0;
+        this.color = params.c || "black";
+        this.position = new Vector({ x: params.x, y: params.y });
+        this.velocity = new Vector({ x: 0, y: 0 });
+        this.acceleration = new Vector({ x: 0, y: 0 });
+        this.accelerationUnit = params.a;
     }
 
-    update() {
-        this.draw();
-        this.debug();
+    update(ctx) {
+        this.draw(ctx);
+        this.debug(ctx);
     }
 
-    debug() {
-        // Acceleration direction
-        this.canvasCtx.beginPath();
-        this.canvasCtx.moveTo(this.positionX, this.positionY);
-        this.canvasCtx.lineTo(
-            this.positionX + this.accelerationX * 100,
-            this.positionY + this.accelerationY * 100
-        );
-        this.canvasCtx.strokeStyle = 'green';
-        this.canvasCtx.stroke();
-        this.canvasCtx.closePath();
-
-        // Velocity direction
-        this.canvasCtx.beginPath();
-        this.canvasCtx.moveTo(this.positionX, this.positionY);
-        this.canvasCtx.lineTo(
-            this.positionX + this.velocityX * 10,
-            this.positionY + this.velocityY * 10
-        );
-        this.canvasCtx.strokeStyle = 'red';
-        this.canvasCtx.stroke();
-        this.canvasCtx.closePath();
+    debug(ctx) {
+        this.acceleration.draw(ctx, { x: this.position.x, y: this.position.y, n: 100, c: "green" });
+        this.velocity.draw(ctx, { x: this.position.x, y: this.position.y, n: 10, c: "red" });
     }
 
-    draw() {
-        this.canvasCtx.beginPath();
-        this.canvasCtx.arc(
-            this.positionX,
-            this.positionY,
-            this.radius,
-            0,
-            Math.PI * 2,
-            true
-        );
-        this.canvasCtx.fillStyle = this.color;
-        this.canvasCtx.fill();
-        this.canvasCtx.closePath();
+    draw(ctx) {
+        ctx.beginPath();
+        ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI * 2, true);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
     }
 }
 
