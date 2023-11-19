@@ -18,6 +18,7 @@ class Ball {
     }
 
     debug() {
+        // Acceleration direction
         this.canvasCtx.beginPath();
         this.canvasCtx.moveTo(this.positionX, this.positionY);
         this.canvasCtx.lineTo(
@@ -28,6 +29,7 @@ class Ball {
         this.canvasCtx.stroke();
         this.canvasCtx.closePath();
 
+        // Velocity direction
         this.canvasCtx.beginPath();
         this.canvasCtx.moveTo(this.positionX, this.positionY);
         this.canvasCtx.lineTo(

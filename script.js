@@ -2,8 +2,6 @@ import Ball from './classes/Ball.js';
 
 const FRICTION = 0.025;
 
-const START_TIME = Date.now();
-
 window.addEventListener('load', () => {
     let IS_UP, IS_RIGHT, IS_DOWN, IS_LEFT;
 
@@ -16,7 +14,7 @@ window.addEventListener('load', () => {
         new Ball(canvasCtx, { x: 400, y: 300, r: 15, a: 1.2 }),
         new Ball(canvasCtx, { x: 100, y: 600, r: 5, a: 2 }),
     ];
-    const currentBall = balls[1];
+    const currentBall = balls[0];
 
     window.addEventListener('keydown', (event) => {
         if (event.code === 'ArrowUp') {
@@ -88,8 +86,6 @@ window.addEventListener('load', () => {
     }
 
     function draw() {
-        const CURR_TIME = Date.now();
-        const PASS_SECS = Math.floor((CURR_TIME - START_TIME) / 1000);
         move();
 
         balls.forEach((ball) => {
