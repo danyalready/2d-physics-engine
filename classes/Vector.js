@@ -16,6 +16,14 @@ class Vector {
         return new Vector({ x: this.x * n, y: this.y * n });
     }
 
+    unit() {
+        if (this.getMag() === 0) {
+            return new Vector({ x: 0, y: 0 });
+        }
+
+        return new Vector({ x: this.x / this.getMag(), y: this.y / this.getMag() });
+    }
+
     getMag() {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }

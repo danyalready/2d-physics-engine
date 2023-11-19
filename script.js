@@ -77,6 +77,7 @@ window.addEventListener("load", () => {
             currentBall.acceleration.x = 0;
         }
 
+        currentBall.acceleration = currentBall.acceleration.unit().mult(currentBall.accelerationUnit);
         currentBall.velocity = currentBall.velocity.add(currentBall.acceleration);
         currentBall.velocity = currentBall.velocity.mult(1 - FRICTION);
         currentBall.position = currentBall.position.add(currentBall.velocity);
@@ -86,7 +87,8 @@ window.addEventListener("load", () => {
         move();
 
         balls.forEach((ball) => {
-            ball.update(canvasCtx);
+            ball.draw(canvasCtx);
+            ball.displayVectors(canvasCtx);
         });
     }
 

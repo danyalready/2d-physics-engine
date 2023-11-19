@@ -10,12 +10,7 @@ class Ball {
         this.accelerationUnit = params.a;
     }
 
-    update(ctx) {
-        this.draw(ctx);
-        this.debug(ctx);
-    }
-
-    debug(ctx) {
+    displayVectors(ctx) {
         this.acceleration.draw(ctx, { x: this.position.x, y: this.position.y, n: 100, c: "green" });
         this.velocity.draw(ctx, { x: this.position.x, y: this.position.y, n: 10, c: "red" });
     }
