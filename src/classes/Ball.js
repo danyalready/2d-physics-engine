@@ -41,7 +41,7 @@ class Ball {
     }
 
     draw(ctx) {
-        drawCircle(ctx, { x: this.position.x + 50, y: this.position.y, r: this.radius, c: this.color, isFill: true });
+        drawCircle(ctx, { x: this.position.x, y: this.position.y, r: this.radius, c: this.color, isFill: true });
     }
 }
 
