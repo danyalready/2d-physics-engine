@@ -7,14 +7,15 @@ window.addEventListener("load", () => {
 
     const canvas = document.getElementById("canvas");
     const canvasCtx = canvas.getContext("2d");
+    console.log(canvasCtx);
 
     const balls = [
-        new Ball({ x: 100, y: 200, r: 25, a: 1 }),
+        new Ball({ x: 100, y: 200, r: 25, a: 1, isPlayer: true }),
         new Ball({ x: 200, y: 300, r: 55, a: 0.2 }),
         new Ball({ x: 400, y: 300, r: 15, a: 1.2 }),
         new Ball({ x: 100, y: 600, r: 5, a: 2 }),
     ];
-    const currentBall = balls[0];
+    const playerBall = balls.find((ball) => ball.isPlayer);
 
     window.addEventListener("keydown", (event) => {
         if (event.code === "ArrowUp") {
@@ -54,33 +55,33 @@ window.addEventListener("load", () => {
 
     function move() {
         if (IS_UP) {
-            currentBall.acceleration.y = -currentBall.accelerationUnit;
+            playerBall.acceleration.y = -playerBall.accelerationUnit;
         }
 
         if (IS_RIGHT) {
-            currentBall.acceleration.x = currentBall.accelerationUnit;
+            playerBall.acceleration.x = playerBall.accelerationUnit;
         }
 
         if (IS_DOWN) {
-            currentBall.acceleration.y = currentBall.accelerationUnit;
+            playerBall.acceleration.y = playerBall.accelerationUnit;
         }
 
         if (IS_LEFT) {
-            currentBall.acceleration.x = -currentBall.accelerationUnit;
+            playerBall.acceleration.x = -playerBall.accelerationUnit;
         }
 
         if (!IS_UP && !IS_DOWN) {
-            currentBall.acceleration.y = 0;
+            playerBall.acceleration.y = 0;
         }
 
         if (!IS_RIGHT && !IS_LEFT) {
-            currentBall.acceleration.x = 0;
+            playerBall.acceleration.x = 0;
         }
 
-        currentBall.acceleration = currentBall.acceleration.unit().mult(currentBall.accelerationUnit);
-        currentBall.velocity = currentBall.velocity.add(currentBall.acceleration);
-        currentBall.velocity = currentBall.velocity.mult(1 - FRICTION);
-        currentBall.position = currentBall.position.add(currentBall.velocity);
+        playerBall.acceleration = playerBall.acceleration.unit().mult(playerBall.accelerationUnit);
+        playerBall.velocity = playerBall.velocity.add(playerBall.acceleration);
+        playerBall.velocity = playerBall.velocity.mult(1 - FRICTION);
+        playerBall.position = playerBall.position.add(playerBall.velocity);
     }
 
     function draw() {
@@ -88,7 +89,11 @@ window.addEventListener("load", () => {
 
         balls.forEach((ball) => {
             ball.draw(canvasCtx);
-            ball.displayVectors(canvasCtx);
+
+            if (ball.isPlayer) {
+                ball.displayVectors(canvasCtx);
+                ball.debugDisplayVectors(canvasCtx);
+            }
         });
     }
 
