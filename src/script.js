@@ -1,13 +1,12 @@
 import Ball from "./classes/Ball.js";
 
-const FRICTION = 0.025;
+const FRICTION = 0.095;
 
 window.addEventListener("load", () => {
     let IS_UP, IS_RIGHT, IS_DOWN, IS_LEFT;
 
     const canvas = document.getElementById("canvas");
     const canvasCtx = canvas.getContext("2d");
-    console.log(canvasCtx);
 
     const balls = [
         new Ball({ x: 100, y: 200, r: 25, a: 1, isPlayer: true }),

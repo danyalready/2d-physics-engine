@@ -13,8 +13,8 @@ class Ball {
     }
 
     displayVectors(ctx) {
-        this.acceleration.draw(ctx, { x: this.position.x, y: this.position.y, n: 100, c: "green" });
-        this.velocity.draw(ctx, { x: this.position.x, y: this.position.y, n: 10, c: "red" });
+        this.acceleration.unit().draw(ctx, { x: this.position.x, y: this.position.y, n: this.radius, c: "green" });
+        this.velocity.draw(ctx, { x: this.position.x, y: this.position.y, n: this.radius / 3, c: "red" });
     }
 
     debugDisplayVectors(ctx) {
@@ -23,20 +23,26 @@ class Ball {
         const INDICATOR_OFFSET_Y = ctx.canvas.offsetHeight - INDICATOR_OFFSET;
 
         drawCircle(ctx, { x: INDICATOR_OFFSET_X, y: INDICATOR_OFFSET_Y, r: this.radius });
-        drawCircle(ctx, { x: INDICATOR_OFFSET_X, y: INDICATOR_OFFSET_Y, r: 100, c: "red" });
 
         this.velocity.draw(ctx, {
             x: INDICATOR_OFFSET_X,
             y: INDICATOR_OFFSET_Y,
-            n: 5,
+            n: this.radius / 3,
             c: "red",
         });
 
-        this.acceleration.draw(ctx, {
+        this.acceleration.unit().draw(ctx, {
             x: INDICATOR_OFFSET_X,
             y: INDICATOR_OFFSET_Y,
-            n: 100,
+            n: this.radius,
             c: "green",
+        });
+
+        this.acceleration.normal().draw(ctx, {
+            x: INDICATOR_OFFSET_X,
+            y: INDICATOR_OFFSET_Y,
+            n: this.radius,
+            c: "yellow",
         });
     }
 

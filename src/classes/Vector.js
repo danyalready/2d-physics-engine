@@ -24,6 +24,10 @@ class Vector {
         return new Vector({ x: this.x / this.getMag(), y: this.y / this.getMag() });
     }
 
+    normal() {
+        return new Vector({ x: -this.y, y: this.x });
+    }
+
     getMag() {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
