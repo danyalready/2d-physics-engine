@@ -11,11 +11,16 @@ window.addEventListener('load', () => {
     const canvasCtx = canvas.getContext('2d');
 
     const balls = [
-        new Ball({ x: 100, y: 200, r: 25, a: 1, isPlayer: true }),
+        new Ball({ x: 100, y: 200, r: 25, a: 1, isPlayer: true, c: 'brown' }),
+        new Ball({ x: 800, y: 200, r: 10, a: 1 }),
+        new Ball({ x: 400, y: 600, r: 50, a: 1 }),
+        new Ball({ x: 100, y: 250, r: 15, a: 1 }),
+        new Ball({ x: 200, y: 200, r: 20, a: 1 }),
+        new Ball({ x: 700, y: 700, r: 30, a: 1 }),
         new Ball({
             x: canvasCtx.canvas.offsetWidth / 2,
             y: canvasCtx.canvas.offsetHeight / 2,
-            r: 15,
+            r: 5,
             a: 0.2,
             c: 'red',
         }),
@@ -89,33 +94,26 @@ window.addEventListener('load', () => {
         playerBall.position = playerBall.position.add(playerBall.velocity);
     }
 
-    let distanceVector = new Vector(0, 0);
-
     function draw() {
-        move();
-
-        distanceVector = balls[1].position.subtr(playerBall.position);
-        const distanceRoundMagnitude = roundNumber(distanceVector.getMag(), 3);
-
-        canvasCtx.fillText(
-            `Disntance: ${distanceRoundMagnitude}`,
-            canvasCtx.canvas.offsetWidth - 200,
-            canvasCtx.canvas.offsetHeight - 200
-        );
-        canvasCtx.fillText(
-            `Is collsion: ${Ball.isCollision(balls[0], balls[1], distanceRoundMagnitude)}`,
-            canvasCtx.canvas.offsetWidth - 200,
-            canvasCtx.canvas.offsetHeight - 190
-        );
-
-        balls.forEach((ball) => {
+        balls.forEach((ball, index) => {
             ball.draw(canvasCtx);
 
             if (ball.isPlayer) {
                 ball.displayVectors(canvasCtx);
                 ball.debugDisplayVectors(canvasCtx);
             }
+
+            for (let i = index + 1; i < balls.length; i++) {
+                const distanceVector = balls[index].position.subtr(balls[i].position);
+                const distanceRoundMagnitude = roundNumber(distanceVector.getMag(), 3);
+
+                if (Ball.isCollision(balls[index], balls[i], distanceRoundMagnitude)) {
+                    Ball.penetrationResolution(balls[index], balls[i]);
+                }
+            }
         });
+
+        move();
     }
 
     (function mainLoop() {

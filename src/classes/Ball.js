@@ -16,6 +16,15 @@ class Ball {
         return ball1.radius + ball2.radius >= distance;
     }
 
+    static penetrationResolution(ball1, ball2) {
+        const distanceVector = ball1.position.subtr(ball2.position);
+        const penetrationDepth = ball1.radius + ball2.radius - distanceVector.getMag();
+        const repulse = distanceVector.unit().mult(penetrationDepth / 2);
+
+        ball1.position = ball1.position.add(repulse);
+        ball2.position = ball2.position.add(repulse.mult(-1));
+    }
+
     displayVectors(ctx) {
         this.acceleration.unit().draw(ctx, { x: this.position.x, y: this.position.y, n: this.radius, c: 'green' });
         this.velocity.draw(ctx, { x: this.position.x, y: this.position.y, n: this.radius / 3, c: 'red' });
