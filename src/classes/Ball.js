@@ -1,10 +1,10 @@
-import Vector from "./Vector.js";
-import { drawCircle } from "../utils.js";
+import Vector from './Vector.js';
+import { drawCircle } from '../utils.js';
 
 class Ball {
     constructor(params) {
         this.radius = params.r;
-        this.color = params.c || "black";
+        this.color = params.c || 'black';
         this.position = new Vector({ x: params.x, y: params.y });
         this.velocity = new Vector({ x: 0, y: 0 });
         this.acceleration = new Vector({ x: 0, y: 0 });
@@ -13,8 +13,8 @@ class Ball {
     }
 
     displayVectors(ctx) {
-        this.acceleration.unit().draw(ctx, { x: this.position.x, y: this.position.y, n: this.radius, c: "green" });
-        this.velocity.draw(ctx, { x: this.position.x, y: this.position.y, n: this.radius / 3, c: "red" });
+        this.acceleration.unit().draw(ctx, { x: this.position.x, y: this.position.y, n: this.radius, c: 'green' });
+        this.velocity.draw(ctx, { x: this.position.x, y: this.position.y, n: this.radius / 3, c: 'red' });
     }
 
     debugDisplayVectors(ctx) {
@@ -28,21 +28,21 @@ class Ball {
             x: INDICATOR_OFFSET_X,
             y: INDICATOR_OFFSET_Y,
             n: this.radius / 3,
-            c: "red",
+            c: 'red',
         });
 
         this.acceleration.unit().draw(ctx, {
             x: INDICATOR_OFFSET_X,
             y: INDICATOR_OFFSET_Y,
             n: this.radius,
-            c: "green",
+            c: 'green',
         });
 
         this.acceleration.normal().draw(ctx, {
             x: INDICATOR_OFFSET_X,
             y: INDICATOR_OFFSET_Y,
             n: this.radius,
-            c: "yellow",
+            c: 'yellow',
         });
     }
 

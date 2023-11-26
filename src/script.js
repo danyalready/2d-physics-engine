@@ -1,12 +1,12 @@
-import Ball from "./classes/Ball.js";
+import Ball from './classes/Ball.js';
 
 const FRICTION = 0.095;
 
-window.addEventListener("load", () => {
+window.addEventListener('load', () => {
     let IS_UP, IS_RIGHT, IS_DOWN, IS_LEFT;
 
-    const canvas = document.getElementById("canvas");
-    const canvasCtx = canvas.getContext("2d");
+    const canvas = document.getElementById('canvas');
+    const canvasCtx = canvas.getContext('2d');
 
     const balls = [
         new Ball({ x: 100, y: 200, r: 25, a: 1, isPlayer: true }),
@@ -16,38 +16,38 @@ window.addEventListener("load", () => {
     ];
     const playerBall = balls.find((ball) => ball.isPlayer);
 
-    window.addEventListener("keydown", (event) => {
-        if (event.code === "ArrowUp") {
+    window.addEventListener('keydown', (event) => {
+        if (event.code === 'ArrowUp' || event.code === 'KeyW') {
             IS_UP = true;
         }
 
-        if (event.code === "ArrowRight") {
+        if (event.code === 'ArrowRight' || event.code === 'KeyD') {
             IS_RIGHT = true;
         }
 
-        if (event.code === "ArrowDown") {
+        if (event.code === 'ArrowDown' || event.code === 'KeyS') {
             IS_DOWN = true;
         }
 
-        if (event.code === "ArrowLeft") {
+        if (event.code === 'ArrowLeft' || event.code === 'KeyA') {
             IS_LEFT = true;
         }
     });
 
-    window.addEventListener("keyup", (event) => {
-        if (event.code === "ArrowUp") {
+    window.addEventListener('keyup', (event) => {
+        if (event.code === 'ArrowUp' || event.code === 'KeyW') {
             IS_UP = false;
         }
 
-        if (event.code === "ArrowRight") {
+        if (event.code === 'ArrowRight' || event.code === 'KeyD') {
             IS_RIGHT = false;
         }
 
-        if (event.code === "ArrowDown") {
+        if (event.code === 'ArrowDown' || event.code === 'KeyS') {
             IS_DOWN = false;
         }
 
-        if (event.code === "ArrowLeft") {
+        if (event.code === 'ArrowLeft' || event.code === 'KeyA') {
             IS_LEFT = false;
         }
     });

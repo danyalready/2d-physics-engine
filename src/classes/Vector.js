@@ -4,6 +4,10 @@ class Vector {
         this.y = params.y;
     }
 
+    static dot(vector1, vector2) {
+        return vector1.x * vector2.x + vector1.y * vector2.y;
+    }
+
     add(vector) {
         return new Vector({ x: this.x + vector.x, y: this.y + vector.y });
     }
