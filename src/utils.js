@@ -15,4 +15,10 @@ function drawCircle(canvasContext, params) {
     canvasContext.closePath();
 }
 
-export { drawCircle };
+function roundNumber(number, precision) {
+    const factor = 10 ** precision;
+
+    return Math.round(number * factor) / factor;
+}
+
+export { drawCircle, roundNumber };

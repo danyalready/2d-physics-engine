@@ -12,6 +12,10 @@ class Ball {
         this.isPlayer = params.isPlayer;
     }
 
+    static isCollision(ball1, ball2, distance) {
+        return ball1.radius + ball2.radius >= distance;
+    }
+
     displayVectors(ctx) {
         this.acceleration.unit().draw(ctx, { x: this.position.x, y: this.position.y, n: this.radius, c: 'green' });
         this.velocity.draw(ctx, { x: this.position.x, y: this.position.y, n: this.radius / 3, c: 'red' });

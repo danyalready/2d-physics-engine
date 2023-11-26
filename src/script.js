@@ -1,4 +1,6 @@
 import Ball from './classes/Ball.js';
+import Vector from './classes/Vector.js';
+import { roundNumber } from './utils.js';
 
 const FRICTION = 0.095;
 
@@ -10,44 +12,48 @@ window.addEventListener('load', () => {
 
     const balls = [
         new Ball({ x: 100, y: 200, r: 25, a: 1, isPlayer: true }),
-        new Ball({ x: 200, y: 300, r: 55, a: 0.2 }),
-        new Ball({ x: 400, y: 300, r: 15, a: 1.2 }),
-        new Ball({ x: 100, y: 600, r: 5, a: 2 }),
+        new Ball({
+            x: canvasCtx.canvas.offsetWidth / 2,
+            y: canvasCtx.canvas.offsetHeight / 2,
+            r: 15,
+            a: 0.2,
+            c: 'red',
+        }),
     ];
     const playerBall = balls.find((ball) => ball.isPlayer);
 
     window.addEventListener('keydown', (event) => {
-        if (event.code === 'ArrowUp' || event.code === 'KeyW') {
+        if (event.code === 'ArrowUp') {
             IS_UP = true;
         }
 
-        if (event.code === 'ArrowRight' || event.code === 'KeyD') {
+        if (event.code === 'ArrowRight') {
             IS_RIGHT = true;
         }
 
-        if (event.code === 'ArrowDown' || event.code === 'KeyS') {
+        if (event.code === 'ArrowDown') {
             IS_DOWN = true;
         }
 
-        if (event.code === 'ArrowLeft' || event.code === 'KeyA') {
+        if (event.code === 'ArrowLeft') {
             IS_LEFT = true;
         }
     });
 
     window.addEventListener('keyup', (event) => {
-        if (event.code === 'ArrowUp' || event.code === 'KeyW') {
+        if (event.code === 'ArrowUp') {
             IS_UP = false;
         }
 
-        if (event.code === 'ArrowRight' || event.code === 'KeyD') {
+        if (event.code === 'ArrowRight') {
             IS_RIGHT = false;
         }
 
-        if (event.code === 'ArrowDown' || event.code === 'KeyS') {
+        if (event.code === 'ArrowDown') {
             IS_DOWN = false;
         }
 
-        if (event.code === 'ArrowLeft' || event.code === 'KeyA') {
+        if (event.code === 'ArrowLeft') {
             IS_LEFT = false;
         }
     });
@@ -83,8 +89,24 @@ window.addEventListener('load', () => {
         playerBall.position = playerBall.position.add(playerBall.velocity);
     }
 
+    let distanceVector = new Vector(0, 0);
+
     function draw() {
         move();
+
+        distanceVector = balls[1].position.subtr(playerBall.position);
+        const distanceRoundMagnitude = roundNumber(distanceVector.getMag(), 3);
+
+        canvasCtx.fillText(
+            `Disntance: ${distanceRoundMagnitude}`,
+            canvasCtx.canvas.offsetWidth - 200,
+            canvasCtx.canvas.offsetHeight - 200
+        );
+        canvasCtx.fillText(
+            `Is collsion: ${Ball.isCollision(balls[0], balls[1], distanceRoundMagnitude)}`,
+            canvasCtx.canvas.offsetWidth - 200,
+            canvasCtx.canvas.offsetHeight - 190
+        );
 
         balls.forEach((ball) => {
             ball.draw(canvasCtx);
