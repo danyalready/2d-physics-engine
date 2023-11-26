@@ -1,5 +1,4 @@
 import Ball from './classes/Ball.js';
-import Vector from './classes/Vector.js';
 import { roundNumber } from './utils.js';
 
 const FRICTION = 0.095;
@@ -96,11 +95,9 @@ window.addEventListener('load', () => {
 
     function draw() {
         balls.forEach((ball, index) => {
-            ball.draw(canvasCtx);
-
             if (ball.isPlayer) {
                 ball.displayVectors(canvasCtx);
-                ball.debugDisplayVectors(canvasCtx);
+                ball.displayFixedVectors(canvasCtx);
             }
 
             for (let i = index + 1; i < balls.length; i++) {
@@ -108,9 +105,11 @@ window.addEventListener('load', () => {
                 const distanceRoundMagnitude = roundNumber(distanceVector.getMag(), 3);
 
                 if (Ball.isCollision(balls[index], balls[i], distanceRoundMagnitude)) {
-                    Ball.penetrationResolution(balls[index], balls[i]);
+                    Ball.resolvePenetration(balls[index], balls[i]);
                 }
             }
+
+            ball.draw(canvasCtx);
         });
 
         move();
