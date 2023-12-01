@@ -1,27 +1,26 @@
 import Ball from './classes/Ball.js';
 import { roundNumber } from './utils.js';
 
-const FRICTION = 0.095;
+const FRICTION: number = 0.095;
 
 window.addEventListener('load', () => {
-    let IS_UP, IS_RIGHT, IS_DOWN, IS_LEFT;
+    let IS_UP: boolean, IS_RIGHT: boolean, IS_DOWN: boolean, IS_LEFT: boolean;
 
-    const canvas = document.getElementById('canvas');
-    const canvasCtx = canvas.getContext('2d');
+    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+    const canvasCtx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
     const balls = [
-        new Ball({ x: 100, y: 200, r: 25, a: 1, isPlayer: true, c: 'brown' }),
-        new Ball({ x: 800, y: 200, r: 10, a: 1 }),
-        new Ball({ x: 400, y: 600, r: 50, a: 1 }),
-        new Ball({ x: 100, y: 250, r: 15, a: 1 }),
-        new Ball({ x: 200, y: 200, r: 20, a: 1 }),
-        new Ball({ x: 700, y: 700, r: 30, a: 1 }),
+        new Ball({ coordinate: { x: 100, y: 200 }, radius: 25, accelerationUnit: 1, color: 'brown', isPlayer: true }),
+        new Ball({ coordinate: { x: 200, y: 600 }, radius: 25, accelerationUnit: 1, color: 'brown' }),
+        new Ball({ coordinate: { x: 700, y: 900 }, radius: 25, accelerationUnit: 1, color: 'brown' }),
         new Ball({
-            x: canvasCtx.canvas.offsetWidth / 2,
-            y: canvasCtx.canvas.offsetHeight / 2,
-            r: 5,
-            a: 0.2,
-            c: 'red',
+            coordinate: {
+                x: canvasCtx.canvas.offsetWidth / 2,
+                y: canvasCtx.canvas.offsetHeight / 2,
+            },
+            radius: 5,
+            accelerationUnit: 0.2,
+            color: 'red',
         }),
     ];
     const playerBall = balls.find((ball) => ball.isPlayer);
@@ -63,6 +62,10 @@ window.addEventListener('load', () => {
     });
 
     function move() {
+        if (!playerBall) {
+            throw new Error('The `player-ball` is not defined.');
+        }
+
         if (IS_UP) {
             playerBall.acceleration.y = -playerBall.accelerationUnit;
         }

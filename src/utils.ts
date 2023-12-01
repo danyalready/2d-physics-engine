@@ -1,8 +1,10 @@
-function drawCircle(canvasContext, params) {
-    const color = params.c || 'black';
+import { type Circle } from './classes/Ball';
+
+function drawCircle(canvasContext: CanvasRenderingContext2D, params: Circle) {
+    const color = params.color || 'black';
 
     canvasContext.beginPath();
-    canvasContext.arc(params.x, params.y, params.r, 0, Math.PI * 2, true);
+    canvasContext.arc(params.coordinate.x, params.coordinate.y, params.radius, 0, Math.PI * 2, true);
 
     if (params.isFill) {
         canvasContext.fillStyle = color;
@@ -15,7 +17,7 @@ function drawCircle(canvasContext, params) {
     canvasContext.closePath();
 }
 
-function roundNumber(number, precision) {
+function roundNumber(number: number, precision: number) {
     const factor = 10 ** precision;
 
     return Math.round(number * factor) / factor;
