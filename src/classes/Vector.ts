@@ -3,8 +3,8 @@ export type Coordinate = { x: number; y: number };
 export type Line = { coordinate: Coordinate; n: number; color: CSSStyleDeclaration['color'] };
 
 class Vector {
-    x: number;
-    y: number;
+    public x: number;
+    public y: number;
 
     constructor(params: Coordinate) {
         this.x = params.x;
@@ -15,19 +15,19 @@ class Vector {
         return vector1.x * vector2.x + vector1.y * vector2.y;
     }
 
-    add(vector: Vector) {
+    public add(vector: Vector) {
         return new Vector({ x: this.x + vector.x, y: this.y + vector.y });
     }
 
-    subtr(vector: Vector) {
+    public subtr(vector: Vector) {
         return new Vector({ x: this.x - vector.x, y: this.y - vector.y });
     }
 
-    mult(n: number) {
+    public mult(n: number) {
         return new Vector({ x: this.x * n, y: this.y * n });
     }
 
-    get unit() {
+    public get unit() {
         if (this.magnitude === 0) {
             return new Vector({ x: 0, y: 0 });
         }
@@ -38,15 +38,15 @@ class Vector {
         });
     }
 
-    get normal() {
+    public get normal() {
         return new Vector({ x: -this.y, y: this.x });
     }
 
-    get magnitude() {
+    public get magnitude() {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
 
-    draw(ctx: CanvasRenderingContext2D, params: Line) {
+    public draw(ctx: CanvasRenderingContext2D, params: Line) {
         ctx.beginPath();
         ctx.moveTo(params.coordinate.x, params.coordinate.y);
         ctx.lineTo(params.coordinate.x + this.x * params.n, params.coordinate.y + this.y * params.n);

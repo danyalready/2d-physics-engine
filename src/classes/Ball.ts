@@ -14,13 +14,13 @@ type BallParams = Circle & {
 };
 
 class Ball {
-    radius: number;
-    color: CSSStyleDeclaration['color'];
-    position: Vector;
-    velocity: Vector;
-    acceleration: Vector;
-    accelerationUnit: number;
-    isPlayer: boolean;
+    public radius: number;
+    public color: CSSStyleDeclaration['color'];
+    public position: Vector;
+    public velocity: Vector;
+    public acceleration: Vector;
+    public accelerationUnit: number;
+    public isPlayer: boolean;
 
     constructor(params: BallParams) {
         this.radius = params.radius;
@@ -48,7 +48,7 @@ class Ball {
         ball2.position = ball2.position.add(repulseVector.mult(-1));
     }
 
-    displayVectors(ctx: CanvasRenderingContext2D) {
+    public displayVectors(ctx: CanvasRenderingContext2D) {
         this.acceleration.unit.draw(ctx, {
             coordinate: {
                 x: this.position.x,
@@ -67,7 +67,7 @@ class Ball {
         });
     }
 
-    displayFixedVectors(ctx: CanvasRenderingContext2D) {
+    public displayFixedVectors(ctx: CanvasRenderingContext2D) {
         const INDICATOR_OFFSET = 150;
         const INDICATOR_OFFSET_X = ctx.canvas.offsetWidth - INDICATOR_OFFSET;
         const INDICATOR_OFFSET_Y = ctx.canvas.offsetHeight - INDICATOR_OFFSET;
@@ -105,7 +105,7 @@ class Ball {
         });
     }
 
-    draw(ctx: CanvasRenderingContext2D) {
+    public draw(ctx: CanvasRenderingContext2D) {
         drawCircle(ctx, {
             coordinate: { x: this.position.x, y: this.position.y },
             radius: this.radius,
