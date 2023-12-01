@@ -11,7 +11,7 @@ class Vector {
         this.y = params.y;
     }
 
-    static dot(vector1: Vector, vector2: Vector) {
+    static getDot(vector1: Vector, vector2: Vector) {
         return vector1.x * vector2.x + vector1.y * vector2.y;
     }
 
