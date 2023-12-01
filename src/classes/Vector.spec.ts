@@ -22,4 +22,10 @@ describe('Vector class:', () => {
             expect(vector.normal).toMatchObject({ x: -vector.y, y: vector.x });
         }
     });
+
+    test('magnitude value', () => {
+        for (const vector of vectors) {
+            expect(vector.magnitude).toBeCloseTo(Math.sqrt(vector.x ** 2 + vector.y ** 2));
+        }
+    });
 });
