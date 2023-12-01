@@ -8,7 +8,7 @@ export type Circle = {
     isFill?: boolean;
 };
 
-export type BallParams = Circle & {
+type BallParams = Circle & {
     accelerationUnit: number;
     isPlayer?: boolean;
 };
@@ -41,15 +41,15 @@ class Ball {
 
     static resolvePenetration(ball1: Ball, ball2: Ball) {
         const distanceVector = ball1.position.subtr(ball2.position);
-        const penetrationDepth = ball1.radius + ball2.radius - distanceVector.getMag();
-        const repulseVector = distanceVector.unit().mult(penetrationDepth / 2);
+        const penetrationDepth = ball1.radius + ball2.radius - distanceVector.magnitude;
+        const repulseVector = distanceVector.unit.mult(penetrationDepth / 2);
 
         ball1.position = ball1.position.add(repulseVector);
         ball2.position = ball2.position.add(repulseVector.mult(-1));
     }
 
     displayVectors(ctx: CanvasRenderingContext2D) {
-        this.acceleration.unit().draw(ctx, {
+        this.acceleration.unit.draw(ctx, {
             coordinate: {
                 x: this.position.x,
                 y: this.position.y,
@@ -86,7 +86,7 @@ class Ball {
             color: 'red',
         });
 
-        this.acceleration.unit().draw(ctx, {
+        this.acceleration.unit.draw(ctx, {
             coordinate: {
                 x: INDICATOR_OFFSET_X,
                 y: INDICATOR_OFFSET_Y,
@@ -95,7 +95,7 @@ class Ball {
             color: 'green',
         });
 
-        this.acceleration.normal().draw(ctx, {
+        this.acceleration.normal.draw(ctx, {
             coordinate: {
                 x: INDICATOR_OFFSET_X,
                 y: INDICATOR_OFFSET_Y,

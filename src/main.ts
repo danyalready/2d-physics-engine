@@ -90,7 +90,7 @@ window.addEventListener('load', () => {
             playerBall.acceleration.x = 0;
         }
 
-        playerBall.acceleration = playerBall.acceleration.unit().mult(playerBall.accelerationUnit);
+        playerBall.acceleration = playerBall.acceleration.unit.mult(playerBall.accelerationUnit);
         playerBall.velocity = playerBall.velocity.add(playerBall.acceleration);
         playerBall.velocity = playerBall.velocity.mult(1 - FRICTION);
         playerBall.position = playerBall.position.add(playerBall.velocity);
@@ -105,7 +105,7 @@ window.addEventListener('load', () => {
 
             for (let i = index + 1; i < balls.length; i++) {
                 const distanceVector = balls[index].position.subtr(balls[i].position);
-                const distanceRoundMagnitude = roundNumber(distanceVector.getMag(), 3);
+                const distanceRoundMagnitude = roundNumber(distanceVector.magnitude, 3);
 
                 if (Ball.isCollision(balls[index], balls[i], distanceRoundMagnitude)) {
                     Ball.resolvePenetration(balls[index], balls[i]);

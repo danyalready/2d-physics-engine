@@ -27,22 +27,22 @@ class Vector {
         return new Vector({ x: this.x * n, y: this.y * n });
     }
 
-    unit() {
-        if (this.getMag() === 0) {
+    get unit() {
+        if (this.magnitude === 0) {
             return new Vector({ x: 0, y: 0 });
         }
 
         return new Vector({
-            x: this.x / this.getMag(),
-            y: this.y / this.getMag(),
+            x: this.x / this.magnitude,
+            y: this.y / this.magnitude,
         });
     }
 
-    normal() {
+    get normal() {
         return new Vector({ x: -this.y, y: this.x });
     }
 
-    getMag() {
+    get magnitude() {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
 
