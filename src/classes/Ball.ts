@@ -1,5 +1,5 @@
-import Vector, { type Coordinate } from './Vector.js';
-import { drawCircle } from '../utils.js';
+import Vector, { type Coordinate } from './Vector';
+import { drawCircle } from '../utils';
 
 export type Circle = {
     coordinate: Coordinate;
