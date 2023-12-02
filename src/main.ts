@@ -63,7 +63,7 @@ window.addEventListener('load', () => {
 
     function move() {
         if (!playerBall) {
-            throw new Error('The `player-ball` is not defined.');
+            throw new Error('There must be one ball in the `balls` array with the `isPlayer` property set to `true`.');
         }
 
         if (IS_UP) {
