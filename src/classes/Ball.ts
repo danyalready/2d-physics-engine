@@ -42,12 +42,23 @@ class Ball {
     }
 
     static resolvePenetration(ball1: Ball, ball2: Ball) {
-        const distanceVector = ball1.position.subtr(ball2.position);
-        const penetrationDepth = ball1.radius + ball2.radius - distanceVector.magnitude;
-        const repulseVector = distanceVector.unit.mult(penetrationDepth / 2);
+        const distance = ball1.position.subtr(ball2.position);
+        const penetrationDepth = ball1.radius + ball2.radius - distance.magnitude;
+        const repulse = distance.unit.mult(penetrationDepth / 2);
 
-        ball1.position = ball1.position.add(repulseVector);
-        ball2.position = ball2.position.add(repulseVector.mult(-1));
+        ball1.position = ball1.position.add(repulse);
+        ball2.position = ball2.position.add(repulse.mult(-1));
+    }
+
+    static resolveCollision(ball1: Ball, ball2: Ball) {
+        const distanceUnit = ball1.position.subtr(ball2.position).unit;
+        const relativeVelocity = ball1.velocity.subtr(ball2.velocity);
+        const separatingVelocityDot = Vector.getDot(relativeVelocity, distanceUnit);
+        const separatingVelocityDotAfter = -separatingVelocityDot;
+        const separatingVelocity = distanceUnit.mult(separatingVelocityDotAfter);
+
+        ball1.velocity = ball1.velocity.add(separatingVelocity);
+        ball2.velocity = ball2.velocity.add(separatingVelocity.mult(-1));
     }
 
     public repositionate() {

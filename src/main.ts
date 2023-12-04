@@ -102,6 +102,7 @@ window.addEventListener('load', () => {
 
                 if (Ball.isCollision(balls[index], balls[i], distanceRoundMagnitude)) {
                     Ball.resolvePenetration(balls[index], balls[i]);
+                    Ball.resolveCollision(balls[index], balls[i]);
                 }
             }
 
