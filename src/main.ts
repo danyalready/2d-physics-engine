@@ -1,8 +1,6 @@
 import Ball from './classes/Ball.js';
 import { roundNumber } from './utils.js';
 
-const FRICTION: number = 0.095;
-
 window.addEventListener('load', () => {
     let IS_UP: boolean, IS_RIGHT: boolean, IS_DOWN: boolean, IS_LEFT: boolean;
 
@@ -61,7 +59,7 @@ window.addEventListener('load', () => {
         }
     });
 
-    function move() {
+    function updatePlayerAcceleration() {
         if (!playerBall) {
             throw new Error('There must be one ball in the `balls` array with the `isPlayer` property set to `true`.');
         }
@@ -89,11 +87,6 @@ window.addEventListener('load', () => {
         if (!IS_RIGHT && !IS_LEFT) {
             playerBall.acceleration.x = 0;
         }
-
-        playerBall.acceleration = playerBall.acceleration.unit.mult(playerBall.accelerationUnit);
-        playerBall.velocity = playerBall.velocity.add(playerBall.acceleration);
-        playerBall.velocity = playerBall.velocity.mult(1 - FRICTION);
-        playerBall.position = playerBall.position.add(playerBall.velocity);
     }
 
     function draw() {
@@ -112,10 +105,11 @@ window.addEventListener('load', () => {
                 }
             }
 
+            ball.repositionate();
             ball.draw(canvasCtx);
         });
 
-        move();
+        updatePlayerAcceleration();
     }
 
     (function mainLoop() {

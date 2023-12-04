@@ -1,6 +1,8 @@
 import Vector, { type Coordinate } from './Vector';
 import { drawCircle } from '../utils';
 
+const FRICTION: number = 0.095;
+
 export type Circle = {
     coordinate: Coordinate;
     radius: number;
@@ -46,6 +48,13 @@ class Ball {
 
         ball1.position = ball1.position.add(repulseVector);
         ball2.position = ball2.position.add(repulseVector.mult(-1));
+    }
+
+    public repositionate() {
+        this.acceleration = this.acceleration.unit.mult(this.accelerationUnit);
+        this.velocity = this.velocity.add(this.acceleration);
+        this.velocity = this.velocity.mult(1 - FRICTION);
+        this.position = this.position.add(this.velocity);
     }
 
     public displayVectors(ctx: CanvasRenderingContext2D) {
