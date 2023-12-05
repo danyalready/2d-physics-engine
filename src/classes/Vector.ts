@@ -15,6 +15,12 @@ class Vector {
         return vector1.x * vector2.x + vector1.y * vector2.y;
     }
 
+    static getRadians(vector1: Vector, vector2: Vector) {
+        const cosine = this.getDot(vector1, vector2) / (vector1.magnitude * vector2.magnitude);
+
+        return Math.acos(cosine);
+    }
+
     public add(vector: Vector) {
         return new Vector({ x: this.x + vector.x, y: this.y + vector.y });
     }

@@ -39,6 +39,15 @@ describe('Vector class:', () => {
             expect(Vector.getDot(vector1, vector2)).toBe(vector1.x * vector2.x + vector1.y * vector2.y);
         });
 
+        test('getRadians static method', () => {
+            const v1 = new Vector({ x: 1, y: 0 });
+            const v2 = new Vector({ x: 1, y: 1 });
+
+            const angle = (Vector.getRadians(v1, v2) * 180) / Math.PI;
+
+            expect(angle).toBeCloseTo(45);
+        });
+
         test('add method', () => {
             expect(vector1.add(vector2)).toMatchObject({ x: 6, y: 6 });
         });
