@@ -12,10 +12,12 @@ export type Circle = {
 
 type BallParams = Circle & {
     accelerationUnit: number;
+    mass: number;
     isPlayer?: boolean;
 };
 
 class Ball {
+    public mass: number;
     public radius: number;
     public color: CSSStyleDeclaration['color'];
     public position: Vector;
@@ -25,6 +27,7 @@ class Ball {
     public isPlayer: boolean;
 
     constructor(params: BallParams) {
+        this.mass = params.mass;
         this.radius = params.radius;
         this.color = params.color || 'black';
         this.position = new Vector({
@@ -51,14 +54,26 @@ class Ball {
     }
 
     static resolveCollision(ball1: Ball, ball2: Ball) {
-        const distanceUnit = ball1.position.subtr(ball2.position).unit;
-        const relativeVelocity = ball1.velocity.subtr(ball2.velocity);
-        const separatingVelocityDot = Vector.getDot(relativeVelocity, distanceUnit);
-        const separatingVelocityDotAfter = -separatingVelocityDot;
-        const separatingVelocity = distanceUnit.mult(separatingVelocityDotAfter);
+        const unitNormal = ball1.position.subtr(ball2.position).unit;
+        const unitTangent = unitNormal.normal.unit;
 
-        ball1.velocity = ball1.velocity.add(separatingVelocity);
-        ball2.velocity = ball2.velocity.add(separatingVelocity.mult(-1));
+        const v1Normal = Vector.getDot(unitNormal, ball1.velocity);
+        const v2Normal = Vector.getDot(unitNormal, ball2.velocity);
+
+        const v1Tangent = Vector.getDot(unitTangent, ball1.velocity)
+        const v2Tangent = Vector.getDot(unitTangent, ball2.velocity);
+
+        const v1NormalAfter = (v1Normal * (ball1.mass - ball2.mass) + 2 * ball2.mass * v2Normal) / ball1.mass + ball2.mass;
+        const v2NormalAfter = (v2Normal * (ball2.mass - ball1.mass) + 2 * ball1.mass * v1Normal) / ball1.mass + ball2.mass;
+
+        const v1NormalVectorAfter = unitNormal.mult(v1NormalAfter);
+        const v2NormalVectorAfter = unitNormal.mult(v2NormalAfter);
+
+        const v1TangentVectorAfter = unitTangent.mult(v1Tangent);
+        const v2TangentVectorAfter = unitTangent.mult(v2Tangent);
+
+        ball1.velocity = v1NormalVectorAfter.add(v1TangentVectorAfter);
+        ball2.velocity = v2NormalVectorAfter.add(v2TangentVectorAfter);
     }
 
     public repositionate() {
