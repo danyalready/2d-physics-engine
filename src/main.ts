@@ -1,98 +1,54 @@
 import Ball from './classes/Ball.js';
+import InputControl from './classes/InputControl.ts';
 import { roundNumber } from './utils.js';
 
 window.addEventListener('load', () => {
-    let IS_UP: boolean, IS_RIGHT: boolean, IS_DOWN: boolean, IS_LEFT: boolean;
-
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const canvasCtx = canvas.getContext('2d') as CanvasRenderingContext2D;
+    const inputControl = new InputControl();
 
     const balls = [
         new Ball({
-            mass: 5,
+            mass: 1,
             coordinate: { x: 100, y: 200 },
-            radius: 25,
+            radius: 15,
             accelerationUnit: 1,
-            color: 'brown',
+            color: 'black',
             isPlayer: true,
         }),
-        new Ball({ mass: 1, coordinate: { x: 200, y: 600 }, radius: 25, accelerationUnit: 1, color: 'brown' }),
-        new Ball({ mass: 1, coordinate: { x: 700, y: 900 }, radius: 25, accelerationUnit: 1, color: 'brown' }),
-        new Ball({
-            mass: 1,
-            coordinate: { x: canvasCtx.canvas.offsetWidth / 2, y: canvasCtx.canvas.offsetHeight / 2 },
-            radius: 5,
-            accelerationUnit: 0.2,
-            color: 'red',
-        }),
+        new Ball({ mass: 1, coordinate: { x: 200, y: 500 }, radius: 25, accelerationUnit: 1, color: 'brown' }),
+        new Ball({ mass: 1, coordinate: { x: 600, y: 200 }, radius: 25, accelerationUnit: 1, color: 'brown' }),
+        new Ball({ mass: 1, coordinate: { x: 700, y: 700 }, radius: 35, accelerationUnit: 1, color: 'brown' }),
     ];
     const playerBall = balls.find((ball) => ball.isPlayer);
-
-    window.addEventListener('keydown', (event) => {
-        if (event.code === 'ArrowUp') {
-            IS_UP = true;
-        }
-
-        if (event.code === 'ArrowRight') {
-            IS_RIGHT = true;
-        }
-
-        if (event.code === 'ArrowDown') {
-            IS_DOWN = true;
-        }
-
-        if (event.code === 'ArrowLeft') {
-            IS_LEFT = true;
-        }
-    });
-
-    window.addEventListener('keyup', (event) => {
-        if (event.code === 'ArrowUp') {
-            IS_UP = false;
-        }
-
-        if (event.code === 'ArrowRight') {
-            IS_RIGHT = false;
-        }
-
-        if (event.code === 'ArrowDown') {
-            IS_DOWN = false;
-        }
-
-        if (event.code === 'ArrowLeft') {
-            IS_LEFT = false;
-        }
-    });
 
     function updatePlayerAcceleration() {
         try {
             if (!playerBall) {
-                throw new Error(
-                    'There must be one ball in the `balls` array with the `isPlayer` property set to `true`.'
-                );
+                throw new Error('No object is detected with "isPlayer" property set to "true".');
             }
 
-            if (IS_UP) {
+            if (inputControl.arrowUp) {
                 playerBall.acceleration.y = -playerBall.accelerationUnit;
             }
 
-            if (IS_RIGHT) {
+            if (inputControl.arrowRight) {
                 playerBall.acceleration.x = playerBall.accelerationUnit;
             }
 
-            if (IS_DOWN) {
+            if (inputControl.arrowDown) {
                 playerBall.acceleration.y = playerBall.accelerationUnit;
             }
 
-            if (IS_LEFT) {
+            if (inputControl.arrowLeft) {
                 playerBall.acceleration.x = -playerBall.accelerationUnit;
             }
 
-            if (!IS_UP && !IS_DOWN) {
+            if (!inputControl.arrowUp && !inputControl.arrowDown) {
                 playerBall.acceleration.y = 0;
             }
 
-            if (!IS_RIGHT && !IS_LEFT) {
+            if (!inputControl.arrowRight && !inputControl.arrowLeft) {
                 playerBall.acceleration.x = 0;
             }
         } catch (error) {
