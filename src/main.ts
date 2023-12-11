@@ -1,5 +1,4 @@
-import Ball from './classes/Ball.js';
-import InputControl from './classes/InputControl.ts';
+import { Ball, InputControl } from './classes';
 import { roundNumber } from './utils.js';
 
 window.addEventListener('load', () => {
