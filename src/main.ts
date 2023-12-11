@@ -8,14 +8,19 @@ window.addEventListener('load', () => {
     const canvasCtx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
     const balls = [
-        new Ball({ mass: 2, coordinate: { x: 100, y: 200 }, radius: 25, accelerationUnit: 2, color: 'brown', isPlayer: true }),
+        new Ball({
+            mass: 5,
+            coordinate: { x: 100, y: 200 },
+            radius: 25,
+            accelerationUnit: 1,
+            color: 'brown',
+            isPlayer: true,
+        }),
         new Ball({ mass: 1, coordinate: { x: 200, y: 600 }, radius: 25, accelerationUnit: 1, color: 'brown' }),
         new Ball({ mass: 1, coordinate: { x: 700, y: 900 }, radius: 25, accelerationUnit: 1, color: 'brown' }),
         new Ball({
-            mass: 1, coordinate: {
-                x: canvasCtx.canvas.offsetWidth / 2,
-                y: canvasCtx.canvas.offsetHeight / 2,
-            },
+            mass: 1,
+            coordinate: { x: canvasCtx.canvas.offsetWidth / 2, y: canvasCtx.canvas.offsetHeight / 2 },
             radius: 5,
             accelerationUnit: 0.2,
             color: 'red',
@@ -60,32 +65,38 @@ window.addEventListener('load', () => {
     });
 
     function updatePlayerAcceleration() {
-        if (!playerBall) {
-            throw new Error('There must be one ball in the `balls` array with the `isPlayer` property set to `true`.');
-        }
+        try {
+            if (!playerBall) {
+                throw new Error(
+                    'There must be one ball in the `balls` array with the `isPlayer` property set to `true`.'
+                );
+            }
 
-        if (IS_UP) {
-            playerBall.acceleration.y = -playerBall.accelerationUnit;
-        }
+            if (IS_UP) {
+                playerBall.acceleration.y = -playerBall.accelerationUnit;
+            }
 
-        if (IS_RIGHT) {
-            playerBall.acceleration.x = playerBall.accelerationUnit;
-        }
+            if (IS_RIGHT) {
+                playerBall.acceleration.x = playerBall.accelerationUnit;
+            }
 
-        if (IS_DOWN) {
-            playerBall.acceleration.y = playerBall.accelerationUnit;
-        }
+            if (IS_DOWN) {
+                playerBall.acceleration.y = playerBall.accelerationUnit;
+            }
 
-        if (IS_LEFT) {
-            playerBall.acceleration.x = -playerBall.accelerationUnit;
-        }
+            if (IS_LEFT) {
+                playerBall.acceleration.x = -playerBall.accelerationUnit;
+            }
 
-        if (!IS_UP && !IS_DOWN) {
-            playerBall.acceleration.y = 0;
-        }
+            if (!IS_UP && !IS_DOWN) {
+                playerBall.acceleration.y = 0;
+            }
 
-        if (!IS_RIGHT && !IS_LEFT) {
-            playerBall.acceleration.x = 0;
+            if (!IS_RIGHT && !IS_LEFT) {
+                playerBall.acceleration.x = 0;
+            }
+        } catch (error) {
+            console.error(error);
         }
     }
 

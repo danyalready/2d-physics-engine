@@ -38,10 +38,7 @@ class Vector {
             return new Vector({ x: 0, y: 0 });
         }
 
-        return new Vector({
-            x: this.x / this.magnitude,
-            y: this.y / this.magnitude,
-        });
+        return new Vector({ x: this.x / this.magnitude, y: this.y / this.magnitude });
     }
 
     public get normal() {

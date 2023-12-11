@@ -30,10 +30,7 @@ class Ball {
         this.mass = params.mass;
         this.radius = params.radius;
         this.color = params.color || 'black';
-        this.position = new Vector({
-            x: params.coordinate.x,
-            y: params.coordinate.y,
-        });
+        this.position = new Vector(params.coordinate);
         this.velocity = new Vector({ x: 0, y: 0 });
         this.acceleration = new Vector({ x: 0, y: 0 });
         this.accelerationUnit = params.accelerationUnit;
@@ -56,15 +53,16 @@ class Ball {
     static resolveCollision(ball1: Ball, ball2: Ball) {
         const unitNormal = ball1.position.subtr(ball2.position).unit;
         const unitTangent = unitNormal.normal.unit;
+        const totalMass = ball1.mass + ball2.mass;
 
         const v1Normal = Vector.getDot(unitNormal, ball1.velocity);
         const v2Normal = Vector.getDot(unitNormal, ball2.velocity);
 
-        const v1Tangent = Vector.getDot(unitTangent, ball1.velocity)
+        const v1Tangent = Vector.getDot(unitTangent, ball1.velocity);
         const v2Tangent = Vector.getDot(unitTangent, ball2.velocity);
 
-        const v1NormalAfter = (v1Normal * (ball1.mass - ball2.mass) + 2 * ball2.mass * v2Normal) / ball1.mass + ball2.mass;
-        const v2NormalAfter = (v2Normal * (ball2.mass - ball1.mass) + 2 * ball1.mass * v1Normal) / ball1.mass + ball2.mass;
+        const v1NormalAfter = (v1Normal * (ball1.mass - ball2.mass) + 2 * ball2.mass * v2Normal) / totalMass;
+        const v2NormalAfter = (v2Normal * (ball2.mass - ball1.mass) + 2 * ball1.mass * v1Normal) / totalMass;
 
         const v1NormalVectorAfter = unitNormal.mult(v1NormalAfter);
         const v2NormalVectorAfter = unitNormal.mult(v2NormalAfter);
@@ -85,18 +83,12 @@ class Ball {
 
     public displayVectors(ctx: CanvasRenderingContext2D) {
         this.acceleration.unit.draw(ctx, {
-            coordinate: {
-                x: this.position.x,
-                y: this.position.y,
-            },
+            coordinate: this.position,
             n: this.radius,
             color: 'green',
         });
         this.velocity.draw(ctx, {
-            coordinate: {
-                x: this.position.x,
-                y: this.position.y,
-            },
+            coordinate: this.position,
             n: this.radius / 3,
             color: 'red',
         });
@@ -113,28 +105,19 @@ class Ball {
         });
 
         this.velocity.draw(ctx, {
-            coordinate: {
-                x: INDICATOR_OFFSET_X,
-                y: INDICATOR_OFFSET_Y,
-            },
+            coordinate: { x: INDICATOR_OFFSET_X, y: INDICATOR_OFFSET_Y },
             n: this.radius / 3,
             color: 'red',
         });
 
         this.acceleration.unit.draw(ctx, {
-            coordinate: {
-                x: INDICATOR_OFFSET_X,
-                y: INDICATOR_OFFSET_Y,
-            },
+            coordinate: { x: INDICATOR_OFFSET_X, y: INDICATOR_OFFSET_Y },
             n: this.radius,
             color: 'green',
         });
 
         this.acceleration.normal.draw(ctx, {
-            coordinate: {
-                x: INDICATOR_OFFSET_X,
-                y: INDICATOR_OFFSET_Y,
-            },
+            coordinate: { x: INDICATOR_OFFSET_X, y: INDICATOR_OFFSET_Y },
             n: this.radius,
             color: 'yellow',
         });
@@ -142,7 +125,7 @@ class Ball {
 
     public draw(ctx: CanvasRenderingContext2D) {
         drawCircle(ctx, {
-            coordinate: { x: this.position.x, y: this.position.y },
+            coordinate: this.position,
             radius: this.radius,
             color: this.color,
             isFill: true,
