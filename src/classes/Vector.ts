@@ -1,3 +1,5 @@
+import { drawLine } from '../utils';
+
 export type Coordinate = { x: number; y: number };
 
 export type Line = { coordinate: Coordinate; n: number; color: CSSStyleDeclaration['color'] };
@@ -50,12 +52,14 @@ class Vector {
     }
 
     public draw(ctx: CanvasRenderingContext2D, params: Line) {
-        ctx.beginPath();
-        ctx.moveTo(params.coordinate.x, params.coordinate.y);
-        ctx.lineTo(params.coordinate.x + this.x * params.n, params.coordinate.y + this.y * params.n);
-        ctx.strokeStyle = params.color;
-        ctx.stroke();
-        ctx.closePath();
+        drawLine(ctx, {
+            from: params.coordinate,
+            to: {
+                x: params.coordinate.x + this.x * params.n,
+                y: params.coordinate.y + this.y * params.n,
+            },
+            color: params.color,
+        });
     }
 }
 
