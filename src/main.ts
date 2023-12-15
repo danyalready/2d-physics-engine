@@ -1,76 +1,78 @@
-import { Ball, InputControl } from './classes';
+import { Ball, InputControl, Wall } from './classes';
 import { roundNumber } from './utils.js';
+
+const DYNAMIC_OBJECTS: Ball[] = [
+    new Ball({
+        mass: 1,
+        elasticity: 1,
+        coordinate: { x: 100, y: 200 },
+        radius: 15,
+        accelerationUnit: 1,
+        color: 'black',
+        isPlayer: true,
+    }),
+    new Ball({
+        mass: 1,
+        elasticity: 0.1,
+        coordinate: { x: 700, y: 200 },
+        radius: 25,
+        accelerationUnit: 1,
+        color: 'brown',
+    }),
+    new Ball({
+        mass: 1,
+        elasticity: 0,
+        coordinate: { x: 200, y: 500 },
+        radius: 25,
+        accelerationUnit: 1,
+        color: 'brown',
+    }),
+    new Ball({
+        mass: 1,
+        elasticity: 1,
+        coordinate: { x: 700, y: 700 },
+        radius: 35,
+        accelerationUnit: 1,
+        color: 'brown',
+    }),
+];
+const STATIC_OBJECTS = [new Wall({ coordinates: { start: { x: 100, y: 100 }, end: { x: 500, y: 500 } } })];
 
 window.addEventListener('load', () => {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const canvasCtx = canvas.getContext('2d') as CanvasRenderingContext2D;
     const inputControl = new InputControl();
 
-    const balls = [
-        new Ball({
-            mass: 1,
-            elasticity: 1,
-            coordinate: { x: 100, y: 200 },
-            radius: 15,
-            accelerationUnit: 1,
-            color: 'black',
-            isPlayer: true,
-        }),
-        new Ball({
-            mass: 1,
-            elasticity: 0.1,
-            coordinate: { x: 700, y: 200 },
-            radius: 25,
-            accelerationUnit: 1,
-            color: 'brown',
-        }),
-        new Ball({
-            mass: 1,
-            elasticity: 0,
-            coordinate: { x: 200, y: 500 },
-            radius: 25,
-            accelerationUnit: 1,
-            color: 'brown',
-        }),
-        new Ball({
-            mass: 1,
-            elasticity: 1,
-            coordinate: { x: 700, y: 700 },
-            radius: 35,
-            accelerationUnit: 1,
-            color: 'brown',
-        }),
-    ];
-    const playerBall = balls.find((ball) => ball.isPlayer);
+    const player = DYNAMIC_OBJECTS.find((obj) => obj.isPlayer);
 
     function updatePlayerAcceleration() {
         try {
-            if (!playerBall) {
+            if (!player) {
                 throw new Error('No object is detected with "isPlayer" property set to "true".');
             }
 
             if (inputControl.arrowUp) {
-                playerBall.acceleration.y = -playerBall.accelerationUnit;
+                player.acceleration.y = -player.accelerationUnit;
             }
 
             if (inputControl.arrowRight) {
-                playerBall.acceleration.x = playerBall.accelerationUnit;
+                player.acceleration.x = player.accelerationUnit;
             }
 
             if (inputControl.arrowDown) {
-                playerBall.acceleration.y = playerBall.accelerationUnit;
+                player.acceleration.y = player.accelerationUnit;
             }
 
             if (inputControl.arrowLeft) {
-                playerBall.acceleration.x = -playerBall.accelerationUnit;
+                player.acceleration.x = -player.accelerationUnit;
             }
 
             if (!inputControl.arrowUp && !inputControl.arrowDown) {
-                playerBall.acceleration.y = 0;
+                player.acceleration.y = 0;
             }
 
             if (!inputControl.arrowRight && !inputControl.arrowLeft) {
-                playerBall.acceleration.x = 0;
+                player.acceleration.x = 0;
             }
         } catch (error) {
             console.error(error);
@@ -78,19 +80,20 @@ window.addEventListener('load', () => {
     }
 
     function draw() {
-        balls.forEach((ball, index) => {
+        STATIC_OBJECTS.forEach((obj) => obj.draw(canvasCtx));
+        DYNAMIC_OBJECTS.forEach((ball, index) => {
             if (ball.isPlayer) {
                 ball.displayVectors(canvasCtx);
                 ball.displayFixedVectors(canvasCtx);
             }
 
-            for (let i = index + 1; i < balls.length; i++) {
-                const distanceVector = balls[index].position.subtr(balls[i].position);
+            for (let i = index + 1; i < DYNAMIC_OBJECTS.length; i++) {
+                const distanceVector = DYNAMIC_OBJECTS[index].position.subtr(DYNAMIC_OBJECTS[i].position);
                 const distanceRoundMagnitude = roundNumber(distanceVector.magnitude, 3);
 
-                if (Ball.isCollision(balls[index], balls[i], distanceRoundMagnitude)) {
-                    Ball.resolvePenetration(balls[index], balls[i]);
-                    Ball.resolveCollision(balls[index], balls[i]);
+                if (Ball.isCollision(DYNAMIC_OBJECTS[index], DYNAMIC_OBJECTS[i], distanceRoundMagnitude)) {
+                    Ball.resolvePenetration(DYNAMIC_OBJECTS[index], DYNAMIC_OBJECTS[i]);
+                    Ball.resolveCollision(DYNAMIC_OBJECTS[index], DYNAMIC_OBJECTS[i]);
                 }
             }
 
