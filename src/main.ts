@@ -1,8 +1,8 @@
-import { Ball, InputControl, Wall } from './classes';
+import { Circle, InputControl, Wall } from './classes';
 import { roundNumber } from './utils.js';
 
-const DYNAMIC_OBJECTS: Ball[] = [
-    new Ball({
+const DYNAMIC_OBJECTS: Circle[] = [
+    new Circle({
         mass: 1,
         elasticity: 1,
         coordinate: { x: 100, y: 200 },
@@ -11,7 +11,7 @@ const DYNAMIC_OBJECTS: Ball[] = [
         color: 'black',
         isPlayer: true,
     }),
-    new Ball({
+    new Circle({
         mass: 1,
         elasticity: 0.1,
         coordinate: { x: 700, y: 200 },
@@ -19,7 +19,7 @@ const DYNAMIC_OBJECTS: Ball[] = [
         accelerationUnit: 1,
         color: 'brown',
     }),
-    new Ball({
+    new Circle({
         mass: 1,
         elasticity: 0,
         coordinate: { x: 200, y: 500 },
@@ -27,7 +27,7 @@ const DYNAMIC_OBJECTS: Ball[] = [
         accelerationUnit: 1,
         color: 'brown',
     }),
-    new Ball({
+    new Circle({
         mass: 1,
         elasticity: 1,
         coordinate: { x: 700, y: 700 },
@@ -36,7 +36,10 @@ const DYNAMIC_OBJECTS: Ball[] = [
         color: 'brown',
     }),
 ];
-const STATIC_OBJECTS = [new Wall({ coordinates: { start: { x: 100, y: 100 }, end: { x: 500, y: 500 } } })];
+const STATIC_OBJECTS = [
+    new Wall({ coordinates: { start: { x: 100, y: 100 }, end: { x: 500, y: 500 } } }),
+    new Wall({ coordinates: { start: { x: 900, y: 300 }, end: { x: 300, y: 800 } } }),
+];
 
 window.addEventListener('load', () => {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -80,25 +83,30 @@ window.addEventListener('load', () => {
     }
 
     function draw() {
-        STATIC_OBJECTS.forEach((obj) => obj.draw(canvasCtx));
-        DYNAMIC_OBJECTS.forEach((ball, index) => {
-            if (ball.isPlayer) {
-                ball.displayVectors(canvasCtx);
-                ball.displayFixedVectors(canvasCtx);
+        STATIC_OBJECTS.forEach((obj) => {
+            for (let i = 0; i < DYNAMIC_OBJECTS.length; i++) {}
+
+            obj.draw(canvasCtx);
+        });
+
+        DYNAMIC_OBJECTS.forEach((obj, index) => {
+            if (obj.isPlayer) {
+                obj.displayVectors(canvasCtx);
+                obj.displayFixedVectors(canvasCtx);
             }
 
             for (let i = index + 1; i < DYNAMIC_OBJECTS.length; i++) {
                 const distanceVector = DYNAMIC_OBJECTS[index].position.subtr(DYNAMIC_OBJECTS[i].position);
                 const distanceRoundMagnitude = roundNumber(distanceVector.magnitude, 3);
 
-                if (Ball.isCollision(DYNAMIC_OBJECTS[index], DYNAMIC_OBJECTS[i], distanceRoundMagnitude)) {
-                    Ball.resolvePenetration(DYNAMIC_OBJECTS[index], DYNAMIC_OBJECTS[i]);
-                    Ball.resolveCollision(DYNAMIC_OBJECTS[index], DYNAMIC_OBJECTS[i]);
+                if (Circle.isCollision(DYNAMIC_OBJECTS[index], DYNAMIC_OBJECTS[i], distanceRoundMagnitude)) {
+                    Circle.resolvePenetration(DYNAMIC_OBJECTS[index], DYNAMIC_OBJECTS[i]);
+                    Circle.resolveCollision(DYNAMIC_OBJECTS[index], DYNAMIC_OBJECTS[i]);
                 }
             }
 
-            ball.repositionate();
-            ball.draw(canvasCtx);
+            obj.repositionate();
+            obj.draw(canvasCtx);
         });
 
         updatePlayerAcceleration();

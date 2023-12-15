@@ -1,7 +1,9 @@
-import { type Circle } from './classes/Ball';
 import { Coordinate } from './classes/Vector';
 
-function drawCircle(canvasContext: CanvasRenderingContext2D, params: Circle) {
+function drawCircle(
+    canvasContext: CanvasRenderingContext2D,
+    params: { coordinate: Coordinate; radius: number; isFill?: boolean; color?: CSSStyleDeclaration['color'] }
+) {
     const color = params.color || 'black';
 
     canvasContext.beginPath();

@@ -1,50 +1,31 @@
-import Vector, { type Coordinate } from './Vector';
+import PhysicObject, { PhysicObjectParams } from './PhysicObject';
+import Vector from './Vector';
+
 import { drawCircle } from '../utils';
 
 const FRICTION: number = 0.045;
 
-export type Circle = {
-    coordinate: Coordinate;
+type CircleParams = PhysicObjectParams & {
     radius: number;
     color?: CSSStyleDeclaration['color'];
-    isFill?: boolean;
 };
 
-type BallParams = Circle & {
-    elasticity: number;
-    accelerationUnit: number;
-    mass: number;
-    isPlayer?: boolean;
-};
-
-class Ball {
-    public mass: number;
-    public elasticity: number;
+class Circle extends PhysicObject {
     public radius: number;
     public color: CSSStyleDeclaration['color'];
-    public position: Vector;
-    public velocity: Vector;
-    public acceleration: Vector;
-    public accelerationUnit: number;
-    public isPlayer: boolean;
 
-    constructor(params: BallParams) {
-        this.mass = params.mass;
-        this.elasticity = params.elasticity;
+    constructor(params: CircleParams) {
+        super(params);
+
         this.radius = params.radius;
         this.color = params.color || 'black';
-        this.position = new Vector(params.coordinate);
-        this.velocity = new Vector({ x: 0, y: 0 });
-        this.acceleration = new Vector({ x: 0, y: 0 });
-        this.accelerationUnit = params.accelerationUnit;
-        this.isPlayer = Boolean(params.isPlayer);
     }
 
-    static isCollision(ball1: Ball, ball2: Ball, distance: number) {
+    static isCollision(ball1: Circle, ball2: Circle, distance: number) {
         return ball1.radius + ball2.radius >= distance;
     }
 
-    static resolvePenetration(ball1: Ball, ball2: Ball) {
+    static resolvePenetration(ball1: Circle, ball2: Circle) {
         const distance = ball1.position.subtr(ball2.position);
         const penetrationDepth = ball1.radius + ball2.radius - distance.magnitude;
         const repulse = distance.unit.mult(penetrationDepth / 2);
@@ -53,7 +34,7 @@ class Ball {
         ball2.position = ball2.position.add(repulse.mult(-1));
     }
 
-    static resolveCollision(ball1: Ball, ball2: Ball) {
+    static resolveCollision(ball1: Circle, ball2: Circle) {
         const elasticity = (ball1.elasticity + ball2.elasticity) / 2;
         const unitNormal = ball1.position.subtr(ball2.position).unit;
         const unitTangent = unitNormal.normal.unit;
@@ -141,4 +122,4 @@ class Ball {
     }
 }
 
-export default Ball;
+export default Circle;
