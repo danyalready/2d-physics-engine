@@ -1,7 +1,7 @@
 import Vector, { type Coordinate } from './Vector';
 import { drawCircle } from '../utils';
 
-const FRICTION: number = 0.095;
+const FRICTION: number = 0.045;
 
 export type Circle = {
     coordinate: Coordinate;
@@ -11,6 +11,7 @@ export type Circle = {
 };
 
 type BallParams = Circle & {
+    elasticity: number;
     accelerationUnit: number;
     mass: number;
     isPlayer?: boolean;
@@ -18,6 +19,7 @@ type BallParams = Circle & {
 
 class Ball {
     public mass: number;
+    public elasticity: number;
     public radius: number;
     public color: CSSStyleDeclaration['color'];
     public position: Vector;
@@ -28,13 +30,14 @@ class Ball {
 
     constructor(params: BallParams) {
         this.mass = params.mass;
+        this.elasticity = params.elasticity;
         this.radius = params.radius;
         this.color = params.color || 'black';
         this.position = new Vector(params.coordinate);
         this.velocity = new Vector({ x: 0, y: 0 });
         this.acceleration = new Vector({ x: 0, y: 0 });
         this.accelerationUnit = params.accelerationUnit;
-        this.isPlayer = !!params.isPlayer;
+        this.isPlayer = Boolean(params.isPlayer);
     }
 
     static isCollision(ball1: Ball, ball2: Ball, distance: number) {
@@ -51,9 +54,9 @@ class Ball {
     }
 
     static resolveCollision(ball1: Ball, ball2: Ball) {
+        const elasticity = (ball1.elasticity + ball2.elasticity) / 2;
         const unitNormal = ball1.position.subtr(ball2.position).unit;
         const unitTangent = unitNormal.normal.unit;
-        const totalMass = ball1.mass + ball2.mass;
 
         const v1Normal = Vector.getDot(unitNormal, ball1.velocity);
         const v2Normal = Vector.getDot(unitNormal, ball2.velocity);
@@ -61,8 +64,13 @@ class Ball {
         const v1Tangent = Vector.getDot(unitTangent, ball1.velocity);
         const v2Tangent = Vector.getDot(unitTangent, ball2.velocity);
 
-        const v1NormalAfter = (v1Normal * (ball1.mass - ball2.mass) + 2 * ball2.mass * v2Normal) / totalMass;
-        const v2NormalAfter = (v2Normal * (ball2.mass - ball1.mass) + 2 * ball1.mass * v1Normal) / totalMass;
+        const momentum1 = ball1.mass * v1Normal;
+        const momentum2 = ball2.mass * v2Normal;
+        const totalMomentum = momentum1 + momentum2;
+        const totalMass = ball1.mass + ball2.mass;
+
+        const v1NormalAfter = (elasticity * ball2.mass * (v2Normal - v1Normal) + totalMomentum) / totalMass;
+        const v2NormalAfter = (elasticity * ball1.mass * (v1Normal - v2Normal) + totalMomentum) / totalMass;
 
         const v1NormalVectorAfter = unitNormal.mult(v1NormalAfter);
         const v2NormalVectorAfter = unitNormal.mult(v2NormalAfter);

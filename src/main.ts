@@ -9,15 +9,37 @@ window.addEventListener('load', () => {
     const balls = [
         new Ball({
             mass: 1,
+            elasticity: 1,
             coordinate: { x: 100, y: 200 },
             radius: 15,
             accelerationUnit: 1,
             color: 'black',
             isPlayer: true,
         }),
-        new Ball({ mass: 1, coordinate: { x: 200, y: 500 }, radius: 25, accelerationUnit: 1, color: 'brown' }),
-        new Ball({ mass: 1, coordinate: { x: 600, y: 200 }, radius: 25, accelerationUnit: 1, color: 'brown' }),
-        new Ball({ mass: 1, coordinate: { x: 700, y: 700 }, radius: 35, accelerationUnit: 1, color: 'brown' }),
+        new Ball({
+            mass: 1,
+            elasticity: 0.1,
+            coordinate: { x: 700, y: 200 },
+            radius: 25,
+            accelerationUnit: 1,
+            color: 'brown',
+        }),
+        new Ball({
+            mass: 1,
+            elasticity: 0,
+            coordinate: { x: 200, y: 500 },
+            radius: 25,
+            accelerationUnit: 1,
+            color: 'brown',
+        }),
+        new Ball({
+            mass: 1,
+            elasticity: 1,
+            coordinate: { x: 700, y: 700 },
+            radius: 35,
+            accelerationUnit: 1,
+            color: 'brown',
+        }),
     ];
     const playerBall = balls.find((ball) => ball.isPlayer);
 
