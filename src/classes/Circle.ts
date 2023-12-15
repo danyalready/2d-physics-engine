@@ -1,9 +1,9 @@
-import PhysicObject, { PhysicObjectParams } from './PhysicObject';
+import PhysicObject, { type PhysicObjectParams } from './PhysicObject';
 import Vector from './Vector';
 
 import { drawCircle } from '../utils';
 
-const FRICTION: number = 0.045;
+const FRICTION: number = 0.095;
 
 type CircleParams = PhysicObjectParams & {
     radius: number;
@@ -117,7 +117,7 @@ class Circle extends PhysicObject {
             coordinate: this.position,
             radius: this.radius,
             color: this.color,
-            isFill: true,
+            // isFill: true,
         });
     }
 }

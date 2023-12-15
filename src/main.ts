@@ -1,5 +1,5 @@
 import { Circle, InputControl, Wall } from './classes';
-import { roundNumber } from './utils.js';
+import { drawLine, roundNumber } from './utils.js';
 
 const DYNAMIC_OBJECTS: Circle[] = [
     new Circle({
@@ -7,38 +7,38 @@ const DYNAMIC_OBJECTS: Circle[] = [
         elasticity: 1,
         coordinate: { x: 100, y: 200 },
         radius: 15,
-        accelerationUnit: 1,
+        accelerationUnit: 0.3,
         color: 'black',
         isPlayer: true,
     }),
-    new Circle({
-        mass: 1,
-        elasticity: 0.1,
-        coordinate: { x: 700, y: 200 },
-        radius: 25,
-        accelerationUnit: 1,
-        color: 'brown',
-    }),
-    new Circle({
-        mass: 1,
-        elasticity: 0,
-        coordinate: { x: 200, y: 500 },
-        radius: 25,
-        accelerationUnit: 1,
-        color: 'brown',
-    }),
-    new Circle({
-        mass: 1,
-        elasticity: 1,
-        coordinate: { x: 700, y: 700 },
-        radius: 35,
-        accelerationUnit: 1,
-        color: 'brown',
-    }),
+    // new Circle({
+    //     mass: 1,
+    //     elasticity: 0.1,
+    //     coordinate: { x: 700, y: 200 },
+    //     radius: 25,
+    //     accelerationUnit: 1,
+    //     color: 'brown',
+    // }),
+    // new Circle({
+    //     mass: 1,
+    //     elasticity: 0,
+    //     coordinate: { x: 200, y: 500 },
+    //     radius: 25,
+    //     accelerationUnit: 1,
+    //     color: 'brown',
+    // }),
+    // new Circle({
+    //     mass: 1,
+    //     elasticity: 1,
+    //     coordinate: { x: 700, y: 700 },
+    //     radius: 35,
+    //     accelerationUnit: 1,
+    //     color: 'brown',
+    // }),
 ];
 const STATIC_OBJECTS = [
     new Wall({ coordinates: { start: { x: 100, y: 100 }, end: { x: 500, y: 500 } } }),
-    new Wall({ coordinates: { start: { x: 900, y: 300 }, end: { x: 300, y: 800 } } }),
+    // new Wall({ coordinates: { start: { x: 900, y: 300 }, end: { x: 300, y: 800 } } }),
 ];
 
 window.addEventListener('load', () => {
@@ -84,7 +84,14 @@ window.addEventListener('load', () => {
 
     function draw() {
         STATIC_OBJECTS.forEach((obj) => {
-            for (let i = 0; i < DYNAMIC_OBJECTS.length; i++) {}
+            for (let i = 0; i < DYNAMIC_OBJECTS.length; i++) {
+                const closestPoint = Wall.getClosestPoint(obj, DYNAMIC_OBJECTS[i]);
+
+                drawLine(canvasCtx, {
+                    from: DYNAMIC_OBJECTS[i].position,
+                    to: { x: closestPoint.x, y: closestPoint.y },
+                });
+            }
 
             obj.draw(canvasCtx);
         });

@@ -1,3 +1,4 @@
+import Circle from './Circle';
 import Vector, { type Coordinate } from './Vector';
 import { drawLine } from '../utils';
 
@@ -11,21 +12,39 @@ type WallParams = {
 
 class Wall {
     public color: CSSStyleDeclaration['color'];
-    public positionStart: Vector;
-    public positionEnd: Vector;
+    public start: Vector;
+    public end: Vector;
 
     constructor(params: WallParams) {
         this.color = params.color || 'black';
-        this.positionStart = new Vector(params.coordinates.start);
-        this.positionEnd = new Vector(params.coordinates.end);
+        this.start = new Vector(params.coordinates.start);
+        this.end = new Vector(params.coordinates.end);
+    }
+
+    static getClosestPoint(wall: Wall, circle: Circle) {
+        const ballToWallStart = wall.start.subtr(circle.position);
+        const ballToWallEnd = circle.position.subtr(wall.end);
+
+        if (Vector.getDot(wall.vector.unit, ballToWallStart) > 0) {
+            return wall.start;
+        }
+
+        if (Vector.getDot(wall.vector.unit, ballToWallEnd) > 0) {
+            return wall.end;
+        }
+
+        const scalar = Vector.getDot(wall.vector.unit, ballToWallStart);
+        const closestVector = wall.vector.unit.mult(scalar);
+
+        return wall.start.subtr(closestVector);
     }
 
     public get vector() {
-        return this.positionEnd.subtr(this.positionStart);
+        return this.end.subtr(this.start);
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
-        drawLine(ctx, { from: this.positionStart, to: this.positionEnd, color: this.color });
+        drawLine(ctx, { from: this.start, to: this.end, color: this.color });
     }
 }
 
