@@ -1,4 +1,5 @@
 import { type Circle } from './classes/Ball';
+import { Coordinate } from './classes/Vector';
 
 function drawCircle(canvasContext: CanvasRenderingContext2D, params: Circle) {
     const color = params.color || 'black';
@@ -17,10 +18,28 @@ function drawCircle(canvasContext: CanvasRenderingContext2D, params: Circle) {
     canvasContext.closePath();
 }
 
+function drawLine(
+    canvasContext: CanvasRenderingContext2D,
+    params: {
+        from: Coordinate;
+        to: Coordinate;
+        color?: CSSStyleDeclaration['color'];
+    }
+) {
+    const color = params.color || 'black';
+
+    canvasContext.beginPath();
+    canvasContext.moveTo(params.from.x, params.from.y);
+    canvasContext.lineTo(params.to.x, params.to.y);
+    canvasContext.strokeStyle = color;
+    canvasContext.stroke();
+    canvasContext.closePath();
+}
+
 function roundNumber(number: number, precision: number) {
     const factor = 10 ** precision;
 
     return Math.round(number * factor) / factor;
 }
 
-export { drawCircle, roundNumber };
+export { drawCircle, drawLine, roundNumber };
