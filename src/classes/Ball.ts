@@ -66,11 +66,11 @@ class Ball {
 
         const momentum1 = ball1.mass * v1Normal;
         const momentum2 = ball2.mass * v2Normal;
-        const totalMomentum = momentum1 + momentum2;
+        const totalMntm = momentum1 + momentum2;
         const totalMass = ball1.mass + ball2.mass;
 
-        const v1NormalAfter = (elasticity * ball2.mass * (v2Normal - v1Normal) + totalMomentum) / totalMass;
-        const v2NormalAfter = (elasticity * ball1.mass * (v1Normal - v2Normal) + totalMomentum) / totalMass;
+        const v1NormalAfter = (elasticity * ball2.mass * (v2Normal - v1Normal) + totalMntm) / totalMass;
+        const v2NormalAfter = (elasticity * ball1.mass * (v1Normal - v2Normal) + totalMntm) / totalMass;
 
         const v1NormalVectorAfter = unitNormal.mult(v1NormalAfter);
         const v2NormalVectorAfter = unitNormal.mult(v2NormalAfter);
