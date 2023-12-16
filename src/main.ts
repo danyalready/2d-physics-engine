@@ -8,7 +8,7 @@ const DYNAMIC_OBJECTS: Circle[] = [
         elasticity: 0.5,
         coordinate: { x: 100, y: 200 },
         radius: 25,
-        accelerationUnit: 1,
+        accelerationUnit: 0.4,
         color: 'green',
         isPlayer: true,
     }),
@@ -87,13 +87,9 @@ window.addEventListener('load', () => {
     function draw() {
         STATIC_OBJECTS.forEach((obj) => {
             for (let i = 0; i < DYNAMIC_OBJECTS.length; i++) {
-                const closestPoint = Wall.getClosestPoint(obj, DYNAMIC_OBJECTS[i]);
+                const isCollision = Wall.isCollision(obj, DYNAMIC_OBJECTS[i]);
 
-                drawLine(canvasCtx, {
-                    from: DYNAMIC_OBJECTS[i].position,
-                    to: { x: closestPoint.x, y: closestPoint.y },
-                    color: 'red',
-                });
+                console.log(isCollision);
             }
 
             obj.draw(canvasCtx);

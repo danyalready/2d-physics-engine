@@ -21,6 +21,13 @@ class Wall {
         this.end = new Vector(params.coordinates.end);
     }
 
+    static isCollision(wall: Wall, circle: Circle) {
+        const closestPoint = this.getClosestPoint(wall, circle);
+        const distanceMagnitude = closestPoint.subtr(circle.position).magnitude;
+
+        return distanceMagnitude - circle.radius <= 0;
+    }
+
     static getClosestPoint(wall: Wall, circle: Circle) {
         const ballToWallStart = wall.start.subtr(circle.position);
         const ballToWallEnd = circle.position.subtr(wall.end);
