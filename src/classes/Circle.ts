@@ -3,8 +3,6 @@ import Vector from './Vector';
 
 import { drawCircle } from '../utils';
 
-const FRICTION: number = 0.095;
-
 type CircleParams = PhysicObjectParams & {
     radius: number;
     color?: CSSStyleDeclaration['color'];
@@ -61,13 +59,6 @@ class Circle extends PhysicObject {
 
         ball1.velocity = v1NormalVectorAfter.add(v1TangentVectorAfter);
         ball2.velocity = v2NormalVectorAfter.add(v2TangentVectorAfter);
-    }
-
-    public repositionate() {
-        this.acceleration = this.acceleration.unit.mult(this.accelerationUnit);
-        this.velocity = this.velocity.add(this.acceleration);
-        this.velocity = this.velocity.mult(1 - FRICTION);
-        this.position = this.position.add(this.velocity);
     }
 
     public displayVectors(ctx: CanvasRenderingContext2D) {

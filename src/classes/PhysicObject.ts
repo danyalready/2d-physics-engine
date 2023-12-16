@@ -1,9 +1,8 @@
 import Vector, { type Coordinate } from './Vector';
 
-const FRICTION: number = 0.045;
-
 export type PhysicObjectParams = {
     mass: number;
+    friction: number;
     elasticity: number;
     coordinate: Coordinate;
     velocity?: Vector;
@@ -14,6 +13,7 @@ export type PhysicObjectParams = {
 
 class PhysicObject {
     public mass: number;
+    public friction: number;
     public elasticity: number;
     public position: Vector;
     public velocity: Vector;
@@ -23,6 +23,7 @@ class PhysicObject {
 
     constructor(params: PhysicObjectParams) {
         this.mass = params.mass;
+        this.friction = params.friction;
         this.elasticity = params.elasticity;
         this.position = new Vector(params.coordinate);
         this.velocity = params.velocity || new Vector({ x: 0, y: 0 });
@@ -34,7 +35,7 @@ class PhysicObject {
     public repositionate() {
         this.acceleration = this.acceleration.unit.mult(this.accelerationUnit);
         this.velocity = this.velocity.add(this.acceleration);
-        this.velocity = this.velocity.mult(1 - FRICTION);
+        this.velocity = this.velocity.mult(1 - this.friction);
         this.position = this.position.add(this.velocity);
     }
 }

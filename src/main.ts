@@ -3,17 +3,19 @@ import { drawLine, roundNumber } from './utils.js';
 
 const DYNAMIC_OBJECTS: Circle[] = [
     new Circle({
-        mass: 1,
-        elasticity: 1,
+        mass: 10,
+        friction: 0.025,
+        elasticity: 0.5,
         coordinate: { x: 100, y: 200 },
-        radius: 15,
-        accelerationUnit: 0.3,
-        color: 'black',
+        radius: 25,
+        accelerationUnit: 1,
+        color: 'green',
         isPlayer: true,
     }),
     // new Circle({
     //     mass: 1,
-    //     elasticity: 0.1,
+    //     friction: 0.05,
+    //     elasticity: 0,
     //     coordinate: { x: 700, y: 200 },
     //     radius: 25,
     //     accelerationUnit: 1,
@@ -90,6 +92,7 @@ window.addEventListener('load', () => {
                 drawLine(canvasCtx, {
                     from: DYNAMIC_OBJECTS[i].position,
                     to: { x: closestPoint.x, y: closestPoint.y },
+                    color: 'red',
                 });
             }
 
