@@ -1,22 +1,25 @@
-import PhysicObject, { type PhysicObjectParams } from './PhysicObject';
+import PhysicalObject, { type PhysicalObjectParams } from './PhysicalObject';
 import Vector from './Vector';
 
 import { drawCircle } from '../utils';
 
-type CircleParams = PhysicObjectParams & {
+type CircleParams = PhysicalObjectParams & {
     radius: number;
     color?: CSSStyleDeclaration['color'];
+    isFill?: boolean;
 };
 
-class Circle extends PhysicObject {
+class Circle extends PhysicalObject {
     public radius: number;
     public color: CSSStyleDeclaration['color'];
+    public isFill: boolean;
 
     constructor(params: CircleParams) {
         super(params);
 
         this.radius = params.radius;
         this.color = params.color || 'black';
+        this.isFill = Boolean(params.isFill);
     }
 
     static isCollision(ball1: Circle, ball2: Circle, distance: number) {
@@ -108,7 +111,7 @@ class Circle extends PhysicObject {
             coordinate: this.position,
             radius: this.radius,
             color: this.color,
-            // isFill: true,
+            isFill: this.isFill,
         });
     }
 }

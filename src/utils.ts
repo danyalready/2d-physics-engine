@@ -28,12 +28,10 @@ function drawLine(
         color?: CSSStyleDeclaration['color'];
     }
 ) {
-    const color = params.color || 'black';
-
     canvasContext.beginPath();
     canvasContext.moveTo(params.from.x, params.from.y);
     canvasContext.lineTo(params.to.x, params.to.y);
-    canvasContext.strokeStyle = color;
+    canvasContext.strokeStyle = params.color || 'black';
     canvasContext.stroke();
     canvasContext.closePath();
 }

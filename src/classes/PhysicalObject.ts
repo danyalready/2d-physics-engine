@@ -1,6 +1,6 @@
 import Vector, { type Coordinate } from './Vector';
 
-export type PhysicObjectParams = {
+export type PhysicalObjectParams = {
     mass: number;
     friction: number;
     elasticity: number;
@@ -11,7 +11,7 @@ export type PhysicObjectParams = {
     isPlayer?: boolean;
 };
 
-class PhysicObject {
+class PhysicalObject {
     public mass: number;
     public friction: number;
     public elasticity: number;
@@ -21,7 +21,7 @@ class PhysicObject {
     public accelerationUnit: number;
     public isPlayer: boolean;
 
-    constructor(params: PhysicObjectParams) {
+    constructor(params: PhysicalObjectParams) {
         this.mass = params.mass;
         this.friction = params.friction;
         this.elasticity = params.elasticity;
@@ -40,4 +40,4 @@ class PhysicObject {
     }
 }
 
-export default PhysicObject;
+export default PhysicalObject;

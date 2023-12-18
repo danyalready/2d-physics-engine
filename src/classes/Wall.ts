@@ -28,6 +28,33 @@ class Wall {
         return distanceMagnitude - circle.radius <= 0;
     }
 
+    static resolvePenetration(wall: Wall, circle: Circle) {
+        const closestWallPoint = this.getClosestPoint(wall, circle);
+        const distance = circle.position.subtr(closestWallPoint);
+        const penetrationDepth = circle.radius - distance.magnitude;
+
+        circle.position = circle.position.add(distance.unit.mult(penetrationDepth));
+    }
+
+    static resolveCollision(wall: Wall, circle: Circle) {
+        const closestWallPoint = this.getClosestPoint(wall, circle);
+        const distance = circle.position.subtr(closestWallPoint);
+
+        const unitNormal = distance.unit;
+        const unitTangent = unitNormal.normal;
+
+        const unitNormalAfter = unitNormal.mult(-1);
+        const unitTangentAfter = unitTangent;
+
+        const vNormal = Vector.getDot(unitNormalAfter, circle.velocity);
+        const vTanget = Vector.getDot(unitTangentAfter, circle.velocity);
+
+        const vNormalVectorAfter = unitNormal.mult(vNormal);
+        const vTangentVectorAfter = unitTangent.mult(vTanget);
+
+        circle.velocity = vNormalVectorAfter.add(vTangentVectorAfter);
+    }
+
     static getClosestPoint(wall: Wall, circle: Circle) {
         const ballToWallStart = wall.start.subtr(circle.position);
         const ballToWallEnd = circle.position.subtr(wall.end);
