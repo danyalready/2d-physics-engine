@@ -4,7 +4,7 @@ import { roundNumber } from './utils.js';
 const DYNAMIC_OBJECTS: Circle[] = [
     new Circle({
         mass: 10,
-        friction: 0.025,
+        friction: 0.0015,
         elasticity: 0.5,
         coordinate: { x: 100, y: 200 },
         radius: 25,
@@ -13,8 +13,8 @@ const DYNAMIC_OBJECTS: Circle[] = [
         isPlayer: true,
     }),
     new Circle({
-        mass: 1,
-        friction: 0.05,
+        mass: 5,
+        friction: 0.0015,
         elasticity: 0,
         coordinate: { x: 700, y: 200 },
         radius: 25,
@@ -24,7 +24,7 @@ const DYNAMIC_OBJECTS: Circle[] = [
     }),
     new Circle({
         mass: 1,
-        friction: 0.025,
+        friction: 0.0015,
         elasticity: 0,
         coordinate: { x: 200, y: 500 },
         radius: 25,
@@ -34,7 +34,7 @@ const DYNAMIC_OBJECTS: Circle[] = [
     }),
     new Circle({
         mass: 1,
-        friction: 0.025,
+        friction: 0,
         elasticity: 1,
         coordinate: { x: 700, y: 700 },
         radius: 35,
@@ -44,8 +44,11 @@ const DYNAMIC_OBJECTS: Circle[] = [
     }),
 ];
 const STATIC_OBJECTS = [
-    new Wall({ coordinates: { start: { x: 100, y: 100 }, end: { x: 500, y: 500 } } }),
-    new Wall({ coordinates: { start: { x: 900, y: 300 }, end: { x: 300, y: 800 } } }),
+    new Wall({ coordinates: { start: { x: 0, y: 5 }, end: { x: 1200, y: 5 } } }),
+    new Wall({ coordinates: { start: { x: 0, y: 895 }, end: { x: 1200, y: 895 } } }),
+    new Wall({ coordinates: { start: { x: 5, y: 0 }, end: { x: 5, y: 900 } } }),
+    new Wall({ coordinates: { start: { x: 1195, y: 0 }, end: { x: 1195, y: 900 } } }),
+    new Wall({ coordinates: { start: { x: 434, y: 300 }, end: { x: 700, y: 800 } } }),
 ];
 
 window.addEventListener('load', () => {
@@ -59,6 +62,8 @@ window.addEventListener('load', () => {
                 if (Wall.isCollision(obj, DYNAMIC_OBJECTS[i])) {
                     Wall.resolvePenetration(obj, DYNAMIC_OBJECTS[i]);
                     Wall.resolveCollision(obj, DYNAMIC_OBJECTS[i]);
+
+                    DYNAMIC_OBJECTS[i].repositionate();
                 }
             }
 

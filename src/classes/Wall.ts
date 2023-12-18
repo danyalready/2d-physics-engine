@@ -46,13 +46,13 @@ class Wall {
         const unitNormalAfter = unitNormal.mult(-1);
         const unitTangentAfter = unitTangent;
 
-        const vNormal = Vector.getDot(unitNormalAfter, circle.velocity);
-        const vTanget = Vector.getDot(unitTangentAfter, circle.velocity);
+        const velocityNormal = Vector.getDot(unitNormalAfter, circle.velocity);
+        const velocityTangent = Vector.getDot(unitTangentAfter, circle.velocity);
 
-        const vNormalVectorAfter = unitNormal.mult(vNormal);
-        const vTangentVectorAfter = unitTangent.mult(vTanget);
+        const normalAfter = unitNormal.mult(velocityNormal);
+        const tangentAfter = unitTangent.mult(velocityTangent);
 
-        circle.velocity = vNormalVectorAfter.add(vTangentVectorAfter);
+        circle.velocity = normalAfter.add(tangentAfter);
     }
 
     static getClosestPoint(wall: Wall, circle: Circle) {
