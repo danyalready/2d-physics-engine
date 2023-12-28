@@ -21,7 +21,7 @@ class Wall {
         this.end = new Vector(params.coordinates.end);
     }
 
-    static isCollision(wall: Wall, circle: Circle) {
+    static isCollision(wall: Wall, circle: Circle): boolean {
         const closestPoint = this.getClosestPoint(wall, circle);
         const distanceMagnitude = closestPoint.subtr(circle.position).magnitude;
 
@@ -55,7 +55,7 @@ class Wall {
         circle.velocity = normalAfter.add(tangentAfter);
     }
 
-    static getClosestPoint(wall: Wall, circle: Circle) {
+    static getClosestPoint(wall: Wall, circle: Circle): Vector {
         const ballToWallStart = wall.start.subtr(circle.position);
         const ballToWallEnd = circle.position.subtr(wall.end);
 
@@ -73,7 +73,7 @@ class Wall {
         return wall.start.subtr(closestVector);
     }
 
-    public get vector() {
+    public get vector(): Vector {
         return this.end.subtr(this.start);
     }
 

@@ -13,29 +13,29 @@ class Vector {
         this.y = params.y;
     }
 
-    static getDot(vector1: Vector, vector2: Vector) {
+    static getDot(vector1: Vector, vector2: Vector): number {
         return vector1.x * vector2.x + vector1.y * vector2.y;
     }
 
-    static getRadians(vector1: Vector, vector2: Vector) {
+    static getRadians(vector1: Vector, vector2: Vector): number {
         const cosine = this.getDot(vector1, vector2) / (vector1.magnitude * vector2.magnitude);
 
         return Math.acos(cosine);
     }
 
-    public add(vector: Vector) {
+    public add(vector: Vector): Vector {
         return new Vector({ x: this.x + vector.x, y: this.y + vector.y });
     }
 
-    public subtr(vector: Vector) {
+    public subtr(vector: Vector): Vector {
         return new Vector({ x: this.x - vector.x, y: this.y - vector.y });
     }
 
-    public mult(n: number) {
+    public mult(n: number): Vector {
         return new Vector({ x: this.x * n, y: this.y * n });
     }
 
-    public get unit() {
+    public get unit(): Vector {
         if (this.magnitude === 0) {
             return new Vector({ x: 0, y: 0 });
         }
@@ -43,11 +43,11 @@ class Vector {
         return new Vector({ x: this.x / this.magnitude, y: this.y / this.magnitude });
     }
 
-    public get normal() {
+    public get normal(): Vector {
         return new Vector({ x: -this.y, y: this.x });
     }
 
-    public get magnitude() {
+    public get magnitude(): number {
         return Math.sqrt(this.x ** 2 + this.y ** 2);
     }
 

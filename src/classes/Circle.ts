@@ -22,7 +22,7 @@ class Circle extends PhysicalObject {
         this.isFill = Boolean(params.isFill);
     }
 
-    static isCollision(ball1: Circle, ball2: Circle, distance: number) {
+    static isCollision(ball1: Circle, ball2: Circle, distance: number): boolean {
         return ball1.radius + ball2.radius >= distance;
     }
 
