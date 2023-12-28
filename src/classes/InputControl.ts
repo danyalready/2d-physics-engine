@@ -59,7 +59,7 @@ class InputControl {
         });
     }
 
-    public updatePlayerAcceleration() {
+    public updatePhysicalObjectAcceleration() {
         try {
             if (!this.physicalObject) {
                 throw new Error('No object is detected with "isPlayer" property set to "true".');

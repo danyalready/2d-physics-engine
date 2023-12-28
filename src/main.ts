@@ -90,7 +90,7 @@ window.addEventListener('load', () => {
             obj.draw(canvasCtx);
         });
 
-        inputControl.updatePlayerAcceleration();
+        inputControl.updatePhysicalObjectAcceleration();
     }
 
     (function mainLoop() {
