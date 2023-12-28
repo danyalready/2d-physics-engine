@@ -29,6 +29,11 @@ class Circle extends PhysicalObject {
     static resolvePenetration(ball1: Circle, ball2: Circle) {
         const distance = ball1.position.subtr(ball2.position);
         const penetrationDepth = ball1.radius + ball2.radius - distance.magnitude;
+
+        if (penetrationDepth <= 0) {
+            return;
+        }
+
         const repulse = distance.unit.mult(penetrationDepth / 2);
 
         ball1.position = ball1.position.add(repulse);
@@ -46,9 +51,7 @@ class Circle extends PhysicalObject {
         const v1Tangent = Vector.getDot(unitTangent, ball1.velocity);
         const v2Tangent = Vector.getDot(unitTangent, ball2.velocity);
 
-        const momentum1 = ball1.mass * v1Normal;
-        const momentum2 = ball2.mass * v2Normal;
-        const totalMntm = momentum1 + momentum2;
+        const totalMntm = ball1.mass * v1Normal + ball2.mass * v2Normal;
         const totalMass = ball1.mass + ball2.mass;
 
         const v1NormalAfter = (elasticity * ball2.mass * (v2Normal - v1Normal) + totalMntm) / totalMass;
