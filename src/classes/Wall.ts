@@ -1,4 +1,5 @@
 import Circle from './Circle';
+import PhysicalObject from './PhysicalObject';
 import Vector, { type Coordinate } from './Vector';
 import { drawLine } from '../utils';
 
@@ -36,9 +37,9 @@ class Wall {
         circle.position = circle.position.add(distance.unit.mult(penetrationDepth));
     }
 
-    static resolveCollision(wall: Wall, circle: Circle) {
-        const closestWallPoint = this.getClosestPoint(wall, circle);
-        const distance = circle.position.subtr(closestWallPoint);
+    static resolveCollision(wall: Wall, physicalObject: PhysicalObject) {
+        const closestWallPoint = this.getClosestPoint(wall, physicalObject);
+        const distance = physicalObject.position.subtr(closestWallPoint);
 
         const unitNormal = distance.unit;
         const unitTangent = unitNormal.normal;
@@ -46,28 +47,28 @@ class Wall {
         const unitNormalAfter = unitNormal.mult(-1);
         const unitTangentAfter = unitTangent;
 
-        const velocityNormal = Vector.getDot(unitNormalAfter, circle.velocity);
-        const velocityTangent = Vector.getDot(unitTangentAfter, circle.velocity);
+        const velocityNormal = Vector.getDot(unitNormalAfter, physicalObject.velocity);
+        const velocityTangent = Vector.getDot(unitTangentAfter, physicalObject.velocity);
 
         const normalAfter = unitNormal.mult(velocityNormal);
         const tangentAfter = unitTangent.mult(velocityTangent);
 
-        circle.velocity = normalAfter.add(tangentAfter);
+        physicalObject.velocity = normalAfter.add(tangentAfter);
     }
 
-    static getClosestPoint(wall: Wall, circle: Circle): Vector {
-        const ballToWallStart = wall.start.subtr(circle.position);
-        const ballToWallEnd = circle.position.subtr(wall.end);
+    static getClosestPoint(wall: Wall, physicalObject: PhysicalObject): Vector {
+        const physicalObjectToWallStart = wall.start.subtr(physicalObject.position);
+        const wallEndToPhysicalObject = physicalObject.position.subtr(wall.end);
 
-        if (Vector.getDot(wall.vector.unit, ballToWallStart) > 0) {
+        if (Vector.getDot(wall.vector.unit, physicalObjectToWallStart) > 0) {
             return wall.start;
         }
 
-        if (Vector.getDot(wall.vector.unit, ballToWallEnd) > 0) {
+        if (Vector.getDot(wall.vector.unit, wallEndToPhysicalObject) > 0) {
             return wall.end;
         }
 
-        const scalar = Vector.getDot(wall.vector.unit, ballToWallStart);
+        const scalar = Vector.getDot(wall.vector.unit, physicalObjectToWallStart);
         const closestVector = wall.vector.unit.mult(scalar);
 
         return wall.start.subtr(closestVector);
