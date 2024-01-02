@@ -1,10 +1,11 @@
 import Vector, { type Coordinate } from './Vector';
 
 export type PhysicalObjectParams = {
-    mass: number;
-    friction: number;
-    elasticity: number;
     coordinate: Coordinate;
+
+    mass?: number;
+    friction?: number;
+    elasticity?: number;
     velocity?: Vector;
     acceleration?: Vector;
     accelerationUnit?: number;
@@ -22,9 +23,9 @@ class PhysicalObject {
     public isPlayer: boolean;
 
     constructor(params: PhysicalObjectParams) {
-        this.mass = params.mass;
-        this.friction = params.friction;
-        this.elasticity = params.elasticity;
+        this.mass = params.mass || 0;
+        this.friction = params.friction || 0;
+        this.elasticity = params.elasticity || 1;
         this.position = new Vector(params.coordinate);
         this.velocity = params.velocity || new Vector({ x: 0, y: 0 });
         this.acceleration = params.acceleration || new Vector({ x: 0, y: 0 });

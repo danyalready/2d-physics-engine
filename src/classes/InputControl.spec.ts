@@ -3,13 +3,8 @@ import Circle from './Circle';
 
 describe('InputControl class:', () => {
     const circle = new Circle({
-        mass: 1,
-        friction: 0,
-        elasticity: 0,
         coordinate: { x: 0, y: 0 },
         radius: 1,
-        accelerationUnit: 1,
-        color: 'green',
         isPlayer: true,
     });
 
