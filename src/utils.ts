@@ -2,7 +2,7 @@ import { Coordinate } from './classes/Vector';
 
 function drawCircle(
     canvasContext: CanvasRenderingContext2D,
-    params: { coordinate: Coordinate; radius: number; isFill?: boolean; color?: CSSStyleDeclaration['color'] }
+    params: { coordinate: Coordinate; radius: number; isFill?: boolean; color?: CSSStyleDeclaration['color'] },
 ) {
     const color = params.color || 'black';
 
@@ -26,7 +26,7 @@ function drawLine(
         from: Coordinate;
         to: Coordinate;
         color?: CSSStyleDeclaration['color'];
-    }
+    },
 ) {
     canvasContext.beginPath();
     canvasContext.moveTo(params.from.x, params.from.y);

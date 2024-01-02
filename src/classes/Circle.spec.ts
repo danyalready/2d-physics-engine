@@ -21,7 +21,7 @@ describe('Circle class:', () => {
                 radius: 10,
             });
             const distanceMagnitude = ball1.position.subtr(ball2.position).magnitude;
-    
+
             expect(Circle.isCollision(ball1, ball2, distanceMagnitude)).toBeTruthy();
         });
 
@@ -42,9 +42,9 @@ describe('Circle class:', () => {
                 coordinate: { x: 10, y: 5 },
                 radius: 3,
             });
-    
+
             Circle.resolvePenetration(ball1, ball2);
-    
+
             expect(ball1.position).toMatchObject({ x: 4.5, y: 5 });
             expect(ball2.position).toMatchObject({ x: 10.5, y: 5 });
         });
@@ -58,12 +58,12 @@ describe('Circle class:', () => {
                 coordinate: { x: 0, y: 0 },
                 radius: 2,
             });
-    
+
             ball.velocity = new Vector({ x: 1, y: 1 });
             for (let i = 0; i <= 10; i++) {
                 ball.repositionate();
             }
-    
+
             expect(ball.position.x).toBeGreaterThan(5);
             expect(ball.position.y).toBeGreaterThan(5);
         });

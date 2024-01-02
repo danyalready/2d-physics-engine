@@ -10,14 +10,14 @@ describe('PhysicalObject class:', () => {
                 friction: 0,
                 mass: 1,
             });
-    
+
             physicalObject.repositionate();
-    
+
             expect(physicalObject.position).toMatchObject({ x: 0, y: 0 });
-    
+
             physicalObject.velocity = physicalObject.velocity.add(new Vector({ x: 1, y: 1 }));
             physicalObject.repositionate();
-    
+
             expect(physicalObject.position).toMatchObject({ x: 1, y: 1 });
         });
     });
