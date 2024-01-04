@@ -42,4 +42,14 @@ function roundNumber(number: number, precision: number) {
     return Math.round(number * factor) / factor;
 }
 
-export { drawCircle, drawLine, roundNumber };
+function getDot(numbersA: number[], numbersB: number[]): number {
+    if (numbersA.length !== numbersB.length) {
+        throw new Error('The length of numbers does not match.');
+    }
+
+    const multipliedNumbers = numbersA.map((value, index) => value * numbersB[index]);
+
+    return multipliedNumbers.reduce((prev, curr) => prev + curr, 0);
+}
+
+export { drawCircle, drawLine, roundNumber, getDot };
