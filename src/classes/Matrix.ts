@@ -85,6 +85,22 @@ class Matrix {
         return result;
     }
 
+    static subtr(matrixA: Matrix, matrixB: Matrix) {
+        if (matrixA.cols !== matrixB.cols || matrixA.rows !== matrixB.rows) {
+            throw new Error('The order of the matrices are not equal.');
+        }
+
+        const result = new Matrix(matrixA.rows, matrixA.cols);
+
+        for (let iRow = 0; iRow < matrixA.data.length; iRow++) {
+            for (let iCol = 0; iCol < matrixA.data[iRow].length; iCol++) {
+                result.data[iRow][iCol] = matrixA.data[iRow][iCol] - matrixB.data[iRow][iCol];
+            }
+        }
+
+        return result;
+    }
+
     public get data(): Array<number[]> {
         return this._data;
     }
