@@ -101,6 +101,14 @@ class Matrix {
         return result;
     }
 
+    public multBy(n: number) {
+        for (let iRow = 0; iRow < this.data.length; iRow++) {
+            for (let iCol = 0; iCol < this.data[iRow].length; iCol++) {
+                this.data[iRow][iCol] = this.data[iRow][iCol] * n;
+            }
+        }
+    }
+
     public get data(): Array<number[]> {
         return this._data;
     }
