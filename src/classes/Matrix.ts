@@ -35,78 +35,82 @@ class Matrix {
     static getRotationMatrix(radians: number): Matrix {
         const result = new Matrix(2, 2);
 
-        result._data[0][0] = Math.cos(radians);
-        result._data[0][1] = -Math.sin(radians);
-        result._data[1][0] = Math.sin(radians);
-        result._data[1][1] = Math.cos(radians);
+        result.data[0][0] = Math.cos(radians);
+        result.data[0][1] = -Math.sin(radians);
+        result.data[1][0] = Math.sin(radians);
+        result.data[1][1] = Math.cos(radians);
 
         return result;
     }
 
-    static mult(matrixA: Matrix, matrixB: Matrix): Matrix {
-        if (matrixA.cols !== matrixB.rows) {
+    public subtr(matrix: Matrix): Matrix {
+        if (this.cols !== matrix.cols || this.rows !== matrix.rows) {
+            throw new Error('The order of the matrices are not equal.');
+        }
+
+        const result = new Matrix(this.rows, this.rows);
+
+        for (let iRow = 0; iRow < this.data.length; iRow++) {
+            for (let iCol = 0; iCol < this.data[iRow].length; iCol++) {
+                result.data[iRow][iCol] = this.data[iRow][iCol] - matrix.data[iRow][iCol];
+            }
+        }
+
+        return result;
+    }
+
+    public add(matrix: Matrix): Matrix {
+        if (this.cols !== matrix.cols || this.rows !== matrix.rows) {
+            throw new Error('The order of the matrices are not equal.');
+        }
+
+        const result = new Matrix(this.rows, this.cols);
+
+        for (let iRow = 0; iRow < this.data.length; iRow++) {
+            for (let iCol = 0; iCol < this.data[iRow].length; iCol++) {
+                result.data[iRow][iCol] = this.data[iRow][iCol] + matrix.data[iRow][iCol];
+            }
+        }
+
+        return result;
+    }
+
+    public multBy(n: number): Matrix {
+        const result = new Matrix(this.rows, this.cols);
+
+        for (let iRow = 0; iRow < this.data.length; iRow++) {
+            for (let iCol = 0; iCol < this.data[iRow].length; iCol++) {
+                result.data[iRow][iCol] = this.data[iRow][iCol] * n;
+            }
+        }
+
+        return result;
+    }
+
+    public mult(matrix: Matrix): Matrix {
+        if (this.cols !== matrix.rows) {
             throw new Error(
                 'The number of columns in the first matrix must be equal to the number of rows in the second matrix.',
             );
         }
 
-        const result = new Matrix(matrixA.rows, matrixB.cols);
+        const result = new Matrix(this.rows, matrix.cols);
 
-        for (let iMatrixARow = 0; iMatrixARow < matrixA.rows; iMatrixARow++) {
-            const currMatrixARowNumbers = matrixA._data[iMatrixARow];
+        for (let iRow = 0; iRow < this.rows; iRow++) {
+            const currSelfRowNumbers = this.data[iRow];
 
-            for (let iMatrixBCol = 0; iMatrixBCol < matrixB.cols; iMatrixBCol++) {
-                const currMatrixBColNumbers: number[] = [];
+            for (let iMatrixCol = 0; iMatrixCol < matrix.cols; iMatrixCol++) {
+                const currMatrixColNumbers: number[] = [];
 
-                for (let iMatrixBRow = 0; iMatrixBRow < matrixB.rows; iMatrixBRow++) {
-                    currMatrixBColNumbers.push(matrixB._data[iMatrixBRow][iMatrixBCol]);
+                for (let iMatrixRow = 0; iMatrixRow < matrix.rows; iMatrixRow++) {
+                    currMatrixColNumbers.push(matrix.data[iMatrixRow][iMatrixCol]);
                 }
 
-                result._data[iMatrixARow][iMatrixBCol] = getDot(currMatrixARowNumbers, currMatrixBColNumbers);
+                result.data[iRow][iMatrixCol] = getDot(currSelfRowNumbers, currMatrixColNumbers);
             }
         }
 
         return result;
-    }
-
-    static add(matrixA: Matrix, matrixB: Matrix): Matrix {
-        if (matrixA.cols !== matrixB.cols || matrixA.rows !== matrixB.rows) {
-            throw new Error('The order of the matrices are not equal.');
-        }
-
-        const result = new Matrix(matrixA.rows, matrixA.cols);
-
-        for (let iRow = 0; iRow < matrixA.data.length; iRow++) {
-            for (let iCol = 0; iCol < matrixA.data[iRow].length; iCol++) {
-                result.data[iRow][iCol] = matrixA.data[iRow][iCol] + matrixB.data[iRow][iCol];
-            }
-        }
-
-        return result;
-    }
-
-    static subtr(matrixA: Matrix, matrixB: Matrix) {
-        if (matrixA.cols !== matrixB.cols || matrixA.rows !== matrixB.rows) {
-            throw new Error('The order of the matrices are not equal.');
-        }
-
-        const result = new Matrix(matrixA.rows, matrixA.cols);
-
-        for (let iRow = 0; iRow < matrixA.data.length; iRow++) {
-            for (let iCol = 0; iCol < matrixA.data[iRow].length; iCol++) {
-                result.data[iRow][iCol] = matrixA.data[iRow][iCol] - matrixB.data[iRow][iCol];
-            }
-        }
-
-        return result;
-    }
-
-    public multBy(n: number) {
-        for (let iRow = 0; iRow < this.data.length; iRow++) {
-            for (let iCol = 0; iCol < this.data[iRow].length; iCol++) {
-                this.data[iRow][iCol] = this.data[iRow][iCol] * n;
-            }
-        }
     }
 
     public get data(): Array<number[]> {
