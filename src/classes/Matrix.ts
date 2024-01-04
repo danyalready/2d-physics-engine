@@ -43,7 +43,7 @@ class Matrix {
         return result;
     }
 
-    static multiply(matrixA: Matrix, matrixB: Matrix): Matrix {
+    static mult(matrixA: Matrix, matrixB: Matrix): Matrix {
         if (matrixA.cols !== matrixB.rows) {
             throw new Error(
                 'The number of columns in the first matrix must be equal to the number of rows in the second matrix.',
@@ -63,6 +63,22 @@ class Matrix {
                 }
 
                 result._data[iMatrixARow][iMatrixBCol] = getDot(currMatrixARowNumbers, currMatrixBColNumbers);
+            }
+        }
+
+        return result;
+    }
+
+    static add(matrixA: Matrix, matrixB: Matrix): Matrix {
+        if (matrixA.cols !== matrixB.cols || matrixA.rows !== matrixB.rows) {
+            throw new Error('The order of the matrices are not equal.');
+        }
+
+        const result = new Matrix(matrixA.rows, matrixA.cols);
+
+        for (let iRow = 0; iRow < matrixA.data.length; iRow++) {
+            for (let iCol = 0; iCol < matrixA.data[iRow].length; iCol++) {
+                result.data[iRow][iCol] = matrixA.data[iRow][iCol] + matrixB.data[iRow][iCol];
             }
         }
 
