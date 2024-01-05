@@ -3,6 +3,9 @@ import PhysicalObject from './PhysicalObject';
 class InputControl {
     physicalObject: PhysicalObject;
     keys: {
+        cw: boolean; // clockwise
+        acw: boolean; // anticlockwise
+
         arrowUp: boolean;
         arrowRight: boolean;
         arrowDown: boolean;
@@ -12,6 +15,9 @@ class InputControl {
     constructor(physicalObject: PhysicalObject) {
         this.physicalObject = physicalObject;
         this.keys = {
+            cw: false,
+            acw: false,
+
             arrowUp: false,
             arrowRight: false,
             arrowDown: false,
@@ -23,6 +29,14 @@ class InputControl {
 
     private setEventListeners() {
         window.addEventListener('keydown', (event) => {
+            if (event.code === 'KeyE') {
+                this.keys.cw = true;
+            }
+
+            if (event.code === 'KeyQ') {
+                this.keys.acw = true;
+            }
+
             if (event.code === 'ArrowUp') {
                 this.keys.arrowUp = true;
             }
@@ -41,6 +55,14 @@ class InputControl {
         });
 
         window.addEventListener('keyup', (event) => {
+            if (event.code === 'KeyE') {
+                this.keys.cw = false;
+            }
+
+            if (event.code === 'KeyQ') {
+                this.keys.acw = false;
+            }
+
             if (event.code === 'ArrowUp') {
                 this.keys.arrowUp = false;
             }
@@ -65,28 +87,40 @@ class InputControl {
                 throw new Error('No object is detected with "isPlayer" property set to "true".');
             }
 
+            if (this.keys.cw) {
+                this.physicalObject.angAcceleration = -this.physicalObject.angAccelerationUnit;
+            }
+
+            if (this.keys.acw) {
+                this.physicalObject.angAcceleration = this.physicalObject.angAccelerationUnit;
+            }
+
             if (this.keys.arrowUp) {
-                this.physicalObject.acceleration.y = -this.physicalObject.accelerationUnit;
+                this.physicalObject.linAcceleration.y = -this.physicalObject.linAccelerationUnit;
             }
 
             if (this.keys.arrowRight) {
-                this.physicalObject.acceleration.x = this.physicalObject.accelerationUnit;
+                this.physicalObject.linAcceleration.x = this.physicalObject.linAccelerationUnit;
             }
 
             if (this.keys.arrowDown) {
-                this.physicalObject.acceleration.y = this.physicalObject.accelerationUnit;
+                this.physicalObject.linAcceleration.y = this.physicalObject.linAccelerationUnit;
             }
 
             if (this.keys.arrowLeft) {
-                this.physicalObject.acceleration.x = -this.physicalObject.accelerationUnit;
+                this.physicalObject.linAcceleration.x = -this.physicalObject.linAccelerationUnit;
+            }
+
+            if (!this.keys.cw && !this.keys.acw) {
+                this.physicalObject.angAcceleration = 0;
             }
 
             if (!this.keys.arrowUp && !this.keys.arrowDown) {
-                this.physicalObject.acceleration.y = 0;
+                this.physicalObject.linAcceleration.y = 0;
             }
 
             if (!this.keys.arrowRight && !this.keys.arrowLeft) {
-                this.physicalObject.acceleration.x = 0;
+                this.physicalObject.linAcceleration.x = 0;
             }
         } catch (error) {
             console.error(error);

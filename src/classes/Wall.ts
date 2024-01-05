@@ -47,13 +47,13 @@ class Wall {
         const unitNormalAfter = unitNormal.mult(-1);
         const unitTangentAfter = unitTangent;
 
-        const velocityNormal = Vector.getDot(unitNormalAfter, physicalObject.velocity);
-        const velocityTangent = Vector.getDot(unitTangentAfter, physicalObject.velocity);
+        const velocityNormal = Vector.getDot(unitNormalAfter, physicalObject.linVelocity);
+        const velocityTangent = Vector.getDot(unitTangentAfter, physicalObject.linVelocity);
 
         const normalAfter = unitNormal.mult(velocityNormal);
         const tangentAfter = unitTangent.mult(velocityTangent);
 
-        physicalObject.velocity = normalAfter.add(tangentAfter);
+        physicalObject.linVelocity = normalAfter.add(tangentAfter);
     }
 
     static getClosestPoint(wall: Wall, physicalObject: PhysicalObject): Vector {

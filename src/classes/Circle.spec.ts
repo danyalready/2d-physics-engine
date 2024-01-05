@@ -58,7 +58,7 @@ describe('Circle class:', () => {
                 radius: 2,
             });
 
-            ball.velocity = new Vector({ x: 1, y: 1 });
+            ball.linVelocity = new Vector({ x: 1, y: 1 });
             for (let i = 0; i <= 10; i++) {
                 ball.repositionate();
             }

@@ -45,11 +45,11 @@ class Circle extends PhysicalObject {
         const unitNormal = ball1.position.subtr(ball2.position).unit;
         const unitTangent = unitNormal.normal.unit;
 
-        const v1Normal = Vector.getDot(unitNormal, ball1.velocity);
-        const v2Normal = Vector.getDot(unitNormal, ball2.velocity);
+        const v1Normal = Vector.getDot(unitNormal, ball1.linVelocity);
+        const v2Normal = Vector.getDot(unitNormal, ball2.linVelocity);
 
-        const v1Tangent = Vector.getDot(unitTangent, ball1.velocity);
-        const v2Tangent = Vector.getDot(unitTangent, ball2.velocity);
+        const v1Tangent = Vector.getDot(unitTangent, ball1.linVelocity);
+        const v2Tangent = Vector.getDot(unitTangent, ball2.linVelocity);
 
         const totalMntm = ball1.mass * v1Normal + ball2.mass * v2Normal;
         const totalMass = ball1.mass + ball2.mass;
@@ -63,17 +63,17 @@ class Circle extends PhysicalObject {
         const v1TangentVectorAfter = unitTangent.mult(v1Tangent);
         const v2TangentVectorAfter = unitTangent.mult(v2Tangent);
 
-        ball1.velocity = v1NormalVectorAfter.add(v1TangentVectorAfter);
-        ball2.velocity = v2NormalVectorAfter.add(v2TangentVectorAfter);
+        ball1.linVelocity = v1NormalVectorAfter.add(v1TangentVectorAfter);
+        ball2.linVelocity = v2NormalVectorAfter.add(v2TangentVectorAfter);
     }
 
     public displayVectors(ctx: CanvasRenderingContext2D) {
-        this.acceleration.unit.draw(ctx, {
+        this.linAcceleration.unit.draw(ctx, {
             coordinate: this.position,
             n: this.radius,
             color: 'green',
         });
-        this.velocity.draw(ctx, {
+        this.linVelocity.draw(ctx, {
             coordinate: this.position,
             n: this.radius / 3,
             color: 'red',
@@ -90,19 +90,19 @@ class Circle extends PhysicalObject {
             radius: this.radius,
         });
 
-        this.velocity.draw(ctx, {
+        this.linVelocity.draw(ctx, {
             coordinate: { x: INDICATOR_OFFSET_X, y: INDICATOR_OFFSET_Y },
             n: this.radius / 3,
             color: 'red',
         });
 
-        this.acceleration.unit.draw(ctx, {
+        this.linAcceleration.unit.draw(ctx, {
             coordinate: { x: INDICATOR_OFFSET_X, y: INDICATOR_OFFSET_Y },
             n: this.radius,
             color: 'green',
         });
 
-        this.acceleration.normal.draw(ctx, {
+        this.linAcceleration.normal.draw(ctx, {
             coordinate: { x: INDICATOR_OFFSET_X, y: INDICATOR_OFFSET_Y },
             n: this.radius,
             color: 'yellow',
