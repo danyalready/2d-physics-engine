@@ -33,7 +33,7 @@ class Capsule extends PhysicalObject {
         return this.refPositionStart.add(this.refPositionEnd).mult(0.5);
     }
 
-    public get refUnit(): Vector {
+    public get unit(): Vector {
         return this.refPositionEnd.subtr(this.refPositionStart).unit;
     }
 
@@ -44,14 +44,27 @@ class Capsule extends PhysicalObject {
     public draw(ctx: CanvasRenderingContext2D) {
         // POSITION START ARC
         ctx.beginPath();
-        ctx.arc(this.positionStart.x, this.positionStart.y, this.radius, this.angle, this.angle + Math.PI);
+        ctx.arc(
+            this.positionStart.x,
+            this.positionStart.y,
+            this.radius,
+            this.angle + Math.PI / 2,
+            this.angle + Math.PI * 1.5,
+        );
         ctx.strokeStyle = 'black';
         ctx.stroke();
         ctx.closePath();
 
         // POSITION END ARC
         ctx.beginPath();
-        ctx.arc(this.positionEnd.x, this.positionEnd.y, this.radius, this.angle, this.angle + Math.PI, true);
+        ctx.arc(
+            this.positionEnd.x,
+            this.positionEnd.y,
+            this.radius,
+            this.angle + Math.PI / 2,
+            this.angle + Math.PI * 1.5,
+            true,
+        );
         ctx.strokeStyle = 'red';
         ctx.stroke();
         ctx.closePath();

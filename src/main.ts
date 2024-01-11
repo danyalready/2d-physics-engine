@@ -1,13 +1,38 @@
-import { Circle, InputControl, Wall } from './classes';
+import { Circle, InputControl, Vector, Wall } from './classes';
 import { roundNumber } from './utils';
 import { STATIC_OBJECTS, DYNAMIC_OBJECTS } from './constants';
+
+import Matrix from './classes/Matrix';
+import Capsule from './classes/Capsule';
 
 window.addEventListener('load', () => {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const canvasCtx = canvas.getContext('2d') as CanvasRenderingContext2D;
     const inputControl = new InputControl(DYNAMIC_OBJECTS.find((obj) => obj.isPlayer)!);
+    const capsule = new Capsule({ coordinate: { x: 200, y: 200 }, length: 200, radius: 50, angle: 0 });
 
     function draw() {
+        // <<< TEST STARTS >>>
+
+        const capsuleRotationMatrix = Matrix.getRotationMatrix(capsule.angle);
+        const capsuleUnitMatrix = new Matrix(2, 1);
+
+        capsuleUnitMatrix.data = [[capsule.unit.x], [capsule.unit.y]];
+
+        const capsuleRotatedUnitMatrix = capsuleRotationMatrix.mult(capsuleUnitMatrix);
+        const capsuleRotatedUnit = new Vector({
+            x: capsuleRotatedUnitMatrix.data[0][0],
+            y: capsuleRotatedUnitMatrix.data[1][0],
+        });
+
+        capsule.positionStart = capsule.positionCenter.add(capsuleRotatedUnit.mult(-capsule.length / 2));
+        capsule.positionEnd = capsule.positionCenter.add(capsuleRotatedUnit.mult(capsule.length / 2));
+
+        // capsule.angle += 0.05;
+        capsule.draw(canvasCtx);
+
+        // <<< TEST ENDS >>>
+
         STATIC_OBJECTS.forEach((obj) => {
             for (let i = 0; i < DYNAMIC_OBJECTS.length; i++) {
                 if (Wall.isCollision(obj, DYNAMIC_OBJECTS[i])) {
