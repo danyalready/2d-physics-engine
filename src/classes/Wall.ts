@@ -22,23 +22,23 @@ class Wall {
         this.end = new Vector(params.coordinates.end);
     }
 
-    static isCollision(wall: Wall, circle: Circle): boolean {
-        const closestPoint = this.getClosestPoint(wall, circle);
+    public isCollision(circle: Circle): boolean {
+        const closestPoint = this.getClosestPoint(circle.position);
         const distanceMagnitude = closestPoint.subtr(circle.position).magnitude;
 
         return distanceMagnitude - circle.radius <= 0;
     }
 
-    static resolvePenetration(wall: Wall, circle: Circle) {
-        const closestWallPoint = this.getClosestPoint(wall, circle);
+    public resolvePenetration(circle: Circle) {
+        const closestWallPoint = this.getClosestPoint(circle.position);
         const distance = circle.position.subtr(closestWallPoint);
         const penetrationDepth = circle.radius - distance.magnitude;
 
         circle.position = circle.position.add(distance.unit.mult(penetrationDepth));
     }
 
-    static resolveCollision(wall: Wall, physicalObject: PhysicalObject) {
-        const closestWallPoint = this.getClosestPoint(wall, physicalObject);
+    public resolveCollision(physicalObject: PhysicalObject) {
+        const closestWallPoint = this.getClosestPoint(physicalObject.position);
         const distance = physicalObject.position.subtr(closestWallPoint);
 
         const unitNormal = distance.unit;
@@ -56,26 +56,30 @@ class Wall {
         physicalObject.linVelocity = normalAfter.add(tangentAfter);
     }
 
-    static getClosestPoint(wall: Wall, physicalObject: PhysicalObject): Vector {
-        const physicalObjectToWallStart = wall.start.subtr(physicalObject.position);
-        const wallEndToPhysicalObject = physicalObject.position.subtr(wall.end);
+    public getClosestPoint(vector: Vector): Vector {
+        const vectorToWallStart = this.start.subtr(vector);
+        const wallEndToVector = vector.subtr(this.end);
 
-        if (Vector.getDot(wall.vector.unit, physicalObjectToWallStart) > 0) {
-            return wall.start;
+        if (Vector.getDot(this.unit, vectorToWallStart) > 0) {
+            return this.start;
         }
 
-        if (Vector.getDot(wall.vector.unit, wallEndToPhysicalObject) > 0) {
-            return wall.end;
+        if (Vector.getDot(this.unit, wallEndToVector) > 0) {
+            return this.end;
         }
 
-        const scalar = Vector.getDot(wall.vector.unit, physicalObjectToWallStart);
-        const closestVector = wall.vector.unit.mult(scalar);
+        const scalar = Vector.getDot(this.unit, vectorToWallStart);
+        const closestVector = this.unit.mult(scalar);
 
-        return wall.start.subtr(closestVector);
+        return this.start.subtr(closestVector);
     }
 
-    public get vector(): Vector {
-        return this.end.subtr(this.start);
+    public get position(): Vector {
+        return this.end.add(this.start).mult(0.5);
+    }
+
+    public get unit(): Vector {
+        return this.end.subtr(this.start).unit;
     }
 
     public draw(ctx: CanvasRenderingContext2D) {

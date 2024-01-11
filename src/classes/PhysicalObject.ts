@@ -50,11 +50,15 @@ class PhysicalObject {
         this.linVelocity = this.linVelocity.add(this.linAcceleration);
         this.linVelocity = this.linVelocity.mult(1 - this.friction);
 
-        this.angAcceleration = this.angAcceleration * this.angAccelerationUnit;
-        this.angVelocity = this.angVelocity + this.angAcceleration;
-        this.angVelocity = this.angVelocity * (1 - this.friction);
+        this.angAcceleration *= this.angAccelerationUnit;
+        this.angVelocity += this.angAcceleration;
+        this.angVelocity *= 1 - this.friction;
 
         this.position = this.position.add(this.linVelocity);
+    }
+
+    public getClosestPointTo(_vector: Vector): Vector {
+        return this.position;
     }
 }
 

@@ -1,6 +1,16 @@
-import { Circle, Wall } from './classes';
+import { Circle, Wall, Capsule } from './classes';
 
-const DYNAMIC_OBJECTS: Circle[] = [
+export type PhysicalObject = Circle | Capsule;
+
+const PHYSICAL_OBJECTS: PhysicalObject[] = [
+    new Capsule({
+        mass: 5,
+        coordinate: { x: 600 / 2, y: 700 / 2 },
+        length: 100,
+        radius: 25,
+        angle: 0,
+        isPlayer: true,
+    }),
     new Circle({
         mass: 10,
         friction: 0.015,
@@ -8,8 +18,8 @@ const DYNAMIC_OBJECTS: Circle[] = [
         coordinate: { x: 100, y: 200 },
         radius: 25,
         linAccelerationUnit: 0.4,
-        color: 'green',
-        isPlayer: true,
+        color: 'brown',
+        isFill: true,
     }),
     new Circle({
         mass: 5,
@@ -48,7 +58,7 @@ const STATIC_OBJECTS = [
     new Wall({ coordinates: { start: { x: 0, y: 895 }, end: { x: 1200, y: 895 } } }),
     new Wall({ coordinates: { start: { x: 5, y: 0 }, end: { x: 5, y: 900 } } }),
     new Wall({ coordinates: { start: { x: 1195, y: 0 }, end: { x: 1195, y: 900 } } }),
-    new Wall({ coordinates: { start: { x: 434, y: 300 }, end: { x: 700, y: 800 } } }),
+    // new Wall({ coordinates: { start: { x: 434, y: 300 }, end: { x: 700, y: 800 } } }),
 ];
 
-export { DYNAMIC_OBJECTS, STATIC_OBJECTS };
+export { PHYSICAL_OBJECTS, STATIC_OBJECTS };

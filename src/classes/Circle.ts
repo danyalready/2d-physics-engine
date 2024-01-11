@@ -3,7 +3,7 @@ import Vector from './Vector';
 
 import { drawCircle } from '../utils';
 
-type CircleParams = PhysicalObjectParams & {
+export type CircleParams = PhysicalObjectParams & {
     radius: number;
     color?: CSSStyleDeclaration['color'];
     isFill?: boolean;

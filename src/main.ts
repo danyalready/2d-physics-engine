@@ -1,51 +1,48 @@
-import { Circle, InputControl, Vector, Wall } from './classes';
+import { Circle, InputControl } from './classes';
 import { drawLine, roundNumber } from './utils';
-import { STATIC_OBJECTS, DYNAMIC_OBJECTS } from './constants';
-
-import Matrix from './classes/Matrix';
-import Capsule from './classes/Capsule';
+import { STATIC_OBJECTS, PHYSICAL_OBJECTS } from './constants';
 
 window.addEventListener('load', () => {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const canvasCtx = canvas.getContext('2d') as CanvasRenderingContext2D;
-    // const inputControl = new InputControl(DYNAMIC_OBJECTS.find((obj) => obj.isPlayer)!);
-    const capsule = new Capsule({
-        coordinate: { x: canvas.offsetWidth / 2, y: canvas.offsetHeight / 2 },
-        length: 100,
-        radius: 15,
-        angle: 0,
-        isPlayer: true,
-    });
-    const inputControl = new InputControl(capsule);
+    const inputControl = new InputControl(PHYSICAL_OBJECTS.find((obj) => obj.isPlayer)!);
 
     function draw() {
-        STATIC_OBJECTS.forEach((obj) => {
-            for (let i = 0; i < DYNAMIC_OBJECTS.length; i++) {
-                if (Wall.isCollision(obj, DYNAMIC_OBJECTS[i])) {
-                    Wall.resolvePenetration(obj, DYNAMIC_OBJECTS[i]);
-                    Wall.resolveCollision(obj, DYNAMIC_OBJECTS[i]);
+        STATIC_OBJECTS.forEach((wall) => {
+            for (let i = 0; i < PHYSICAL_OBJECTS.length; i++) {
+                const wallClosestPoint = wall.getClosestPoint(PHYSICAL_OBJECTS[i].position);
+                const objectClosestPoint = PHYSICAL_OBJECTS[i].getClosestPointTo(wall.position);
 
-                    DYNAMIC_OBJECTS[i].repositionate();
+                if (wall.isCollision(PHYSICAL_OBJECTS[i])) {
+                    wall.resolvePenetration(PHYSICAL_OBJECTS[i]);
+                    wall.resolveCollision(PHYSICAL_OBJECTS[i]);
+
+                    PHYSICAL_OBJECTS[i].repositionate();
                 }
+
+                drawLine(canvasCtx, { from: wallClosestPoint, to: objectClosestPoint });
             }
 
-            obj.draw(canvasCtx);
+            wall.draw(canvasCtx);
         });
 
-        DYNAMIC_OBJECTS.forEach((obj, index) => {
+        PHYSICAL_OBJECTS.forEach((obj, aIndex) => {
             if (obj.isPlayer) {
                 obj.displayVectors(canvasCtx);
-                obj.displayFixedVectors(canvasCtx);
             }
 
-            for (let i = index + 1; i < DYNAMIC_OBJECTS.length; i++) {
-                const distance = DYNAMIC_OBJECTS[index].position.subtr(DYNAMIC_OBJECTS[i].position);
+            for (let bIndex = aIndex + 1; bIndex < PHYSICAL_OBJECTS.length; bIndex++) {
+                const aClosestPoint = PHYSICAL_OBJECTS[aIndex].getClosestPointTo(PHYSICAL_OBJECTS[bIndex].position);
+                const bClosestPoint = PHYSICAL_OBJECTS[bIndex].getClosestPointTo(aClosestPoint);
+                const distance = aClosestPoint.subtr(bClosestPoint);
                 const distanceRoundMagnitude = roundNumber(distance.magnitude, 3);
 
-                if (Circle.isCollision(DYNAMIC_OBJECTS[index], DYNAMIC_OBJECTS[i], distanceRoundMagnitude)) {
-                    Circle.resolvePenetration(DYNAMIC_OBJECTS[index], DYNAMIC_OBJECTS[i]);
-                    Circle.resolveCollision(DYNAMIC_OBJECTS[index], DYNAMIC_OBJECTS[i]);
+                if (Circle.isCollision(PHYSICAL_OBJECTS[aIndex], PHYSICAL_OBJECTS[bIndex], distanceRoundMagnitude)) {
+                    Circle.resolvePenetration(PHYSICAL_OBJECTS[aIndex], PHYSICAL_OBJECTS[bIndex]);
+                    Circle.resolveCollision(PHYSICAL_OBJECTS[aIndex], PHYSICAL_OBJECTS[bIndex]);
                 }
+
+                drawLine(canvasCtx, { from: aClosestPoint, to: bClosestPoint });
             }
 
             obj.repositionate();
@@ -58,30 +55,7 @@ window.addEventListener('load', () => {
     (function mainLoop() {
         canvasCtx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // draw();
-
-        // <<< TEST STARTS >>>
-
-        const capsuleRotationMatrix = Matrix.getRotationMatrix(capsule.angle);
-        const capsuleUnitMatrix = new Matrix(2, 1);
-
-        capsuleUnitMatrix.data = [[capsule.unit.x], [capsule.unit.y]];
-
-        const capsuleRotatedUnitMatrix = capsuleRotationMatrix.mult(capsuleUnitMatrix);
-        const capsuleRotatedUnit = new Vector({
-            x: capsuleRotatedUnitMatrix.data[0][0],
-            y: capsuleRotatedUnitMatrix.data[1][0],
-        });
-
-        capsule.positionStart = capsule.center.add(capsuleRotatedUnit.mult(-capsule.length / 2));
-        capsule.positionEnd = capsule.center.add(capsuleRotatedUnit.mult(capsule.length / 2));
-
-        capsule.draw(canvasCtx);
-        drawLine(canvasCtx, { from: { x: 0, y: 0 }, to: capsule.position, color: 'green' });
-        capsule.repositionate();
-        inputControl.updatePhysicalObjectAcceleration();
-
-        // <<< TEST ENDS >>>
+        draw();
 
         requestAnimationFrame(mainLoop);
     })();
