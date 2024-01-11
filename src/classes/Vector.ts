@@ -13,12 +13,16 @@ class Vector {
         this.y = params.y;
     }
 
-    static getDot(vector1: Vector, vector2: Vector): number {
-        return vector1.x * vector2.x + vector1.y * vector2.y;
+    static getDot(vectorA: Vector, vectorB: Vector): number {
+        return vectorA.x * vectorB.x + vectorA.y * vectorB.y;
     }
 
-    static getRadians(vector1: Vector, vector2: Vector): number {
-        const cosine = this.getDot(vector1, vector2) / (vector1.magnitude * vector2.magnitude);
+    static getCross(vectorA: Vector, vectorB: Vector): number {
+        return vectorA.x * vectorB.y - vectorA.y * vectorB.x;
+    }
+
+    static getRadians(vectorA: Vector, vectorB: Vector): number {
+        const cosine = this.getDot(vectorA, vectorB) / (vectorA.magnitude * vectorB.magnitude);
 
         return Math.acos(cosine);
     }
