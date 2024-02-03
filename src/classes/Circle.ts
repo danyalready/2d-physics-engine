@@ -22,13 +22,13 @@ class Circle extends PhysicalObject {
         this.isFill = Boolean(params.isFill);
     }
 
-    static isCollision(ball1: Circle, ball2: Circle, distance: number): boolean {
-        return ball1.radius + ball2.radius >= distance;
+    static isCollision(circleA: Circle, circleB: Circle, distance: number): boolean {
+        return circleA.radius + circleB.radius >= distance;
     }
 
-    static resolvePenetration(ball1: Circle, ball2: Circle) {
-        const distance = ball1.position.subtr(ball2.position);
-        const penetrationDepth = ball1.radius + ball2.radius - distance.magnitude;
+    static resolvePenetration(circleA: Circle, circleB: Circle) {
+        const distance = circleA.position.subtr(circleB.position);
+        const penetrationDepth = circleA.radius + circleB.radius - distance.magnitude;
 
         if (penetrationDepth <= 0) {
             return;
@@ -36,26 +36,26 @@ class Circle extends PhysicalObject {
 
         const repulse = distance.unit.mult(penetrationDepth / 2);
 
-        ball1.position = ball1.position.add(repulse);
-        ball2.position = ball2.position.add(repulse.mult(-1));
+        circleA.position = circleA.position.add(repulse);
+        circleB.position = circleB.position.add(repulse.mult(-1));
     }
 
-    static resolveCollision(ball1: Circle, ball2: Circle) {
-        const elasticity = (ball1.elasticity + ball2.elasticity) / 2;
-        const unitNormal = ball1.position.subtr(ball2.position).unit;
+    static resolveCollision(circleA: Circle, circleB: Circle) {
+        const elasticity = (circleA.elasticity + circleB.elasticity) / 2;
+        const unitNormal = circleA.position.subtr(circleB.position).unit;
         const unitTangent = unitNormal.normal.unit;
 
-        const v1Normal = Vector.getDot(unitNormal, ball1.linVelocity);
-        const v2Normal = Vector.getDot(unitNormal, ball2.linVelocity);
+        const v1Normal = Vector.getDot(unitNormal, circleA.linVelocity);
+        const v2Normal = Vector.getDot(unitNormal, circleB.linVelocity);
 
-        const v1Tangent = Vector.getDot(unitTangent, ball1.linVelocity);
-        const v2Tangent = Vector.getDot(unitTangent, ball2.linVelocity);
+        const v1Tangent = Vector.getDot(unitTangent, circleA.linVelocity);
+        const v2Tangent = Vector.getDot(unitTangent, circleB.linVelocity);
 
-        const totalMntm = ball1.mass * v1Normal + ball2.mass * v2Normal;
-        const totalMass = ball1.mass + ball2.mass;
+        const totalMntm = circleA.mass * v1Normal + circleB.mass * v2Normal;
+        const totalMass = circleA.mass + circleB.mass;
 
-        const v1NormalAfter = (elasticity * ball2.mass * (v2Normal - v1Normal) + totalMntm) / totalMass;
-        const v2NormalAfter = (elasticity * ball1.mass * (v1Normal - v2Normal) + totalMntm) / totalMass;
+        const v1NormalAfter = (elasticity * circleB.mass * (v2Normal - v1Normal) + totalMntm) / totalMass;
+        const v2NormalAfter = (elasticity * circleA.mass * (v1Normal - v2Normal) + totalMntm) / totalMass;
 
         const v1NormalVectorAfter = unitNormal.mult(v1NormalAfter);
         const v2NormalVectorAfter = unitNormal.mult(v2NormalAfter);
@@ -63,8 +63,8 @@ class Circle extends PhysicalObject {
         const v1TangentVectorAfter = unitTangent.mult(v1Tangent);
         const v2TangentVectorAfter = unitTangent.mult(v2Tangent);
 
-        ball1.linVelocity = v1NormalVectorAfter.add(v1TangentVectorAfter);
-        ball2.linVelocity = v2NormalVectorAfter.add(v2TangentVectorAfter);
+        circleA.linVelocity = v1NormalVectorAfter.add(v1TangentVectorAfter);
+        circleB.linVelocity = v2NormalVectorAfter.add(v2TangentVectorAfter);
     }
 
     public displayVectors(ctx: CanvasRenderingContext2D) {
