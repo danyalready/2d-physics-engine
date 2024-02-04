@@ -29,15 +29,22 @@ class Circle extends PhysicalObject {
     static resolvePenetration(circleA: Circle, circleB: Circle) {
         const distance = circleA.position.subtr(circleB.position);
         const penetrationDepth = circleA.radius + circleB.radius - distance.magnitude;
+        const repulse = distance.unit.mult(penetrationDepth / 2);
+
+        const penetrationDetails = {
+            distance,
+            penetrationDepth,
+            repulse,
+        };
 
         if (penetrationDepth <= 0) {
-            return;
+            return penetrationDetails;
         }
-
-        const repulse = distance.unit.mult(penetrationDepth / 2);
 
         circleA.position = circleA.position.add(repulse);
         circleB.position = circleB.position.add(repulse.mult(-1));
+
+        return penetrationDetails;
     }
 
     static resolveCollision(circleA: Circle, circleB: Circle) {

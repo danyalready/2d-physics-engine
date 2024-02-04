@@ -10,14 +10,15 @@ window.addEventListener('load', () => {
     function draw() {
         STATIC_OBJECTS.forEach((wall) => {
             for (let i = 0; i < PHYSICAL_OBJECTS.length; i++) {
-                const wallClosestPoint = wall.getClosestPoint(PHYSICAL_OBJECTS[i].position);
-                const objectClosestPoint = PHYSICAL_OBJECTS[i].getClosestPointTo(wall.position);
+                const physicalObject = PHYSICAL_OBJECTS[i];
+                const wallClosestPoint = wall.getClosestPoint(physicalObject.position);
+                const objectClosestPoint = physicalObject.getClosestPointTo(wall.position);
 
-                if (wall.isCollision(PHYSICAL_OBJECTS[i])) {
-                    wall.resolvePenetration(PHYSICAL_OBJECTS[i]);
-                    wall.resolveCollision(PHYSICAL_OBJECTS[i]);
+                if (wall.isCollision(physicalObject)) {
+                    wall.resolvePenetration(physicalObject);
+                    wall.resolveCollision(physicalObject);
 
-                    PHYSICAL_OBJECTS[i].repositionate();
+                    physicalObject.repositionate();
                 }
 
                 drawLine(canvasCtx, { from: wallClosestPoint, to: objectClosestPoint });
@@ -32,17 +33,34 @@ window.addEventListener('load', () => {
             }
 
             for (let bIndex = aIndex + 1; bIndex < PHYSICAL_OBJECTS.length; bIndex++) {
-                const aClosestPoint = PHYSICAL_OBJECTS[aIndex].getClosestPointTo(PHYSICAL_OBJECTS[bIndex].position);
-                const bClosestPoint = PHYSICAL_OBJECTS[bIndex].getClosestPointTo(aClosestPoint);
-                const distance = aClosestPoint.subtr(bClosestPoint);
-                const distanceRoundMagnitude = roundNumber(distance.magnitude, 3);
+                const physicalObjectA = PHYSICAL_OBJECTS[aIndex];
+                const physicalObjectB = PHYSICAL_OBJECTS[bIndex];
 
-                if (Circle.isCollision(PHYSICAL_OBJECTS[aIndex], PHYSICAL_OBJECTS[bIndex], distanceRoundMagnitude)) {
-                    Circle.resolvePenetration(PHYSICAL_OBJECTS[aIndex], PHYSICAL_OBJECTS[bIndex]);
-                    Circle.resolveCollision(PHYSICAL_OBJECTS[aIndex], PHYSICAL_OBJECTS[bIndex]);
+                const aClosestPointToB = physicalObjectA.getClosestPointTo(physicalObjectB.position);
+                const bClosestPointToA = physicalObjectB.getClosestPointTo(aClosestPointToB);
+
+                const distance = aClosestPointToB.subtr(bClosestPointToA);
+
+                if (Circle.isCollision(physicalObjectA, physicalObjectB, roundNumber(distance.magnitude, 3))) {
+                    const physicalObjectAWithClosestToB = Object.assign({}, physicalObjectA, {
+                        position: aClosestPointToB,
+                    });
+                    const physicalObjectBWithClosestToA = Object.assign({}, physicalObjectB, {
+                        position: bClosestPointToA,
+                    });
+
+                    const penetrationDetails = Circle.resolvePenetration(
+                        physicalObjectAWithClosestToB,
+                        physicalObjectBWithClosestToA,
+                    );
+
+                    physicalObjectA.position = physicalObjectA.position.add(penetrationDetails.repulse);
+                    physicalObjectB.position = physicalObjectB.position.add(penetrationDetails.repulse.mult(-1));
+
+                    Circle.resolveCollision(physicalObjectA, physicalObjectB);
                 }
 
-                drawLine(canvasCtx, { from: aClosestPoint, to: bClosestPoint });
+                drawLine(canvasCtx, { from: aClosestPointToB, to: bClosestPointToA });
             }
 
             obj.repositionate();

@@ -4,7 +4,8 @@ export type PhysicalObject = Circle | Capsule;
 
 const PHYSICAL_OBJECTS: PhysicalObject[] = [
     new Capsule({
-        mass: 5,
+        mass: 1,
+        friction: 0.01,
         coordinate: { x: 600 / 2, y: 700 / 2 },
         length: 100,
         radius: 25,
@@ -23,7 +24,7 @@ const PHYSICAL_OBJECTS: PhysicalObject[] = [
     }),
     new Circle({
         mass: 5,
-        friction: 0.0015,
+        friction: 0.015,
         elasticity: 0,
         coordinate: { x: 700, y: 200 },
         radius: 25,
@@ -33,7 +34,7 @@ const PHYSICAL_OBJECTS: PhysicalObject[] = [
     }),
     new Circle({
         mass: 1,
-        friction: 0.0015,
+        friction: 0.015,
         elasticity: 0,
         coordinate: { x: 200, y: 500 },
         radius: 25,
@@ -43,7 +44,7 @@ const PHYSICAL_OBJECTS: PhysicalObject[] = [
     }),
     new Circle({
         mass: 1,
-        friction: 0,
+        friction: 0.01,
         elasticity: 1,
         coordinate: { x: 700, y: 700 },
         radius: 35,
