@@ -1,4 +1,4 @@
-import { Coordinate } from './classes/Vector';
+import { Coordinate } from './classes/Vector/Vector';
 
 function drawCircle(
     canvasContext: CanvasRenderingContext2D,

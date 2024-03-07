@@ -1,7 +1,7 @@
-export { default as Circle } from './Circle';
-export { default as PhysicalObject } from './PhysicalObject';
-export { default as InputControl } from './InputControl';
-export { default as Vector } from './Vector';
-export { default as Wall } from './Wall';
-export { default as Matrix } from './Matrix';
-export { default as Capsule } from './Capsule';
+export { default as Circle } from './Circle/Circle';
+export { default as PhysicalObject } from './PhysicalObject/PhysicalObject';
+export { default as InputControl } from './InputControl/InputControl';
+export { default as Vector } from './Vector/Vector';
+export { default as Wall } from './Wall/Wall';
+export { default as Matrix } from './Matrix/Matrix';
+export { default as Capsule } from './Capsule/Capsule';

@@ -1,5 +1,5 @@
 import InputControl from './InputControl';
-import Circle from './Circle';
+import Circle from '../Circle/Circle';
 
 describe('InputControl class:', () => {
     const circle = new Circle({

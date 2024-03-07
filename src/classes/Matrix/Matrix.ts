@@ -1,4 +1,4 @@
-import { getDot } from '../utils';
+import { getDot } from '../../utils';
 
 class Matrix {
     public readonly rows: number;

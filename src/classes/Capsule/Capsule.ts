@@ -1,6 +1,6 @@
-import Circle, { type CircleParams } from './Circle';
-import Vector from './Vector';
-import Matrix from './Matrix';
+import Circle, { type CircleParams } from '../Circle/Circle';
+import Vector from '../Vector/Vector';
+import Matrix from '../Matrix/Matrix';
 
 type CapsuleParams = CircleParams & {
     length: number;

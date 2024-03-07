@@ -1,4 +1,4 @@
-import Vector, { type Coordinate } from './Vector';
+import Vector, { type Coordinate } from '../Vector/Vector';
 
 export type PhysicalObjectParams = {
     coordinate: Coordinate;

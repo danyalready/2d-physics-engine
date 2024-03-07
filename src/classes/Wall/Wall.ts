@@ -1,7 +1,7 @@
-import Circle from './Circle';
-import PhysicalObject from './PhysicalObject';
-import Vector, { type Coordinate } from './Vector';
-import { drawLine } from '../utils';
+import Circle from '../Circle/Circle';
+import PhysicalObject from '../PhysicalObject/PhysicalObject';
+import Vector, { type Coordinate } from '../Vector/Vector';
+import { drawLine } from '../../utils';
 
 type WallParams = {
     coordinates: {

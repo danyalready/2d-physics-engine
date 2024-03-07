@@ -1,7 +1,7 @@
-import PhysicalObject, { type PhysicalObjectParams } from './PhysicalObject';
-import Vector from './Vector';
+import PhysicalObject, { type PhysicalObjectParams } from '../PhysicalObject/PhysicalObject';
+import Vector from '../Vector/Vector';
 
-import { drawCircle } from '../utils';
+import { drawCircle } from '../../utils';
 
 export type CircleParams = PhysicalObjectParams & {
     radius: number;

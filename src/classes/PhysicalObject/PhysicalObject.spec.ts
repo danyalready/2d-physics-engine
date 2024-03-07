@@ -1,5 +1,5 @@
 import PhysicalObject from './PhysicalObject';
-import Vector from './Vector';
+import Vector from '../Vector/Vector';
 
 describe('PhysicalObject class:', () => {
     describe('values:', () => {

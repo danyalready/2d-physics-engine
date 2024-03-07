@@ -1,4 +1,4 @@
-import PhysicalObject from './PhysicalObject';
+import PhysicalObject from '../PhysicalObject/PhysicalObject';
 
 class InputControl {
     physicalObject: PhysicalObject;

@@ -1,5 +1,5 @@
 import Circle from './Circle';
-import Vector from './Vector';
+import Vector from '../Vector/Vector';
 
 describe('Circle class:', () => {
     describe('methods:', () => {

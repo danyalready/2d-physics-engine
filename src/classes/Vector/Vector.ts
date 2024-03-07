@@ -1,4 +1,4 @@
-import { drawLine } from '../utils';
+import { drawLine } from '../../utils';
 
 export type Coordinate = { x: number; y: number };
 
