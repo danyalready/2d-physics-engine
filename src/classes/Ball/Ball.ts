@@ -1,20 +1,20 @@
-import Body, { type BodyParams } from '../Body/Body';
-import Vector from '../Vector/Vector';
+import Body, { type BodyParams } from '../../classes/Body/Body';
+import Vector from '../../classes/Vector/Vector';
 
 import { drawCircle } from '../../utils';
 
-export type CircleParams = BodyParams & {
+export type BallParams = BodyParams & {
     radius: number;
     color?: CSSStyleDeclaration['color'];
     isFill?: boolean;
 };
 
-class Circle extends Body {
+class Ball extends Body {
     public radius: number;
     public color: CSSStyleDeclaration['color'];
     public isFill: boolean;
 
-    constructor(params: CircleParams) {
+    constructor(params: BallParams) {
         super(params);
 
         this.radius = params.radius;
@@ -22,32 +22,7 @@ class Circle extends Body {
         this.isFill = Boolean(params.isFill);
     }
 
-    static isCollision(circleA: Circle, circleB: Circle, distance: number): boolean {
-        return circleA.radius + circleB.radius >= distance;
-    }
-
-    static resolvePenetration(circleA: Circle, circleB: Circle) {
-        const distance = circleA.position.subtr(circleB.position);
-        const penetrationDepth = circleA.radius + circleB.radius - distance.magnitude;
-        const repulse = distance.unit.mult(penetrationDepth / 2);
-
-        const penetrationDetails = {
-            distance,
-            penetrationDepth,
-            repulse,
-        };
-
-        if (penetrationDepth <= 0) {
-            return penetrationDetails;
-        }
-
-        circleA.position = circleA.position.add(repulse);
-        circleB.position = circleB.position.add(repulse.mult(-1));
-
-        return penetrationDetails;
-    }
-
-    static resolveCollision(circleA: Circle, circleB: Circle) {
+    static resolveCollision(circleA: Ball, circleB: Ball) {
         const elasticity = (circleA.elasticity + circleB.elasticity) / 2;
         const unitNormal = circleA.position.subtr(circleB.position).unit;
         const unitTangent = unitNormal.normal.unit;
@@ -126,4 +101,4 @@ class Circle extends Body {
     }
 }
 
-export default Circle;
+export default Ball;

@@ -1,7 +1,7 @@
-import PhysicalObject from '../PhysicalObject/PhysicalObject';
+import Body from '../Body/Body';
 
 class InputControl {
-    physicalObject: PhysicalObject;
+    physicalObject: Body;
     keys: {
         cw: boolean; // clockwise
         acw: boolean; // anticlockwise
@@ -12,7 +12,7 @@ class InputControl {
         arrowLeft: boolean;
     };
 
-    constructor(physicalObject: PhysicalObject) {
+    constructor(physicalObject: Body) {
         this.physicalObject = physicalObject;
         this.keys = {
             cw: false,

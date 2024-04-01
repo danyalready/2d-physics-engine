@@ -1,10 +1,11 @@
-import { Circle, Matrix, Vector } from '..';
+import { Circle, Matrix, Vector } from '../../classes';
 
 type CapsuleParams = {
     length: number;
     position: Vector;
     radius?: number;
     components?: [Circle, Circle];
+    isPlayer?: boolean;
 };
 
 class Capsule {
@@ -22,16 +23,20 @@ class Capsule {
     /** The initial position of the second component of Capsule. */
     public readonly refPositionEnd: Vector;
 
+    /**  */
+    public isPlayer?: boolean;
+
     constructor(params: CapsuleParams) {
+        this.isPlayer = params.isPlayer;
         this.length = params.length;
         this.position = params.position;
         this.components = params.components || [
             new Circle({
-                coordinate: this.position.subtr(new Vector({ x: this.position.x - this.length / 2, y: 0 })),
+                position: this.position.subtr(new Vector({ x: this.position.x - this.length / 2, y: 0 })),
                 radius: params.radius || 10,
             }),
             new Circle({
-                coordinate: this.position.subtr(new Vector({ x: this.position.x + this.length / 2, y: 0 })),
+                position: this.position.subtr(new Vector({ x: this.position.x + this.length / 2, y: 0 })),
                 radius: params.radius || 10,
             }),
         ];
@@ -58,6 +63,7 @@ class Capsule {
 
         this.components[0].position = this.position.add(capsuleRotatedUnit.mult(-this.length / 2));
         this.components[1].position = this.position.add(capsuleRotatedUnit.mult(this.length / 2));
+        this.position = this.components[0].position.add(this.components[1].position).mult(0.5);
     }
 
     /** Returns the closest point of Capsule to the given vector. */

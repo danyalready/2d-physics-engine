@@ -1,5 +1,5 @@
-import Circle from '../Circle/Circle';
-import PhysicalObject from '../PhysicalObject/PhysicalObject';
+import Circle from '../../shapes/Circle/Circle';
+import Body from '../Body/Body';
 import Vector, { type Coordinate } from '../Vector/Vector';
 import { drawLine } from '../../utils';
 
@@ -37,7 +37,7 @@ class Wall {
         circle.position = circle.position.add(distance.unit.mult(penetrationDepth));
     }
 
-    public resolveCollision(physicalObject: PhysicalObject) {
+    public resolveCollision(physicalObject: Body) {
         const closestWallPoint = this.getClosestPoint(physicalObject.position);
         const distance = physicalObject.position.subtr(closestWallPoint);
 
