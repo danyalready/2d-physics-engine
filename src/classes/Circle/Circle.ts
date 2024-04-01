@@ -1,15 +1,15 @@
-import PhysicalObject, { type PhysicalObjectParams } from '../PhysicalObject/PhysicalObject';
+import Body, { type BodyParams } from '../Body/Body';
 import Vector from '../Vector/Vector';
 
 import { drawCircle } from '../../utils';
 
-export type CircleParams = PhysicalObjectParams & {
+export type CircleParams = BodyParams & {
     radius: number;
     color?: CSSStyleDeclaration['color'];
     isFill?: boolean;
 };
 
-class Circle extends PhysicalObject {
+class Circle extends Body {
     public radius: number;
     public color: CSSStyleDeclaration['color'];
     public isFill: boolean;

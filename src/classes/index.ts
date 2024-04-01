@@ -1,5 +1,4 @@
 export { default as Circle } from './Circle/Circle';
-export { default as PhysicalObject } from './PhysicalObject/PhysicalObject';
 export { default as InputControl } from './InputControl/InputControl';
 export { default as Vector } from './Vector/Vector';
 export { default as Wall } from './Wall/Wall';
