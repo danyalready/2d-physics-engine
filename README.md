@@ -20,8 +20,13 @@ Format: `<type>(<scope>): <subject>`
 
 [Reference](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716)
 
+## Workspace
+
+I keep track of tasks and the process in [my trello board](https://trello.com/b/pmeZrloH/2d-physics-engine).
+
 ## Resources:
 
+-   [danielszabo88 repository](https://github.com/danielszabo88/mocorgo/tree/master) 🙌
 -   [Dot Product](https://www.mathsisfun.com/algebra/vectors-dot-product.html)
 -   [2D Collisions](https://www.vobarian.com/collisions/2dcollisions2.pdf)
 -   [Markdown Editor](https://stackedit.io/app#)
