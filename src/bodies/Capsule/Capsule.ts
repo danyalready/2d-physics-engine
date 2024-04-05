@@ -17,11 +17,11 @@ class Capsule extends Body implements BodyLike {
 
     public components: [Circle, Circle];
 
-    // /** The initial position of the first component of Capsule. */
-    // public readonly refPositionStart: Vector;
+    /** The initial position of the first component of Capsule. */
+    public readonly refPositionStart: Vector;
 
-    // /** The initial position of the second component of Capsule. */
-    // public readonly refPositionEnd: Vector;
+    /** The initial position of the second component of Capsule. */
+    public readonly refPositionEnd: Vector;
 
     constructor(params: CapsuleParams) {
         super(params);
@@ -38,16 +38,20 @@ class Capsule extends Body implements BodyLike {
                 radius: params.radius,
             }),
         ];
+        this.refPositionStart = this.components[0].position;
+        this.refPositionEnd = this.components[1].position;
     }
 
     public get unit(): Vector {
-        return this.components[1].position.subtr(this.components[0].position).unit;
+        return this.refPositionEnd.subtr(this.refPositionStart).unit;
     }
 
     public reposition(): void {
         super.reposition();
 
-        const capsuleRotationMatrix = Matrix.getRotationMatrix(0); // TODO: this.angle
+        this.angle += this.angVelocity;
+
+        const capsuleRotationMatrix = Matrix.getRotationMatrix(this.angle);
         const capsuleUnitMatrix = new Matrix(2, 1);
 
         capsuleUnitMatrix.data = [[this.unit.x], [this.unit.y]];
@@ -87,16 +91,16 @@ class Capsule extends Body implements BodyLike {
             this.components[0].position.x,
             this.components[0].position.y,
             this.components[0].radius,
-            0 + Math.PI / 2, // TODO: this.angle
-            0 + Math.PI * 1.5, // TODO: this.angle
+            this.angle + Math.PI / 2,
+            this.angle + Math.PI * 1.5,
             true,
         );
         ctx.arc(
             this.components[1].position.x,
             this.components[1].position.y,
             this.components[1].radius,
-            0 + Math.PI * 1.5, // TODO: this.angle
-            0 + Math.PI / 2, // TODO: this.angle
+            this.angle + Math.PI * 1.5,
+            this.angle + Math.PI / 2,
             true,
         );
         ctx.fillStyle = 'red';

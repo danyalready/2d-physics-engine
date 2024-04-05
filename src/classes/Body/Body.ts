@@ -40,7 +40,7 @@ class Body {
         this.angle = params.angle || 0;
         this.angVelocity = params.angVelocity || 0;
         this.angAcceleration = params.angAcceleration || 0;
-        this.angAccelerationUnit = params.angAccelerationUnit || 1;
+        this.angAccelerationUnit = params.angAccelerationUnit || 0.1;
         this.isPlayer = Boolean(params.isPlayer);
     }
 

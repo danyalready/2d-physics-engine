@@ -1,10 +1,20 @@
 import Body from '../Body/Body';
 
+const ROTATE_CLOCKWISE_KEYS = ['KeyE'];
+const ROTATE_ANTICLOCKWISE_KEYS = ['KeyQ'];
+const UP_KEYS = ['ArrowUp', 'KeyW'];
+const DOWN_KEYS = ['ArrowDown', 'KeyS'];
+const LEFT_KEYS = ['ArrowLeft', 'KeyA'];
+const RIGHT_KEYS = ['ArrowRight', 'KeyD'];
+
 class InputControl {
-    physicalObject: Body;
+    body: Body;
     keys: {
-        cw: boolean; // clockwise
-        acw: boolean; // anticlockwise
+        //** Clockwise rotation. */
+        cw: boolean;
+
+        //** Anticlockwise rotation. */
+        acw: boolean;
 
         arrowUp: boolean;
         arrowRight: boolean;
@@ -12,8 +22,8 @@ class InputControl {
         arrowLeft: boolean;
     };
 
-    constructor(physicalObject: Body) {
-        this.physicalObject = physicalObject;
+    constructor(body: Body) {
+        this.body = body;
         this.keys = {
             cw: false,
             acw: false,
@@ -29,27 +39,27 @@ class InputControl {
 
     private setEventListeners() {
         window.addEventListener('keydown', (event) => {
-            if (event.code === 'KeyE') {
+            if (ROTATE_CLOCKWISE_KEYS.includes(event.code)) {
                 this.keys.cw = true;
             }
 
-            if (event.code === 'KeyQ') {
+            if (ROTATE_ANTICLOCKWISE_KEYS.includes(event.code)) {
                 this.keys.acw = true;
             }
 
-            if (event.code === 'ArrowUp') {
+            if (UP_KEYS.includes(event.code)) {
                 this.keys.arrowUp = true;
             }
 
-            if (event.code === 'ArrowRight') {
+            if (RIGHT_KEYS.includes(event.code)) {
                 this.keys.arrowRight = true;
             }
 
-            if (event.code === 'ArrowDown') {
+            if (DOWN_KEYS.includes(event.code)) {
                 this.keys.arrowDown = true;
             }
 
-            if (event.code === 'ArrowLeft') {
+            if (LEFT_KEYS.includes(event.code)) {
                 this.keys.arrowLeft = true;
             }
         });
@@ -63,19 +73,19 @@ class InputControl {
                 this.keys.acw = false;
             }
 
-            if (event.code === 'ArrowUp') {
+            if (UP_KEYS.includes(event.code)) {
                 this.keys.arrowUp = false;
             }
 
-            if (event.code === 'ArrowRight') {
+            if (RIGHT_KEYS.includes(event.code)) {
                 this.keys.arrowRight = false;
             }
 
-            if (event.code === 'ArrowDown') {
+            if (DOWN_KEYS.includes(event.code)) {
                 this.keys.arrowDown = false;
             }
 
-            if (event.code === 'ArrowLeft') {
+            if (LEFT_KEYS.includes(event.code)) {
                 this.keys.arrowLeft = false;
             }
         });
@@ -83,44 +93,44 @@ class InputControl {
 
     public updatePhysicalObjectAcceleration() {
         try {
-            if (!this.physicalObject) {
+            if (!this.body) {
                 throw new Error('No object is detected with "isPlayer" property set to "true".');
             }
 
             if (this.keys.cw) {
-                this.physicalObject.angAcceleration = -this.physicalObject.angAccelerationUnit;
+                this.body.angAcceleration = this.body.angAccelerationUnit;
             }
 
             if (this.keys.acw) {
-                this.physicalObject.angAcceleration = this.physicalObject.angAccelerationUnit;
+                this.body.angAcceleration = -this.body.angAccelerationUnit;
             }
 
             if (this.keys.arrowUp) {
-                this.physicalObject.linAcceleration.y = -this.physicalObject.linAccelerationUnit;
+                this.body.linAcceleration.y = -this.body.linAccelerationUnit;
             }
 
             if (this.keys.arrowRight) {
-                this.physicalObject.linAcceleration.x = this.physicalObject.linAccelerationUnit;
+                this.body.linAcceleration.x = this.body.linAccelerationUnit;
             }
 
             if (this.keys.arrowDown) {
-                this.physicalObject.linAcceleration.y = this.physicalObject.linAccelerationUnit;
+                this.body.linAcceleration.y = this.body.linAccelerationUnit;
             }
 
             if (this.keys.arrowLeft) {
-                this.physicalObject.linAcceleration.x = -this.physicalObject.linAccelerationUnit;
+                this.body.linAcceleration.x = -this.body.linAccelerationUnit;
             }
 
             if (!this.keys.cw && !this.keys.acw) {
-                this.physicalObject.angAcceleration = 0;
+                this.body.angAcceleration = 0;
             }
 
             if (!this.keys.arrowUp && !this.keys.arrowDown) {
-                this.physicalObject.linAcceleration.y = 0;
+                this.body.linAcceleration.y = 0;
             }
 
             if (!this.keys.arrowRight && !this.keys.arrowLeft) {
-                this.physicalObject.linAcceleration.x = 0;
+                this.body.linAcceleration.x = 0;
             }
         } catch (error) {
             console.error(error);
