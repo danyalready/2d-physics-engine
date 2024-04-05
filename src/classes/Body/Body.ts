@@ -1,8 +1,7 @@
-import Vector, { type Coordinate } from '../Vector/Vector';
+import Vector from '../Vector/Vector';
 
 export type BodyParams = {
-    coordinate: Coordinate;
-
+    position: Vector;
     mass?: number;
     friction?: number;
     elasticity?: number;
@@ -34,7 +33,7 @@ class Body {
         this.mass = params.mass || 0;
         this.friction = params.friction || 0;
         this.elasticity = params.elasticity || 1;
-        this.position = new Vector(params.coordinate);
+        this.position = params.position;
         this.linVelocity = params.linVelocity || new Vector({ x: 0, y: 0 });
         this.linAcceleration = params.linAcceleration || new Vector({ x: 0, y: 0 });
         this.linAccelerationUnit = params.linAccelerationUnit || 1;
@@ -45,7 +44,7 @@ class Body {
         this.isPlayer = Boolean(params.isPlayer);
     }
 
-    public repositionate() {
+    public reposition() {
         this.linAcceleration = this.linAcceleration.unit.mult(this.linAccelerationUnit);
         this.linVelocity = this.linVelocity.add(this.linAcceleration);
         this.linVelocity = this.linVelocity.mult(1 - this.friction);

@@ -22,22 +22,22 @@ class Ball extends Body {
         this.isFill = Boolean(params.isFill);
     }
 
-    static resolveCollision(circleA: Ball, circleB: Ball) {
-        const elasticity = (circleA.elasticity + circleB.elasticity) / 2;
-        const unitNormal = circleA.position.subtr(circleB.position).unit;
+    static resolveCollision(ballA: Ball, ballB: Ball) {
+        const elasticity = (ballA.elasticity + ballB.elasticity) / 2;
+        const unitNormal = ballA.position.subtr(ballB.position).unit;
         const unitTangent = unitNormal.normal.unit;
 
-        const v1Normal = Vector.getDot(unitNormal, circleA.linVelocity);
-        const v2Normal = Vector.getDot(unitNormal, circleB.linVelocity);
+        const v1Normal = Vector.getDot(unitNormal, ballA.linVelocity);
+        const v2Normal = Vector.getDot(unitNormal, ballB.linVelocity);
 
-        const v1Tangent = Vector.getDot(unitTangent, circleA.linVelocity);
-        const v2Tangent = Vector.getDot(unitTangent, circleB.linVelocity);
+        const v1Tangent = Vector.getDot(unitTangent, ballA.linVelocity);
+        const v2Tangent = Vector.getDot(unitTangent, ballB.linVelocity);
 
-        const totalMntm = circleA.mass * v1Normal + circleB.mass * v2Normal;
-        const totalMass = circleA.mass + circleB.mass;
+        const totalMntm = ballA.mass * v1Normal + ballB.mass * v2Normal;
+        const totalMass = ballA.mass + ballB.mass;
 
-        const v1NormalAfter = (elasticity * circleB.mass * (v2Normal - v1Normal) + totalMntm) / totalMass;
-        const v2NormalAfter = (elasticity * circleA.mass * (v1Normal - v2Normal) + totalMntm) / totalMass;
+        const v1NormalAfter = (elasticity * ballB.mass * (v2Normal - v1Normal) + totalMntm) / totalMass;
+        const v2NormalAfter = (elasticity * ballA.mass * (v1Normal - v2Normal) + totalMntm) / totalMass;
 
         const v1NormalVectorAfter = unitNormal.mult(v1NormalAfter);
         const v2NormalVectorAfter = unitNormal.mult(v2NormalAfter);
@@ -45,8 +45,8 @@ class Ball extends Body {
         const v1TangentVectorAfter = unitTangent.mult(v1Tangent);
         const v2TangentVectorAfter = unitTangent.mult(v2Tangent);
 
-        circleA.linVelocity = v1NormalVectorAfter.add(v1TangentVectorAfter);
-        circleB.linVelocity = v2NormalVectorAfter.add(v2TangentVectorAfter);
+        ballA.linVelocity = v1NormalVectorAfter.add(v1TangentVectorAfter);
+        ballB.linVelocity = v2NormalVectorAfter.add(v2TangentVectorAfter);
     }
 
     public displayVectors(ctx: CanvasRenderingContext2D) {
