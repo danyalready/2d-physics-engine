@@ -1,5 +1,4 @@
-import { Circle, InputControl } from './classes';
-import { drawLine, roundNumber } from './utils';
+import { InputControl } from './classes';
 import { BODIES } from './constants';
 
 window.addEventListener('load', () => {
@@ -67,8 +66,10 @@ window.addEventListener('load', () => {
         //     obj.draw(canvasCtx);
         // });
 
-        BODIES.forEach((body, bodyIndex) => {
+        BODIES.forEach((body) => {
+            //** Draws the bodies on the canvas. */
             body.draw(canvasCtx);
+
             body.reposition();
         });
 

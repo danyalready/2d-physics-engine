@@ -44,7 +44,7 @@ class Body {
         this.isPlayer = Boolean(params.isPlayer);
     }
 
-    public reposition() {
+    public reposition(): void {
         this.linAcceleration = this.linAcceleration.unit.mult(this.linAccelerationUnit);
         this.linVelocity = this.linVelocity.add(this.linAcceleration);
         this.linVelocity = this.linVelocity.mult(1 - this.friction);

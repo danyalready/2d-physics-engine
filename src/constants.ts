@@ -1,16 +1,21 @@
-import { Ball, Wall, Capsule, Vector } from './classes';
+import { Ball, Capsule } from './bodies';
+import { Wall, Vector, Circle, Body } from './classes';
 
-export type PhysicalObject = Ball | Capsule;
+export interface BodyLike extends Body {
+    components: Circle[];
 
-const BODIES: Ball[] = [
+    draw: (ctx: CanvasRenderingContext2D) => void;
+}
+
+const BODIES: BodyLike[] = [
     new Ball({
         position: new Vector({ x: 200, y: 200 }),
         radius: 20,
         friction: 0.03,
         color: 'yellow',
         isFill: true,
-        isPlayer: true,
     }),
+    new Capsule({ position: new Vector({ x: 500, y: 500 }), length: 100, radius: 25, friction: 0.03, isPlayer: true }),
 ];
 
 const STATIC_OBJECTS = [

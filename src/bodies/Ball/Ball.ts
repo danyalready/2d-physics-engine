@@ -1,25 +1,19 @@
+import { Circle } from '../../classes';
 import Body, { type BodyParams } from '../../classes/Body/Body';
 import Vector from '../../classes/Vector/Vector';
-
+import { BodyLike } from '../../constants';
+import { CircleParams } from '../../shapes/Circle/Circle';
 import { drawCircle } from '../../utils';
 
-export type BallParams = BodyParams & {
-    radius: number;
-    color?: CSSStyleDeclaration['color'];
-    isFill?: boolean;
-};
+export type BallParams = BodyParams & CircleParams;
 
-class Ball extends Body {
-    public radius: number;
-    public color: CSSStyleDeclaration['color'];
-    public isFill: boolean;
+class Ball extends Body implements BodyLike {
+    public components: [Circle];
 
     constructor(params: BallParams) {
         super(params);
 
-        this.radius = params.radius;
-        this.color = params.color || 'black';
-        this.isFill = Boolean(params.isFill);
+        this.components = [new Circle(params)];
     }
 
     static resolveCollision(ballA: Ball, ballB: Ball) {
@@ -91,13 +85,26 @@ class Ball extends Body {
         });
     }
 
-    public draw(ctx: CanvasRenderingContext2D) {
-        drawCircle(ctx, {
-            coordinate: this.position,
-            radius: this.radius,
-            color: this.color,
-            isFill: this.isFill,
-        });
+    public reposition(): void {
+        super.reposition();
+
+        this.components[0].position = this.position;
+    }
+
+    public get radius(): number {
+        return this.components[0].radius;
+    }
+
+    public get color(): string {
+        return this.components[0].color;
+    }
+
+    public get isFill(): boolean {
+        return this.components[0].isFill;
+    }
+
+    public draw(ctx: CanvasRenderingContext2D): void {
+        this.components.forEach((component) => component.draw(ctx));
     }
 }
 

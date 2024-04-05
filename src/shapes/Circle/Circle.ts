@@ -4,15 +4,22 @@ import { drawCircle } from '../../utils';
 export type CircleParams = {
     radius: number;
     position: Vector;
+
+    color?: CSSStyleDeclaration['color'];
+    isFill?: boolean;
 };
 
 class Circle {
     public radius: number;
     public position: Vector;
+    public color: CSSStyleDeclaration['color'];
+    public isFill: boolean;
 
     constructor(params: CircleParams) {
         this.radius = params.radius;
         this.position = params.position;
+        this.color = params.color || 'black';
+        this.isFill = Boolean(params.isFill);
     }
 
     static isCollision(circleA: Circle, circleB: Circle, distance: number): boolean {
@@ -44,6 +51,8 @@ class Circle {
         drawCircle(ctx, {
             coordinate: this.position,
             radius: this.radius,
+            color: this.color,
+            isFill: this.isFill,
         });
     }
 }
