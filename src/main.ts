@@ -1,7 +1,7 @@
 import { Capsule } from './bodies';
-import { InputControl } from './classes';
+import { Circle, InputControl } from './classes';
 import { BODIES } from './constants';
-import { drawCircle } from './utils';
+import { Line } from './shapes';
 
 window.addEventListener('load', () => {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -14,27 +14,19 @@ window.addEventListener('load', () => {
 
             for (let bodyBIndex = bodyAIndex + 1; bodyBIndex < BODIES.length; bodyBIndex++) {
                 const bodyB = BODIES[bodyBIndex];
-                bodyB.draw(canvasCtx);
 
                 if (bodyA instanceof Capsule && bodyB instanceof Capsule) {
-                    const clossestAPointToB = bodyA.getClosestPointTo(bodyB.position);
-                    const clossestBPointToA = bodyB.getClosestPointTo(clossestAPointToB);
+                    const [clossestAPointToB, clossestBPointToA] = Line.getClossestPoints(bodyA.line, bodyB.line);
 
-                    const b = bodyB.getClosestPointTo(bodyA.position);
-                    const a = bodyA.getClosestPointTo(b);
+                    const bodyAClossestCircle = new Circle({ position: clossestAPointToB, radius: bodyA.radius });
+                    const bodyBClossestCircle = new Circle({ position: clossestBPointToA, radius: bodyB.radius });
 
-                    drawCircle(canvasCtx, {
-                        coordinate: clossestAPointToB,
-                        radius: bodyA.radius * 1.08,
-                    });
-                    drawCircle(canvasCtx, {
-                        coordinate: clossestBPointToA,
-                        radius: bodyB.radius * 1.08,
-                    });
+                    if (Circle.isCollision(bodyAClossestCircle, bodyBClossestCircle)) {
+                        const { repulse } = Circle.resolvePenetration(bodyAClossestCircle, bodyBClossestCircle);
 
-                    // if (Circle.isCollision(clossestACircle, clossestBCircle)) {
-                    //     console.log('collision');
-                    // }
+                        bodyA.position = bodyA.position.add(repulse);
+                        bodyB.position = bodyB.position.add(repulse.mult(-1));
+                    }
                 }
             }
 

@@ -3,6 +3,7 @@ import type { BodyParams } from '../Body/Body';
 import { BodyLike } from '../../constants';
 import type { CircleParams } from '../../shapes/Circle/Circle';
 import Body from '../Body/Body';
+import { Line } from '../../shapes';
 
 type CapsuleParams = BodyParams &
     CircleParams & {
@@ -75,21 +76,7 @@ class Capsule extends Body implements BodyLike {
 
     /** Returns the closest point of Capsule to the given vector. */
     public getClosestPointTo(vector: Vector): Vector {
-        const vectorToPositionStart = this.components[0].position.subtr(vector);
-        const positionEndToVector = vector.subtr(this.components[1].position);
-
-        if (Vector.getDot(this.unit, vectorToPositionStart) > 0) {
-            return this.components[0].position;
-        }
-
-        if (Vector.getDot(this.unit, positionEndToVector) > 0) {
-            return this.components[1].position;
-        }
-
-        const scalar = Vector.getDot(this.unit, vectorToPositionStart);
-        const closestVector = this.unit.mult(scalar);
-
-        return this.components[0].position.subtr(closestVector);
+        return this.line.getClossestPoint(vector);
     }
 
     public draw(ctx: CanvasRenderingContext2D) {
@@ -113,12 +100,16 @@ class Capsule extends Body implements BodyLike {
         ctx.closePath();
     }
 
-    public get radius() {
+    public get radius(): number {
         return this.components[0].radius;
     }
 
-    public get color() {
+    public get color(): string {
         return this.components[0].color;
+    }
+
+    public get line(): Line {
+        return new Line({ positions: [this.components[0].position, this.components[1].position] });
     }
 }
 

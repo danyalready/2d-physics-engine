@@ -28,7 +28,10 @@ class Circle {
         return circleA.radius + circleB.radius >= distance;
     }
 
-    static resolvePenetration(circleA: Circle, circleB: Circle) {
+    static resolvePenetration(
+        circleA: Circle,
+        circleB: Circle,
+    ): { distance: Vector; penetrationDepth: number; repulse: Vector } {
         const distance = circleA.position.subtr(circleB.position);
         const penetrationDepth = circleA.radius + circleB.radius - distance.magnitude;
         const repulse = distance.unit.mult(penetrationDepth / 2);
