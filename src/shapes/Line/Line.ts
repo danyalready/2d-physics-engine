@@ -30,29 +30,29 @@ class Line {
         return this.positions[0].subtr(scalarVector);
     }
 
-    public getClossestPoints(line: Line): [Vector, Vector] {
-        const [thisStart, thisEnd] = this.positions;
-        const [lineStart, lineEnd] = line.positions;
+    static getClossestPoints(lineA: Line, lineB: Line): [Vector, Vector] {
+        const [lineAStart, lineAEnd] = lineA.positions;
+        const [lineBStart, lineBEnd] = lineB.positions;
 
-        let clossestPoints: [Vector, Vector] = [thisStart, line.getClossestPoint(thisStart)];
+        let clossestPoints: [Vector, Vector] = [lineAStart, lineB.getClossestPoint(lineAStart)];
         let shortestDistance: number = clossestPoints[0].subtr(clossestPoints[1]).magnitude;
 
         function updateShortestDistance() {
             shortestDistance = clossestPoints[0].subtr(clossestPoints[1]).magnitude;
         }
 
-        if (line.getClossestPoint(thisEnd).subtr(thisEnd).magnitude < shortestDistance) {
-            clossestPoints = [thisEnd, line.getClossestPoint(thisEnd)];
+        if (lineB.getClossestPoint(lineAEnd).subtr(lineAEnd).magnitude < shortestDistance) {
+            clossestPoints = [lineAEnd, lineB.getClossestPoint(lineAEnd)];
             updateShortestDistance();
         }
 
-        if (this.getClossestPoint(lineStart).subtr(lineStart).magnitude < shortestDistance) {
-            clossestPoints = [this.getClossestPoint(lineStart), lineStart];
+        if (lineA.getClossestPoint(lineBStart).subtr(lineBStart).magnitude < shortestDistance) {
+            clossestPoints = [lineA.getClossestPoint(lineBStart), lineBStart];
             updateShortestDistance();
         }
 
-        if (this.getClossestPoint(lineEnd).subtr(lineEnd).magnitude < shortestDistance) {
-            clossestPoints = [this.getClossestPoint(lineEnd), lineEnd];
+        if (lineA.getClossestPoint(lineBEnd).subtr(lineBEnd).magnitude < shortestDistance) {
+            clossestPoints = [lineA.getClossestPoint(lineBEnd), lineBEnd];
             updateShortestDistance();
         }
 
