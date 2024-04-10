@@ -1,4 +1,4 @@
-import { Capsule } from './bodies';
+import { Ball, Capsule } from './bodies';
 import { Circle, InputControl } from './classes';
 import { BODIES } from './constants';
 import { Line } from './shapes';
@@ -18,14 +18,27 @@ window.addEventListener('load', () => {
                 if (bodyA instanceof Capsule && bodyB instanceof Capsule) {
                     const [clossestAPointToB, clossestBPointToA] = Line.getClossestPoints(bodyA.line, bodyB.line);
 
-                    const bodyAClossestCircle = new Circle({ position: clossestAPointToB, radius: bodyA.radius });
-                    const bodyBClossestCircle = new Circle({ position: clossestBPointToA, radius: bodyB.radius });
+                    const bodyAClossestBall = new Ball({
+                        ...bodyA,
+                        position: clossestAPointToB,
+                        radius: bodyA.radius,
+                    });
+                    const bodyBClossestBall = new Ball({
+                        ...bodyB,
+                        position: clossestBPointToA,
+                        radius: bodyB.radius,
+                    });
 
-                    if (Circle.isCollision(bodyAClossestCircle, bodyBClossestCircle)) {
-                        const { repulse } = Circle.resolvePenetration(bodyAClossestCircle, bodyBClossestCircle);
+                    if (Circle.isCollision(bodyAClossestBall, bodyBClossestBall)) {
+                        const { repulse } = Circle.resolvePenetration(bodyAClossestBall, bodyBClossestBall);
 
                         bodyA.position = bodyA.position.add(repulse);
                         bodyB.position = bodyB.position.add(repulse.mult(-1));
+
+                        Ball.resolveCollision(bodyAClossestBall, bodyBClossestBall);
+
+                        bodyA.linVelocity = bodyAClossestBall.linVelocity;
+                        bodyB.linVelocity = bodyBClossestBall.linVelocity;
                     }
                 }
             }

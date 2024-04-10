@@ -30,7 +30,7 @@ class Body {
     public isPlayer: boolean;
 
     constructor(params: BodyParams) {
-        this.mass = params.mass || 0;
+        this.mass = params.mass || 0.001; // WARNING: mass must not be equal to zero!
         this.friction = params.friction || 0;
         this.elasticity = params.elasticity || 1;
         this.position = params.position;
