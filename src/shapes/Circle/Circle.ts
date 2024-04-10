@@ -1,4 +1,4 @@
-import Vector from '../../classes/Vector/Vector';
+import { Vector } from '../../classes';
 import { drawCircle } from '../../utils';
 
 export type CircleParams = {
@@ -22,7 +22,9 @@ class Circle {
         this.isFill = Boolean(params.isFill);
     }
 
-    static isCollision(circleA: Circle, circleB: Circle, distance: number): boolean {
+    static isCollision(circleA: Circle, circleB: Circle): boolean {
+        const distance = circleA.position.subtr(circleB.position).magnitude;
+
         return circleA.radius + circleB.radius >= distance;
     }
 

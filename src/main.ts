@@ -1,5 +1,7 @@
+import { Capsule } from './bodies';
 import { InputControl } from './classes';
 import { BODIES } from './constants';
+import { drawCircle } from './utils';
 
 window.addEventListener('load', () => {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -7,70 +9,36 @@ window.addEventListener('load', () => {
     const inputControl = new InputControl(BODIES.find((obj) => obj.isPlayer)!);
 
     function draw() {
-        // STATIC_OBJECTS.forEach((wall) => {
-        //     for (let i = 0; i < PHYSICAL_OBJECTS.length; i++) {
-        //         const physicalObject = PHYSICAL_OBJECTS[i];
-        //         const wallClosestPoint = wall.getClosestPoint(physicalObject.position);
-        //         const objectClosestPoint = physicalObject.getClosestPointTo(wall.position);
+        BODIES.forEach((bodyA, bodyAIndex) => {
+            bodyA.draw(canvasCtx);
 
-        //         if (wall.isCollision(physicalObject)) {
-        //             wall.resolvePenetration(physicalObject);
-        //             wall.resolveCollision(physicalObject);
+            for (let bodyBIndex = bodyAIndex + 1; bodyBIndex < BODIES.length; bodyBIndex++) {
+                const bodyB = BODIES[bodyBIndex];
+                bodyB.draw(canvasCtx);
 
-        //             physicalObject.repositionate();
-        //         }
+                if (bodyA instanceof Capsule && bodyB instanceof Capsule) {
+                    const clossestAPointToB = bodyA.getClosestPointTo(bodyB.position);
+                    const clossestBPointToA = bodyB.getClosestPointTo(clossestAPointToB);
 
-        //         drawLine(canvasCtx, { from: wallClosestPoint, to: objectClosestPoint });
-        //     }
+                    const b = bodyB.getClosestPointTo(bodyA.position);
+                    const a = bodyA.getClosestPointTo(b);
 
-        //     wall.draw(canvasCtx);
-        // });
+                    drawCircle(canvasCtx, {
+                        coordinate: clossestAPointToB,
+                        radius: bodyA.radius * 1.08,
+                    });
+                    drawCircle(canvasCtx, {
+                        coordinate: clossestBPointToA,
+                        radius: bodyB.radius * 1.08,
+                    });
 
-        // PHYSICAL_OBJECTS.forEach((obj, aIndex) => {
-        //     if (obj.isPlayer) {
-        //         obj.displayVectors(canvasCtx);
-        //     }
+                    // if (Circle.isCollision(clossestACircle, clossestBCircle)) {
+                    //     console.log('collision');
+                    // }
+                }
+            }
 
-        //     for (let bIndex = aIndex + 1; bIndex < PHYSICAL_OBJECTS.length; bIndex++) {
-        //         const physicalObjectA = PHYSICAL_OBJECTS[aIndex];
-        //         const physicalObjectB = PHYSICAL_OBJECTS[bIndex];
-
-        //         const aClosestPointToB = physicalObjectA.getClosestPointTo(physicalObjectB.position);
-        //         const bClosestPointToA = physicalObjectB.getClosestPointTo(aClosestPointToB);
-
-        //         const distance = aClosestPointToB.subtr(bClosestPointToA);
-
-        //         if (Circle.isCollision(physicalObjectA, physicalObjectB, roundNumber(distance.magnitude, 3))) {
-        //             const physicalObjectAWithClosestToB = Object.assign({}, physicalObjectA, {
-        //                 position: aClosestPointToB,
-        //             });
-        //             const physicalObjectBWithClosestToA = Object.assign({}, physicalObjectB, {
-        //                 position: bClosestPointToA,
-        //             });
-
-        //             const penetrationDetails = Circle.resolvePenetration(
-        //                 physicalObjectAWithClosestToB,
-        //                 physicalObjectBWithClosestToA,
-        //             );
-
-        //             physicalObjectA.position = physicalObjectA.position.add(penetrationDetails.repulse);
-        //             physicalObjectB.position = physicalObjectB.position.add(penetrationDetails.repulse.mult(-1));
-
-        //             Circle.resolveCollision(physicalObjectA, physicalObjectB);
-        //         }
-
-        //         drawLine(canvasCtx, { from: aClosestPointToB, to: bClosestPointToA });
-        //     }
-
-        //     obj.repositionate();
-        //     obj.draw(canvasCtx);
-        // });
-
-        BODIES.forEach((body) => {
-            //** Draws the bodies on the canvas. */
-            body.draw(canvasCtx);
-
-            body.reposition();
+            bodyA.reposition();
         });
 
         inputControl.updatePhysicalObjectAcceleration();

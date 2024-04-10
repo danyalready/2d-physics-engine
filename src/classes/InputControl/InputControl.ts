@@ -1,4 +1,4 @@
-import Body from '../Body/Body';
+import { Body } from '../../bodies';
 
 const ROTATE_CLOCKWISE_KEYS = ['KeyE'];
 const ROTATE_ANTICLOCKWISE_KEYS = ['KeyQ'];

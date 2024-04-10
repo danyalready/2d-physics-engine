@@ -1,4 +1,4 @@
-import Vector from '../Vector/Vector';
+import { Vector } from '../../classes';
 
 export type BodyParams = {
     position: Vector;

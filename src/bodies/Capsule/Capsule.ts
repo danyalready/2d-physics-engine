@@ -1,7 +1,8 @@
-import { Body, Circle, Matrix, Vector } from '../../classes';
-import type { BodyParams } from '../../classes/Body/Body';
+import { Circle, Matrix, Vector } from '../../classes';
+import type { BodyParams } from '../Body/Body';
 import { BodyLike } from '../../constants';
 import type { CircleParams } from '../../shapes/Circle/Circle';
+import Body from '../Body/Body';
 
 type CapsuleParams = BodyParams &
     CircleParams & {
@@ -18,10 +19,10 @@ class Capsule extends Body implements BodyLike {
     public components: [Circle, Circle];
 
     /** The initial position of the first component of Capsule. */
-    public readonly refPositionStart: Vector;
+    private readonly refPositionStart: Vector;
 
     /** The initial position of the second component of Capsule. */
-    public readonly refPositionEnd: Vector;
+    private readonly refPositionEnd: Vector;
 
     constructor(params: CapsuleParams) {
         super(params);
@@ -30,12 +31,14 @@ class Capsule extends Body implements BodyLike {
         this.position = params.position;
         this.components = [
             new Circle({
-                position: this.position.subtr(new Vector({ x: this.position.x - this.length / 2, y: 0 })),
-                radius: params.radius,
-            }),
-            new Circle({
                 position: this.position.subtr(new Vector({ x: this.position.x + this.length / 2, y: 0 })),
                 radius: params.radius,
+                color: params.color,
+            }),
+            new Circle({
+                position: this.position.subtr(new Vector({ x: this.position.x - this.length / 2, y: 0 })),
+                radius: params.radius,
+                color: params.color,
             }),
         ];
         this.refPositionStart = this.components[0].position;
@@ -43,6 +46,10 @@ class Capsule extends Body implements BodyLike {
     }
 
     public get unit(): Vector {
+        return this.components[1].position.subtr(this.components[0].position).unit;
+    }
+
+    private get refUnit(): Vector {
         return this.refPositionEnd.subtr(this.refPositionStart).unit;
     }
 
@@ -54,7 +61,7 @@ class Capsule extends Body implements BodyLike {
         const capsuleRotationMatrix = Matrix.getRotationMatrix(this.angle);
         const capsuleUnitMatrix = new Matrix(2, 1);
 
-        capsuleUnitMatrix.data = [[this.unit.x], [this.unit.y]];
+        capsuleUnitMatrix.data = [[this.refUnit.x], [this.refUnit.y]];
 
         const capsuleRotatedUnitMatrix = capsuleRotationMatrix.mult(capsuleUnitMatrix);
         const capsuleRotatedUnit = new Vector({
@@ -93,7 +100,6 @@ class Capsule extends Body implements BodyLike {
             this.components[0].radius,
             this.angle + Math.PI / 2,
             this.angle + Math.PI * 1.5,
-            true,
         );
         ctx.arc(
             this.components[1].position.x,
@@ -101,11 +107,18 @@ class Capsule extends Body implements BodyLike {
             this.components[1].radius,
             this.angle + Math.PI * 1.5,
             this.angle + Math.PI / 2,
-            true,
         );
-        ctx.fillStyle = 'red';
+        ctx.fillStyle = this.color;
         ctx.fill();
         ctx.closePath();
+    }
+
+    public get radius() {
+        return this.components[0].radius;
+    }
+
+    public get color() {
+        return this.components[0].color;
     }
 }
 

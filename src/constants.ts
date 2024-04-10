@@ -1,21 +1,32 @@
-import { Ball, Capsule } from './bodies';
-import { Wall, Vector, Circle, Body } from './classes';
+import { Ball, Capsule, Body } from './bodies';
+import { Wall, Vector, Circle } from './classes';
 
 export interface BodyLike extends Body {
     components: Circle[];
 
+    // getClosestPointTo: (vector: Vector) => Vector;
     draw: (ctx: CanvasRenderingContext2D) => void;
 }
 
 const BODIES: BodyLike[] = [
-    new Ball({
-        position: new Vector({ x: 200, y: 200 }),
-        radius: 20,
+    // new Ball({
+    //     position: new Vector({ x: 200, y: 200 }),
+    //     radius: 20,
+    //     friction: 0.03,
+    //     color: 'red',
+    //     isFill: true,
+    // }),
+    new Capsule({ position: new Vector({ x: 400, y: 350 }), length: 100, radius: 25, friction: 0.03, color: 'red' }),
+    new Capsule({
+        position: new Vector({ x: 250, y: 250 }),
+        length: 100,
+        radius: 25,
         friction: 0.03,
-        color: 'yellow',
-        isFill: true,
+        color: 'red',
+        angAccelerationUnit: 0.05,
+        linAccelerationUnit: 0.1,
+        isPlayer: true,
     }),
-    new Capsule({ position: new Vector({ x: 500, y: 500 }), length: 100, radius: 25, friction: 0.03, isPlayer: true }),
 ];
 
 const STATIC_OBJECTS = [

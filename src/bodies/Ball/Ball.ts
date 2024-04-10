@@ -1,8 +1,7 @@
-import { Circle } from '../../classes';
-import Body, { type BodyParams } from '../../classes/Body/Body';
-import Vector from '../../classes/Vector/Vector';
+import { Vector, Circle } from '../../classes';
+import Body, { type BodyParams } from '../Body/Body';
 import { BodyLike } from '../../constants';
-import { CircleParams } from '../../shapes/Circle/Circle';
+import type { CircleParams } from '../../shapes/Circle/Circle';
 import { drawCircle } from '../../utils';
 
 export type BallParams = BodyParams & CircleParams;

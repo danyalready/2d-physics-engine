@@ -12,9 +12,8 @@ describe('Circle class:', () => {
                 position: new Vector({ x: 10, y: 5 }),
                 radius: 10,
             });
-            const distance = circleA.position.subtr(circleB.position);
 
-            expect(Circle.isCollision(circleA, circleB, distance.magnitude)).toBeTruthy();
+            expect(Circle.isCollision(circleA, circleB)).toBeTruthy();
         });
 
         test('`resolvePenetration` - static method', () => {

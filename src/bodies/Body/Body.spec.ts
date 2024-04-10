@@ -1,4 +1,4 @@
-import Vector from '../Vector/Vector';
+import Vector from '../../classes/Vector/Vector';
 import Body from './Body';
 
 describe('Body class:', () => {

@@ -1,5 +1,5 @@
 import Circle from '../../shapes/Circle/Circle';
-import Body from '../Body/Body';
+import Body from '../../bodies/Body/Body';
 import Vector, { type Coordinate } from '../Vector/Vector';
 import { drawLine } from '../../utils';
 
