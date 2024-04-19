@@ -32,7 +32,7 @@ class Body {
     constructor(params: BodyParams) {
         this.mass = params.mass || 0.001; // WARNING: mass must not be equal to zero!
         this.friction = params.friction || 0;
-        this.elasticity = params.elasticity || 1;
+        this.elasticity = params.elasticity ?? 1;
         this.position = params.position;
         this.linVelocity = params.linVelocity || new Vector({ x: 0, y: 0 });
         this.linAcceleration = params.linAcceleration || new Vector({ x: 0, y: 0 });
