@@ -16,7 +16,7 @@ class Ball extends Body implements BodyLike {
     }
 
     static resolveCollision(ballA: Ball, ballB: Ball) {
-        const elasticity = (ballA.elasticity + ballB.elasticity) / 2;
+        const cor = (ballA.elasticity + ballB.elasticity) / 2; // Coefficient of restitution
         const unitNormal = ballA.position.subtr(ballB.position).unit;
         const unitTangent = unitNormal.normal.unit;
 
@@ -29,8 +29,8 @@ class Ball extends Body implements BodyLike {
         const totalMntm = ballA.mass * v1Normal + ballB.mass * v2Normal;
         const totalMass = ballA.mass + ballB.mass;
 
-        const v1NormalAfter = (elasticity * ballB.mass * (v2Normal - v1Normal) + totalMntm) / totalMass;
-        const v2NormalAfter = (elasticity * ballA.mass * (v1Normal - v2Normal) + totalMntm) / totalMass;
+        const v1NormalAfter = (cor * ballB.mass * (v2Normal - v1Normal) + totalMntm) / totalMass;
+        const v2NormalAfter = (cor * ballA.mass * (v1Normal - v2Normal) + totalMntm) / totalMass;
 
         const v1NormalVectorAfter = unitNormal.mult(v1NormalAfter);
         const v2NormalVectorAfter = unitNormal.mult(v2NormalAfter);
