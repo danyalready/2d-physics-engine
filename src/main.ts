@@ -15,6 +15,13 @@ window.addEventListener('load', () => {
             for (let bodyBIndex = bodyAIndex + 1; bodyBIndex < BODIES.length; bodyBIndex++) {
                 const bodyB = BODIES[bodyBIndex];
 
+                if (bodyA instanceof Ball && bodyB instanceof Ball) {
+                    if (Circle.isCollision(bodyA, bodyB)) {
+                        Circle.resolvePenetration(bodyA, bodyB);
+                        Ball.resolveCollision(bodyA, bodyB);
+                    }
+                }
+
                 if (bodyA instanceof Capsule && bodyB instanceof Capsule) {
                     const [clossestAPointToB, clossestBPointToA] = Line.getClossestPoints(bodyA.line, bodyB.line);
 

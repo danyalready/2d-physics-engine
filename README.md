@@ -30,4 +30,5 @@ I keep track of tasks and the process in [my trello board](https://trello.com/b/
 -   [Dot Product](https://www.mathsisfun.com/algebra/vectors-dot-product.html)
 -   [Cross Product](https://www.mathsisfun.com/algebra/vectors-cross-product.html)
 -   [2D Collisions](https://www.vobarian.com/collisions/2dcollisions2.pdf)
+-   [Coefficient of Restitution](https://en.wikipedia.org/wiki/Coefficient_of_restitution)
 -   [Markdown Editor](https://stackedit.io/app#)
