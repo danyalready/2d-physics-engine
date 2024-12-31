@@ -1,15 +1,15 @@
-import Vector2 from '../Vector2';
+import { Vector2 } from '../Vector2';
 
 describe('Vector class:', () => {
     describe('values:', () => {
         const vectors = [
-            new Vector2({ x: 4, y: 0 }),
-            new Vector2({ x: 0, y: 11 }),
-            new Vector2({ x: 7, y: 0 }),
-            new Vector2({ x: 1, y: 1 }),
-            new Vector2({ x: 3, y: 3 }),
-            new Vector2({ x: -7, y: -3 }),
-            new Vector2({ x: -13, y: 70 }),
+            new Vector2(4, 0),
+            new Vector2(0, 11),
+            new Vector2(7, 0),
+            new Vector2(1, 1),
+            new Vector2(3, 3),
+            new Vector2(-7, -3),
+            new Vector2(-13, 70),
         ];
 
         test('`normal`', () => {
@@ -32,32 +32,32 @@ describe('Vector class:', () => {
     });
 
     describe('methods:', () => {
-        const vector1 = new Vector2({ x: 4, y: 2 });
-        const vector2 = new Vector2({ x: 2, y: 4 });
+        const v1 = new Vector2(4, 2);
+        const v2 = new Vector2(2, 4);
 
         test('`getDot` - static method', () => {
-            expect(Vector2.getDot(vector1, vector2)).toBe(vector1.x * vector2.x + vector1.y * vector2.y);
+            expect(v1.getDot(v2)).toBe(v1.x * v2.x + v1.y * v2.y);
         });
 
         test('`getRadians` - static method', () => {
-            const v1 = new Vector2({ x: 1, y: 0 });
-            const v2 = new Vector2({ x: 1, y: 1 });
+            const v1 = new Vector2(1, 0);
+            const v2 = new Vector2(1, 1);
 
-            const angle = (Vector2.getRadians(v1, v2) * 180) / Math.PI;
+            const angle = (v1.getRadians(v2) * 180) / Math.PI;
 
             expect(angle).toBeCloseTo(45);
         });
 
         test('`add` - public method', () => {
-            expect(vector1.add(vector2)).toMatchObject({ x: 6, y: 6 });
+            expect(v1.add(v2)).toMatchObject({ x: 6, y: 6 });
         });
 
         test('`subtr` - public method', () => {
-            expect(vector1.subtr(vector2)).toMatchObject({ x: 2, y: -2 });
+            expect(v1.subtract(v2)).toMatchObject({ x: 2, y: -2 });
         });
 
         test('`mult` - public method', () => {
-            expect(vector1.mult(2)).toMatchObject({ x: 8, y: 4 });
+            expect(v1.multiply(2)).toMatchObject({ x: 8, y: 4 });
         });
     });
 });

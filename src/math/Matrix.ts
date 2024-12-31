@@ -1,6 +1,6 @@
 import { getDot } from '../utils';
 
-export default class Matrix {
+export class Matrix {
     public readonly rowsCount: number;
     public readonly colsCount: number;
     private _data: number[][];

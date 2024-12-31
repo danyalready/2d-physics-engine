@@ -1,4 +1,4 @@
-import Matrix from '../Matrix';
+import { Matrix } from '../Matrix';
 
 describe('Matrix class:', () => {
     describe('static methods:', () => {
