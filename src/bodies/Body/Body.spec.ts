@@ -1,4 +1,4 @@
-import Vector from '../../classes/Vector/Vector';
+import Vector2 from '../../math/Vector2';
 import Body from './Body';
 
 describe('Body class:', () => {
@@ -14,7 +14,7 @@ describe('Body class:', () => {
 
             expect(body.position).toMatchObject({ x: 0, y: 0 });
 
-            body.linVelocity = body.linVelocity.add(new Vector({ x: 1, y: 1 }));
+            body.linVelocity = body.linVelocity.add(new Vector2({ x: 1, y: 1 }));
             body.reposition();
 
             expect(body.position).toMatchObject({ x: 1, y: 1 });

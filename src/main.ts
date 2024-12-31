@@ -6,6 +6,7 @@ import { Line } from './shapes';
 window.addEventListener('load', () => {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const canvasCtx = canvas.getContext('2d') as CanvasRenderingContext2D;
+
     const inputControl = new InputControl(BODIES.find((obj) => obj.isPlayer)!);
 
     function draw() {

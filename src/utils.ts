@@ -1,8 +1,8 @@
-import { Coordinate } from './classes/Vector/Vector';
+import { XYCoordinate } from './math/Vector2';
 
 function drawCircle(
     canvasContext: CanvasRenderingContext2D,
-    params: { coordinate: Coordinate; radius: number; isFill?: boolean; color?: CSSStyleDeclaration['color'] },
+    params: { coordinate: XYCoordinate; radius: number; isFill?: boolean; color?: CSSStyleDeclaration['color'] },
 ) {
     const color = params.color || 'black';
 
@@ -23,8 +23,8 @@ function drawCircle(
 function drawLine(
     canvasContext: CanvasRenderingContext2D,
     params: {
-        from: Coordinate;
-        to: Coordinate;
+        from: XYCoordinate;
+        to: XYCoordinate;
         color?: CSSStyleDeclaration['color'];
     },
 ) {

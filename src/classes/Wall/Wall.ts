@@ -1,25 +1,25 @@
 import Circle from '../../shapes/Circle/Circle';
 import Body from '../../bodies/Body/Body';
-import Vector, { type Coordinate } from '../Vector/Vector';
+import Vector2, { type XYCoordinate } from '../../math/Vector2';
 import { drawLine } from '../../utils';
 
 type WallParams = {
     coordinates: {
-        start: Coordinate;
-        end: Coordinate;
+        start: XYCoordinate;
+        end: XYCoordinate;
     };
     color?: CSSStyleDeclaration['color'];
 };
 
 class Wall {
     public color: CSSStyleDeclaration['color'];
-    public start: Vector;
-    public end: Vector;
+    public start: Vector2;
+    public end: Vector2;
 
     constructor(params: WallParams) {
         this.color = params.color || 'black';
-        this.start = new Vector(params.coordinates.start);
-        this.end = new Vector(params.coordinates.end);
+        this.start = new Vector2(params.coordinates.start);
+        this.end = new Vector2(params.coordinates.end);
     }
 
     public isCollision(circle: Circle): boolean {
@@ -47,8 +47,8 @@ class Wall {
         const unitNormalAfter = unitNormal.mult(-1);
         const unitTangentAfter = unitTangent;
 
-        const velocityNormal = Vector.getDot(unitNormalAfter, physicalObject.linVelocity);
-        const velocityTangent = Vector.getDot(unitTangentAfter, physicalObject.linVelocity);
+        const velocityNormal = Vector2.getDot(unitNormalAfter, physicalObject.linVelocity);
+        const velocityTangent = Vector2.getDot(unitTangentAfter, physicalObject.linVelocity);
 
         const normalAfter = unitNormal.mult(velocityNormal);
         const tangentAfter = unitTangent.mult(velocityTangent);
@@ -56,29 +56,29 @@ class Wall {
         physicalObject.linVelocity = normalAfter.add(tangentAfter);
     }
 
-    public getClosestPoint(vector: Vector): Vector {
+    public getClosestPoint(vector: Vector2): Vector2 {
         const vectorToWallStart = this.start.subtr(vector);
         const wallEndToVector = vector.subtr(this.end);
 
-        if (Vector.getDot(this.unit, vectorToWallStart) > 0) {
+        if (Vector2.getDot(this.unit, vectorToWallStart) > 0) {
             return this.start;
         }
 
-        if (Vector.getDot(this.unit, wallEndToVector) > 0) {
+        if (Vector2.getDot(this.unit, wallEndToVector) > 0) {
             return this.end;
         }
 
-        const scalar = Vector.getDot(this.unit, vectorToWallStart);
+        const scalar = Vector2.getDot(this.unit, vectorToWallStart);
         const closestVector = this.unit.mult(scalar);
 
         return this.start.subtr(closestVector);
     }
 
-    public get position(): Vector {
+    public get position(): Vector2 {
         return this.end.add(this.start).mult(0.5);
     }
 
-    public get unit(): Vector {
+    public get unit(): Vector2 {
         return this.end.subtr(this.start).unit;
     }
 

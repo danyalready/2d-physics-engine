@@ -1,15 +1,15 @@
-import Vector from './Vector';
+import Vector2 from '../Vector2';
 
 describe('Vector class:', () => {
     describe('values:', () => {
         const vectors = [
-            new Vector({ x: 4, y: 0 }),
-            new Vector({ x: 0, y: 11 }),
-            new Vector({ x: 7, y: 0 }),
-            new Vector({ x: 1, y: 1 }),
-            new Vector({ x: 3, y: 3 }),
-            new Vector({ x: -7, y: -3 }),
-            new Vector({ x: -13, y: 70 }),
+            new Vector2({ x: 4, y: 0 }),
+            new Vector2({ x: 0, y: 11 }),
+            new Vector2({ x: 7, y: 0 }),
+            new Vector2({ x: 1, y: 1 }),
+            new Vector2({ x: 3, y: 3 }),
+            new Vector2({ x: -7, y: -3 }),
+            new Vector2({ x: -13, y: 70 }),
         ];
 
         test('`normal`', () => {
@@ -32,18 +32,18 @@ describe('Vector class:', () => {
     });
 
     describe('methods:', () => {
-        const vector1 = new Vector({ x: 4, y: 2 });
-        const vector2 = new Vector({ x: 2, y: 4 });
+        const vector1 = new Vector2({ x: 4, y: 2 });
+        const vector2 = new Vector2({ x: 2, y: 4 });
 
         test('`getDot` - static method', () => {
-            expect(Vector.getDot(vector1, vector2)).toBe(vector1.x * vector2.x + vector1.y * vector2.y);
+            expect(Vector2.getDot(vector1, vector2)).toBe(vector1.x * vector2.x + vector1.y * vector2.y);
         });
 
         test('`getRadians` - static method', () => {
-            const v1 = new Vector({ x: 1, y: 0 });
-            const v2 = new Vector({ x: 1, y: 1 });
+            const v1 = new Vector2({ x: 1, y: 0 });
+            const v2 = new Vector2({ x: 1, y: 1 });
 
-            const angle = (Vector.getRadians(v1, v2) * 180) / Math.PI;
+            const angle = (Vector2.getRadians(v1, v2) * 180) / Math.PI;
 
             expect(angle).toBeCloseTo(45);
         });

@@ -25,7 +25,6 @@ const BODIES: BodyLike[] = [
         linAccelerationUnit: 0.3,
         color: 'red',
         isFill: true,
-        isPlayer: true,
     }),
     new Capsule({
         position: new Vector({ x: 400, y: 350 }),
@@ -36,18 +35,18 @@ const BODIES: BodyLike[] = [
         mass: 100,
         elasticity: 0,
     }),
-    // new Capsule({
-    //     position: new Vector({ x: 250, y: 250 }),
-    //     length: 150,
-    //     radius: 35,
-    //     friction: 0.03,
-    //     color: 'brown',
-    //     elasticity: 0,
-    //     angAccelerationUnit: 0.05,
-    //     linAccelerationUnit: 0.5,
-    //     mass: 10,
-    //     isPlayer: true,
-    // }),
+    new Capsule({
+        position: new Vector({ x: 250, y: 250 }),
+        length: 150,
+        radius: 35,
+        friction: 0.03,
+        color: 'brown',
+        elasticity: 0,
+        angAccelerationUnit: 0.05,
+        linAccelerationUnit: 0.5,
+        mass: 10,
+        isPlayer: true,
+    }),
 ];
 
 const STATIC_OBJECTS = [

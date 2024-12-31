@@ -1,35 +1,33 @@
-import { getDot } from '../../utils';
+import { getDot } from '../utils';
 
-class Matrix {
-    public readonly rows: number;
-    public readonly cols: number;
-    private _data: Array<number[]>;
+export default class Matrix {
+    public readonly rowsCount: number;
+    public readonly colsCount: number;
+    private _data: number[][];
 
     constructor(rows: number, cols: number) {
-        this.rows = rows;
-        this.cols = cols;
+        this.rowsCount = rows;
+        this.colsCount = cols;
         this._data = [];
 
         for (let iRow = 0; iRow < rows; iRow++) {
             const row: number[] = [];
 
-            for (let iCol = 0; iCol < cols; iCol++) {
-                row.push(0);
-            }
+            for (let iCol = 0; iCol < cols; iCol++) row.push(0);
 
             this._data.push(row);
         }
     }
 
-    static isValid(matrixData: Array<number[]>): boolean {
-        const matrixRows = matrixData.length;
-        const matrixCols = matrixData[0].length;
+    static isValid(matrix: number[][]): boolean {
+        const matrixRows = matrix.length;
+        const matrixCols = matrix[0].length;
 
         if (!matrixRows || !matrixCols) {
             return false;
         }
 
-        return matrixData.every((row) => row.length === matrixCols);
+        return matrix.every((row) => row.length === matrixCols);
     }
 
     static getRotationMatrix(radians: number): Matrix {
@@ -44,11 +42,11 @@ class Matrix {
     }
 
     public subtr(matrix: Matrix): Matrix {
-        if (this.cols !== matrix.cols || this.rows !== matrix.rows) {
+        if (this.colsCount !== matrix.colsCount || this.rowsCount !== matrix.rowsCount) {
             throw new Error('The order of the matrices are not equal.');
         }
 
-        const result = new Matrix(this.rows, this.rows);
+        const result = new Matrix(this.rowsCount, this.rowsCount);
 
         for (let iRow = 0; iRow < this.data.length; iRow++) {
             for (let iCol = 0; iCol < this.data[iRow].length; iCol++) {
@@ -60,11 +58,11 @@ class Matrix {
     }
 
     public add(matrix: Matrix): Matrix {
-        if (this.cols !== matrix.cols || this.rows !== matrix.rows) {
+        if (this.colsCount !== matrix.colsCount || this.rowsCount !== matrix.rowsCount) {
             throw new Error('The order of the matrices are not equal.');
         }
 
-        const result = new Matrix(this.rows, this.cols);
+        const result = new Matrix(this.rowsCount, this.colsCount);
 
         for (let iRow = 0; iRow < this.data.length; iRow++) {
             for (let iCol = 0; iCol < this.data[iRow].length; iCol++) {
@@ -76,7 +74,7 @@ class Matrix {
     }
 
     public multBy(n: number): Matrix {
-        const result = new Matrix(this.rows, this.cols);
+        const result = new Matrix(this.rowsCount, this.colsCount);
 
         for (let iRow = 0; iRow < this.data.length; iRow++) {
             for (let iCol = 0; iCol < this.data[iRow].length; iCol++) {
@@ -88,21 +86,19 @@ class Matrix {
     }
 
     public mult(matrix: Matrix): Matrix {
-        if (this.cols !== matrix.rows) {
-            throw new Error(
-                'The number of columns in the first matrix must be equal to the number of rows in the second matrix.',
-            );
+        if (this.colsCount !== matrix.rowsCount) {
+            throw new Error('The number of columns in the first matrix must be equal to the number of rows in the second matrix.');
         }
 
-        const result = new Matrix(this.rows, matrix.cols);
+        const result = new Matrix(this.rowsCount, matrix.colsCount);
 
-        for (let iRow = 0; iRow < this.rows; iRow++) {
+        for (let iRow = 0; iRow < this.rowsCount; iRow++) {
             const currSelfRowNumbers = this.data[iRow];
 
-            for (let iMatrixCol = 0; iMatrixCol < matrix.cols; iMatrixCol++) {
+            for (let iMatrixCol = 0; iMatrixCol < matrix.colsCount; iMatrixCol++) {
                 const currMatrixColNumbers: number[] = [];
 
-                for (let iMatrixRow = 0; iMatrixRow < matrix.rows; iMatrixRow++) {
+                for (let iMatrixRow = 0; iMatrixRow < matrix.rowsCount; iMatrixRow++) {
                     currMatrixColNumbers.push(matrix.data[iMatrixRow][iMatrixCol]);
                 }
 
@@ -113,25 +109,23 @@ class Matrix {
         return result;
     }
 
-    public get data(): Array<number[]> {
+    public get data(): number[][] {
         return this._data;
     }
 
-    public set data(matrixData: Array<number[]>) {
+    public set data(matrixData: number[][]) {
         if (!Matrix.isValid(matrixData)) {
             throw new Error('The given matrix is not valid.');
         }
 
-        if (matrixData.length !== this.rows) {
+        if (matrixData.length !== this.rowsCount) {
             throw new Error('The given matrix data does not have the same amount of rows.');
         }
 
-        if (matrixData[0].length !== this.cols) {
+        if (matrixData[0].length !== this.colsCount) {
             throw new Error('The given matrix data does not have the same amount of columns.');
         }
 
         this._data = matrixData;
     }
 }
-
-export default Matrix;
