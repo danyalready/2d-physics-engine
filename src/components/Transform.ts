@@ -1,16 +1,16 @@
-import { Vector2 } from './Vector2';
+import { Vector2D } from '../math/Vector2D';
 
 export class Transform {
     constructor(
-        private position: Vector2 = new Vector2(),
+        private position: Vector2D = new Vector2D(),
         private rotation: number = 0, // In radians
-        private scale: Vector2 = new Vector2(1, 1),
+        private scale: Vector2D = new Vector2D(1, 1),
     ) {}
 
     // Transform a point from local space to world space
-    transformPoint(point: Vector2): Vector2 {
+    transformPoint(point: Vector2D): Vector2D {
         // First scale
-        let transformed = new Vector2(point.x * this.scale.x, point.y * this.scale.y);
+        let transformed = new Vector2D(point.x * this.scale.x, point.y * this.scale.y);
 
         // Then rotate
         transformed = transformed.rotate(this.rotation);
@@ -20,7 +20,7 @@ export class Transform {
     }
 
     // Transform a point from world space to local space
-    inverseTransformPoint(point: Vector2): Vector2 {
+    inverseTransformPoint(point: Vector2D): Vector2D {
         // Subtract position
         let transformed = point.subtract(this.position);
 
@@ -28,16 +28,16 @@ export class Transform {
         transformed = transformed.rotate(-this.rotation);
 
         // Inverse scale
-        return new Vector2(transformed.x / this.scale.x, transformed.y / this.scale.y);
+        return new Vector2D(transformed.x / this.scale.x, transformed.y / this.scale.y);
     }
 
     // Getters and setters
 
-    getPosition(): Vector2 {
+    getPosition(): Vector2D {
         return this.position.clone();
     }
 
-    setPosition(position: Vector2): void {
+    setPosition(position: Vector2D): void {
         this.position = position.clone();
     }
 
@@ -49,11 +49,11 @@ export class Transform {
         this.rotation = rotation;
     }
 
-    getScale(): Vector2 {
+    getScale(): Vector2D {
         return this.scale.clone();
     }
 
-    setScale(scale: Vector2): void {
+    setScale(scale: Vector2D): void {
         this.scale = scale.clone();
     }
 }

@@ -1,15 +1,15 @@
-import { Vector2 } from '../Vector2';
+import { Vector2D } from '../Vector2D';
 
 describe('Vector class:', () => {
     describe('values:', () => {
         const vectors = [
-            new Vector2(4, 0),
-            new Vector2(0, 11),
-            new Vector2(7, 0),
-            new Vector2(1, 1),
-            new Vector2(3, 3),
-            new Vector2(-7, -3),
-            new Vector2(-13, 70),
+            new Vector2D(4, 0),
+            new Vector2D(0, 11),
+            new Vector2D(7, 0),
+            new Vector2D(1, 1),
+            new Vector2D(3, 3),
+            new Vector2D(-7, -3),
+            new Vector2D(-13, 70),
         ];
 
         test('`normal`', () => {
@@ -32,16 +32,16 @@ describe('Vector class:', () => {
     });
 
     describe('methods:', () => {
-        const v1 = new Vector2(4, 2);
-        const v2 = new Vector2(2, 4);
+        const v1 = new Vector2D(4, 2);
+        const v2 = new Vector2D(2, 4);
 
         test('`getDot` - static method', () => {
             expect(v1.getDot(v2)).toBe(v1.x * v2.x + v1.y * v2.y);
         });
 
         test('`getRadians` - static method', () => {
-            const v1 = new Vector2(1, 0);
-            const v2 = new Vector2(1, 1);
+            const v1 = new Vector2D(1, 0);
+            const v2 = new Vector2D(1, 1);
 
             const angle = (v1.getRadians(v2) * 180) / Math.PI;
 
