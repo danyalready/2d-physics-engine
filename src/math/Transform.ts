@@ -8,7 +8,7 @@ export class Transform {
     ) {}
 
     // Transform a point from local space to world space
-    public transformPoint(point: Vector2): Vector2 {
+    transformPoint(point: Vector2): Vector2 {
         // First scale
         let transformed = new Vector2(point.x * this.scale.x, point.y * this.scale.y);
 
@@ -20,7 +20,7 @@ export class Transform {
     }
 
     // Transform a point from world space to local space
-    public inverseTransformPoint(point: Vector2): Vector2 {
+    inverseTransformPoint(point: Vector2): Vector2 {
         // Subtract position
         let transformed = point.subtract(this.position);
 
@@ -32,27 +32,28 @@ export class Transform {
     }
 
     // Getters and setters
-    public getPosition(): Vector2 {
+
+    getPosition(): Vector2 {
         return this.position.clone();
     }
 
-    public setPosition(position: Vector2): void {
+    setPosition(position: Vector2): void {
         this.position = position.clone();
     }
 
-    public getRotation(): number {
+    getRotation(): number {
         return this.rotation;
     }
 
-    public setRotation(rotation: number): void {
+    setRotation(rotation: number): void {
         this.rotation = rotation;
     }
 
-    public getScale(): Vector2 {
+    getScale(): Vector2 {
         return this.scale.clone();
     }
 
-    public setScale(scale: Vector2): void {
+    setScale(scale: Vector2): void {
         this.scale = scale.clone();
     }
 }
