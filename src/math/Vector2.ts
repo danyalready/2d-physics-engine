@@ -55,6 +55,19 @@ export class Vector2 {
         return Math.acos(cosine);
     }
 
+    /** Rotate vector by angle (in radians). */
+    public rotate(angle: number): Vector2 {
+        const cos = Math.cos(angle);
+        const sin = Math.sin(angle);
+
+        return new Vector2(this.x * cos - this.y * sin, this.x * sin + this.y * cos);
+    }
+
+    // Clone the vector
+    public clone(): Vector2 {
+        return new Vector2(this.x, this.y);
+    }
+
     // Calculated vector values
 
     /** Returns normolized vector (magnitude 1). */
