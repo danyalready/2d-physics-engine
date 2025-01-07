@@ -1,7 +1,8 @@
 import { ColliderComponent } from '../components/ColliderComponent';
 import { TransformComponent } from '../components/TransformComponent';
+import { Entity } from '../core/Entity';
 import { Vector2D } from '../math/Vector2D';
-import type { System } from './System.type';
+import { type System } from './System.type';
 
 export class CollisionSystem implements System {
     private static readonly CELL_SIZE = 100;
@@ -26,6 +27,7 @@ export class CollisionSystem implements System {
         const maxY = Math.floor((pos.y + bounds.height / 2) / CollisionSystem.CELL_SIZE);
 
         const cells: string[] = [];
+
         for (let x = minX; x <= maxX; x++) {
             for (let y = minY; y <= maxY; y++) {
                 cells.push(this.getCellKey(x, y));
@@ -46,10 +48,12 @@ export class CollisionSystem implements System {
 
     private updateColliderInGrid(collider: ColliderComponent): void {
         const cells = this.getNeighboringCells(collider);
+
         for (const cell of cells) {
             if (!this.grid.has(cell)) {
                 this.grid.set(cell, new Set());
             }
+
             this.grid.get(cell)!.add(collider);
         }
     }
@@ -63,6 +67,7 @@ export class CollisionSystem implements System {
     update(): void {
         // Clear and rebuild grid
         this.grid.clear();
+
         for (const collider of this.colliders) {
             this.updateColliderInGrid(collider);
         }
@@ -75,10 +80,12 @@ export class CollisionSystem implements System {
                 for (const colliderB of colliders) {
                     if (colliderA === colliderB) continue;
 
-                    const pairId = [colliderA.id, colliderB.id].sort().join(',');
+                    const pairId = [colliderA.componentId, colliderB.componentId].sort().join(',');
+
                     if (checkedPairs.has(pairId)) continue;
 
                     checkedPairs.add(pairId);
+
                     if (colliderA.intersects(colliderB)) {
                         this.handleCollision(colliderA.entity, colliderB.entity);
                     }
@@ -89,14 +96,14 @@ export class CollisionSystem implements System {
 
     private handleCollision(entityA: Entity, entityB: Entity): void {
         // Dispatch collision events to both entities
-        const collisionEvent = new CustomEvent('collision', {
-            detail: { otherEntity: entityB },
-        });
-        entityA.dispatchEvent(collisionEvent);
+        const collisionEvent = new CustomEvent('collision', { detail: { otherEntity: entityB } });
 
-        const reverseCollisionEvent = new CustomEvent('collision', {
-            detail: { otherEntity: entityA },
-        });
-        entityB.dispatchEvent(reverseCollisionEvent);
+        // TODO:
+        // entityA.dispatchEvent(collisionEvent);
+
+        const reverseCollisionEvent = new CustomEvent('collision', { detail: { otherEntity: entityA } });
+
+        // TODO:
+        // entityB.dispatchEvent(reverseCollisionEvent);
     }
 }

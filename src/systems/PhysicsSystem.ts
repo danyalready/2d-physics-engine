@@ -1,5 +1,7 @@
+import { RigidbodyComponent } from '../components/RigidbodyComponent';
+import { TransformComponent } from '../components/TransformComponent';
 import { Scene } from '../core/Scene';
-import type { System } from './System.type';
+import { type System } from './System.type';
 
 export class PhysicsSystem implements System {
     readonly needsFixedUpdate = true;
@@ -8,8 +10,8 @@ export class PhysicsSystem implements System {
         const entities = scene.getAllEntities();
 
         for (const entity of entities) {
-            const transform = entity.getComponent(Transform);
-            const rigidbody = entity.getComponent(Rigidbody);
+            const transform = entity.getComponent(TransformComponent);
+            const rigidbody = entity.getComponent(RigidbodyComponent);
 
             if (transform && rigidbody) {
                 // Apply velocity

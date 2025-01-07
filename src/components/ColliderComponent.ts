@@ -10,8 +10,8 @@ export class ColliderComponent implements Component {
 
     constructor(
         public entity: Entity,
-        public width: number,
-        public height: number,
+        width: number,
+        height: number,
     ) {
         this.bounds = { width, height };
     }
@@ -27,6 +27,10 @@ export class ColliderComponent implements Component {
             myPos.y - this.bounds.height / 2 < otherPos.y + other.bounds.height / 2 &&
             myPos.y + this.bounds.height / 2 > otherPos.y - other.bounds.height / 2
         );
+    }
+
+    getBounds() {
+        return this.bounds;
     }
 
     update(deltaTime: number): void {
