@@ -37,8 +37,8 @@ export class Scene {
             const transform = entity.getComponent(TransformComponent);
 
             if (sprite && transform) {
-                // Render entity
-                sprite.render(renderer, transform);
+                // TODO: Render entity
+                // sprite.render(renderer, transform);
             }
         }
     }
