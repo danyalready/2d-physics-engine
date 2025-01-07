@@ -1,19 +1,19 @@
 import { AnimationSystem } from '../systems/AnimationSystem';
-import { CollisionSystem } from './CollisionSystem';
-import { InputManager } from './InputManager';
+import { CollisionSystem } from '../systems/CollisionSystem';
 import { PhysicsSystem } from '../systems/PhysicsSystem';
+import { System } from '../systems/System.type';
+import { InputManager } from './InputManager';
 import { Renderer } from './Renderer';
 import { Scene } from './Scene';
-import { System } from '../systems/System';
 
 export class Engine {
+    private readonly fixedTimeStep: number = 1 / 60; // 60 FPS physics
+    private readonly systems: System[] = [];
+
     private scene: Scene | null = null;
     private lastFrameTime: number = 0;
     private isRunning: boolean = false;
     private accumulator: number = 0;
-    private readonly fixedTimeStep: number = 1 / 60; // 60 FPS physics
-
-    private readonly systems: System[] = [];
 
     constructor(
         private readonly canvas: HTMLCanvasElement,
@@ -21,7 +21,7 @@ export class Engine {
         private readonly renderer: Renderer,
         private readonly inputManager: InputManager,
     ) {
-        this.gameLoop = this.gameLoop.bind(this);
+        this.loop = this.loop.bind(this);
 
         // Initialize systems
         this.systems.push(new PhysicsSystem(), new CollisionSystem(), new AnimationSystem());
@@ -40,7 +40,7 @@ export class Engine {
             this.isRunning = true;
             this.lastFrameTime = performance.now();
             this.accumulator = 0;
-            requestAnimationFrame(this.gameLoop);
+            requestAnimationFrame(this.loop);
         }
     }
 
@@ -48,7 +48,7 @@ export class Engine {
         this.isRunning = false;
     }
 
-    private gameLoop(currentTime: number): void {
+    private loop(currentTime: number): void {
         if (!this.isRunning) return;
 
         const deltaTime = Math.min((currentTime - this.lastFrameTime) / 1000, 0.1);
@@ -66,7 +66,7 @@ export class Engine {
         this.update(deltaTime);
         this.render();
 
-        requestAnimationFrame(this.gameLoop);
+        requestAnimationFrame(this.loop);
     }
 
     private fixedUpdate(fixedDeltaTime: number): void {

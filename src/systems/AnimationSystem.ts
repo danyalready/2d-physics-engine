@@ -1,5 +1,5 @@
 import { Scene } from '../core/Scene';
-import { System } from './System';
+import { System } from './System.type';
 
 export class AnimationSystem implements System {
     readonly needsFixedUpdate = false;

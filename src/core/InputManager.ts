@@ -1,20 +1,16 @@
 import { Vector2D } from '../math/Vector2D';
 
-type KeyState = {
+interface KeyState {
     isPressed: boolean;
     wasPressed: boolean;
-};
+}
 
 export class InputManager {
-    private keyStates: Map<string, KeyState>;
-    private mousePosition: Vector2D;
-    private mouseButtons: Map<number, KeyState>;
+    private keyStates: Map<string, KeyState> = new Map();
+    private mousePosition: Vector2D = new Vector2D();
+    private mouseButtons: Map<number, KeyState> = new Map();
 
     constructor() {
-        this.keyStates = new Map();
-        this.mousePosition = new Vector2D();
-        this.mouseButtons = new Map();
-
         // Set up event listeners
         window.addEventListener('keydown', this.handleKeyDown.bind(this));
         window.addEventListener('keyup', this.handleKeyUp.bind(this));
@@ -23,31 +19,32 @@ export class InputManager {
         window.addEventListener('mouseup', this.handleMouseUp.bind(this));
     }
 
-    update(): void {
+    public update(): void {
         // Update wasPressed states
-        this.keyStates.forEach((state) => {
-            state.wasPressed = state.isPressed;
-        });
-        this.mouseButtons.forEach((state) => {
-            state.wasPressed = state.isPressed;
-        });
+        this.keyStates.forEach((state) => (state.wasPressed = state.isPressed));
+        this.mouseButtons.forEach((state) => (state.wasPressed = state.isPressed));
     }
 
-    isKeyPressed(key: string): boolean {
+    public isKeyPressed(key: string): boolean {
         return this.keyStates.get(key)?.isPressed || false;
     }
 
-    isKeyJustPressed(key: string): boolean {
+    public isKeyJustPressed(key: string): boolean {
         const state = this.keyStates.get(key);
+
         return state ? state.isPressed && !state.wasPressed : false;
     }
 
-    getMousePosition(): Vector2D {
-        return this.mousePosition;
+    public isMouseButtonPressed(button: number): boolean {
+        return this.mouseButtons.get(button)?.isPressed || false;
     }
 
-    isMouseButtonPressed(button: number): boolean {
-        return this.mouseButtons.get(button)?.isPressed || false;
+    public isMouseButtonJustPressed(button: number): boolean {
+        return this.mouseButtons.get(button)?.wasPressed || false;
+    }
+
+    public getMousePosition(): Vector2D {
+        return this.mousePosition;
     }
 
     private handleKeyDown(event: KeyboardEvent): void {

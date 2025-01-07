@@ -1,4 +1,4 @@
-import type { Component } from '../components/Component';
+import { type Component } from '../components/Component.type';
 
 export class Entity {
     private components = new Map<symbol, Component>();
@@ -15,6 +15,7 @@ export class Entity {
 
         this.components.set(component.componentId, component);
         component.onStart?.();
+
         return component;
     }
 
@@ -24,6 +25,7 @@ export class Entity {
 
     removeComponent(componentType: { new (...args: any[]): Component }): void {
         const component = this.getComponent(componentType);
+
         if (component) {
             component.onDestroy?.();
             this.components.delete(component.componentId);
@@ -31,9 +33,8 @@ export class Entity {
     }
 
     addChild(child: Entity): void {
-        if (child.parent) {
-            child.parent.removeChild(child);
-        }
+        if (child.parent) child.parent.removeChild(child);
+
         this.children.add(child);
         child.parent = this;
     }

@@ -1,14 +1,12 @@
 import { getDot } from '../uitls';
 
 export class Matrix {
-    private _data: number[][];
+    private _data: number[][] = [];
 
     constructor(
         public readonly rowsCount: number,
         public readonly colsCount: number,
     ) {
-        this._data = [];
-
         for (let iRow = 0; iRow < rowsCount; iRow++) {
             const row: number[] = [];
 

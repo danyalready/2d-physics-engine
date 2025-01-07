@@ -56,8 +56,8 @@ describe('Vector class:', () => {
             expect(v1.subtract(v2)).toMatchObject({ x: 2, y: -2 });
         });
 
-        test('`mult` - public method', () => {
-            expect(v1.multiply(2)).toMatchObject({ x: 8, y: 4 });
+        test('`scale` - public method', () => {
+            expect(v1.scale(2)).toMatchObject({ x: 8, y: 4 });
         });
     });
 });

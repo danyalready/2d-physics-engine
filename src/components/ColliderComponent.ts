@@ -1,23 +1,25 @@
-import { Transform } from './Transform';
+import { TransformComponent } from './TransformComponent';
 import { Vector2D } from '../math/Vector2D';
-import type { Component } from './Component';
 import { Entity } from '../core/Entity';
+import { type Component } from './Component.type';
 
-export class Collider implements Component {
+export class ColliderComponent implements Component {
+    readonly componentId = Symbol('Collider');
+
     private bounds: { width: number; height: number };
 
     constructor(
         public entity: Entity,
-        width: number,
-        height: number,
+        public width: number,
+        public height: number,
     ) {
         this.bounds = { width, height };
     }
 
     // Check if this collider intersects with another collider
-    intersects(other: Collider): boolean {
-        const myPos = this.entity.getComponent(Transform)?.getPosition() || new Vector2D();
-        const otherPos = other.entity.getComponent(Transform)?.getPosition() || new Vector2D();
+    intersects(other: ColliderComponent): boolean {
+        const myPos = this.entity.getComponent(TransformComponent)?.getPosition() || new Vector2D();
+        const otherPos = other.entity.getComponent(TransformComponent)?.getPosition() || new Vector2D();
 
         return (
             myPos.x - this.bounds.width / 2 < otherPos.x + other.bounds.width / 2 &&

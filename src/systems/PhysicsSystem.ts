@@ -1,5 +1,5 @@
 import { Scene } from '../core/Scene';
-import type { System } from './System';
+import type { System } from './System.type';
 
 export class PhysicsSystem implements System {
     readonly needsFixedUpdate = true;

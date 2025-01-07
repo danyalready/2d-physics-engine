@@ -1,18 +1,15 @@
 import { Vector2D } from '../math/Vector2D';
 
 export class Renderer {
-    private spriteCache: Map<string, HTMLImageElement>;
+    private spriteCache: Map<string, HTMLImageElement> = new Map();
 
     constructor(
         private canvas: HTMLCanvasElement,
         private context: CanvasRenderingContext2D,
-    ) {
-        this.context = context;
-        this.spriteCache = new Map();
-    }
+    ) {}
 
-    // Load a sprite into the cache for faster rendering
-    async loadSprite(key: string, imagePath: string): Promise<void> {
+    /** Load a sprite into the cache for faster rendering. */
+    public async loadSprite(key: string, imagePath: string): Promise<void> {
         return new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => {
@@ -24,8 +21,8 @@ export class Renderer {
         });
     }
 
-    // Draw a sprite at the given position with optional rotation and scale
-    drawSprite(key: string, position: Vector2D, rotation: number = 0, scale: Vector2D = new Vector2D(1, 1)): void {
+    /** Draw a sprite at the given position with optional rotation and scale. */
+    public drawSprite(key: string, position: Vector2D, rotation: number = 0, scale: Vector2D = new Vector2D(1, 1)): void {
         const sprite = this.spriteCache.get(key);
 
         if (!sprite) return;
@@ -39,7 +36,7 @@ export class Renderer {
     }
 
     // Clear the entire canvas
-    clear(): void {
+    public clear(): void {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }

@@ -1,8 +1,8 @@
 import { Vector2D } from '../math/Vector2D';
-import { Component } from './Component';
+import { type Component } from './Component.type';
 import { Entity } from '../core/Entity';
 
-export class Rigidbody implements Component {
+export class RigidbodyComponent implements Component {
     readonly componentId = Symbol('Rigidbody');
 
     private velocity = new Vector2D();

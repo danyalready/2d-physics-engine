@@ -1,12 +1,12 @@
-import { Collider } from '../components/Collider';
-import { Transform } from '../components/Transform';
+import { ColliderComponent } from '../components/ColliderComponent';
+import { TransformComponent } from '../components/TransformComponent';
 import { Vector2D } from '../math/Vector2D';
-import { System } from './System';
+import type { System } from './System.type';
 
 export class CollisionSystem implements System {
     private static readonly CELL_SIZE = 100;
-    private grid: Map<string, Set<Collider>> = new Map();
-    private colliders: Set<Collider> = new Set();
+    private grid: Map<string, Set<ColliderComponent>> = new Map();
+    private colliders: Set<ColliderComponent> = new Set();
 
     private getCellKey(x: number, y: number): string {
         const cellX = Math.floor(x / CollisionSystem.CELL_SIZE);
@@ -14,8 +14,8 @@ export class CollisionSystem implements System {
         return `${cellX},${cellY}`;
     }
 
-    private getNeighboringCells(collider: Collider): string[] {
-        const pos = collider.entity.getComponent(Transform)?.getPosition() || new Vector2D();
+    private getNeighboringCells(collider: ColliderComponent): string[] {
+        const pos = collider.entity.getComponent(TransformComponent)?.getPosition() || new Vector2D();
         const bounds = collider.getBounds();
         const minX = Math.floor((pos.x - bounds.width / 2) / CollisionSystem.CELL_SIZE);
         const maxX = Math.floor((pos.x + bounds.width / 2) / CollisionSystem.CELL_SIZE);
@@ -31,17 +31,17 @@ export class CollisionSystem implements System {
         return cells;
     }
 
-    addCollider(collider: Collider): void {
+    addCollider(collider: ColliderComponent): void {
         this.colliders.add(collider);
         this.updateColliderInGrid(collider);
     }
 
-    removeCollider(collider: Collider): void {
+    removeCollider(collider: ColliderComponent): void {
         this.colliders.delete(collider);
         this.removeColliderFromGrid(collider);
     }
 
-    private updateColliderInGrid(collider: Collider): void {
+    private updateColliderInGrid(collider: ColliderComponent): void {
         const cells = this.getNeighboringCells(collider);
         for (const cell of cells) {
             if (!this.grid.has(cell)) {
@@ -51,7 +51,7 @@ export class CollisionSystem implements System {
         }
     }
 
-    private removeColliderFromGrid(collider: Collider): void {
+    private removeColliderFromGrid(collider: ColliderComponent): void {
         for (const cellColliders of this.grid.values()) {
             cellColliders.delete(collider);
         }

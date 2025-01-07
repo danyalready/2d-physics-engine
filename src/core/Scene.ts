@@ -1,5 +1,5 @@
 import { SpriteComponent } from '../components/SpriteComponent';
-import { Transform } from '../components/Transform';
+import { TransformComponent } from '../components/TransformComponent';
 import { Entity } from './Entity';
 import { Renderer } from './Renderer';
 
@@ -34,7 +34,7 @@ export class Scene {
     render(renderer: Renderer): void {
         for (const entity of this.entities) {
             const sprite = entity.getComponent(SpriteComponent);
-            const transform = entity.getComponent(Transform);
+            const transform = entity.getComponent(TransformComponent);
 
             if (sprite && transform) {
                 // Render entity

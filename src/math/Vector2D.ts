@@ -1,7 +1,3 @@
-export type XYCoordinate = { x: number; y: number };
-
-export type Line = { coordinate: XYCoordinate; n: number; color: CSSStyleDeclaration['color'] };
-
 export class Vector2D {
     constructor(
         public x: number = 0,
@@ -18,7 +14,7 @@ export class Vector2D {
         return new Vector2D(this.x - vector.x, this.y - vector.y);
     }
 
-    public multiply(scalar: number): Vector2D {
+    public scale(scalar: number): Vector2D {
         return new Vector2D(this.x * scalar, this.y * scalar);
     }
 
@@ -63,7 +59,7 @@ export class Vector2D {
         return new Vector2D(this.x * cos - this.y * sin, this.x * sin + this.y * cos);
     }
 
-    // Clone the vector
+    /** Returns the copy vector. */
     public clone(): Vector2D {
         return new Vector2D(this.x, this.y);
     }
