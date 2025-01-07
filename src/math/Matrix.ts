@@ -1,4 +1,4 @@
-import { getDot } from '../uitls';
+import { getDot } from '../utils';
 
 export class Matrix {
     private _data: number[][] = [];

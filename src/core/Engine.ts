@@ -16,8 +16,6 @@ export class Engine {
     private accumulator: number = 0;
 
     constructor(
-        private readonly canvas: HTMLCanvasElement,
-        private readonly context: CanvasRenderingContext2D,
         private readonly renderer: Renderer,
         private readonly inputManager: InputManager,
     ) {
@@ -31,6 +29,7 @@ export class Engine {
         if (this.scene) {
             this.scene.onUnload();
         }
+
         this.scene = scene;
         scene.onLoad();
     }
@@ -96,6 +95,7 @@ export class Engine {
 
     private render(): void {
         this.renderer.clear();
+
         if (this.scene) {
             this.scene.render(this.renderer);
         }

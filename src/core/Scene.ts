@@ -22,6 +22,7 @@ export class Scene {
         if (!this.entityCache) {
             this.entityCache = Array.from(this.entities);
         }
+
         return this.entityCache;
     }
 
@@ -52,6 +53,7 @@ export class Scene {
         for (const entity of this.entities) {
             entity.destroy();
         }
+
         this.entities.clear();
         this.entityCache = null;
     }
