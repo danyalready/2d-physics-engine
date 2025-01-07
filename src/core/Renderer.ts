@@ -1,15 +1,13 @@
 import { Vector2D } from '../math/Vector2D';
 
 export class Renderer {
-    private context: CanvasRenderingContext2D;
     private spriteCache: Map<string, HTMLImageElement>;
 
-    constructor(private canvas: HTMLCanvasElement) {
-        const ctx = canvas.getContext('2d');
-
-        if (!ctx) throw new Error('Could not get 2D context');
-
-        this.context = ctx;
+    constructor(
+        private canvas: HTMLCanvasElement,
+        private context: CanvasRenderingContext2D,
+    ) {
+        this.context = context;
         this.spriteCache = new Map();
     }
 

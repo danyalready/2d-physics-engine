@@ -1,36 +1,79 @@
-import type { Component } from './Component';
+import type { Component } from '../components/Component';
 
 export class Entity {
-    private components: Map<string, Component>;
-    private children: Entity[];
-    public parent: Entity | null;
-    public name: string;
+    private components = new Map<symbol, Component>();
+    private children: Set<Entity> = new Set();
+    private active: boolean = true;
+    public parent: Entity | null = null;
 
-    constructor(name: string = 'Entity') {
-        this.components = new Map();
-        this.children = [];
-        this.parent = null;
-        this.name = name;
-    }
+    constructor(public readonly name: string = 'Entity') {}
 
-    addComponent(component: Component): void {
-        this.components.set(component.constructor.name, component);
+    addComponent<T extends Component>(component: T): T {
+        if (this.components.has(component.componentId)) {
+            throw new Error(`Component ${component.constructor.name} already exists on entity ${this.name}`);
+        }
+
+        this.components.set(component.componentId, component);
+        component.onStart?.();
+        return component;
     }
 
     getComponent<T extends Component>(componentType: { new (...args: any[]): T }): T | undefined {
-        return this.components.get(componentType.name) as T;
+        return Array.from(this.components.values()).find((c): c is T => c instanceof componentType);
+    }
+
+    removeComponent(componentType: { new (...args: any[]): Component }): void {
+        const component = this.getComponent(componentType);
+        if (component) {
+            component.onDestroy?.();
+            this.components.delete(component.componentId);
+        }
     }
 
     addChild(child: Entity): void {
-        this.children.push(child);
+        if (child.parent) {
+            child.parent.removeChild(child);
+        }
+        this.children.add(child);
         child.parent = this;
     }
 
-    update(deltaTime: number): void {
-        // Update all components
-        this.components.forEach((component) => component.update(deltaTime));
+    removeChild(child: Entity): void {
+        if (this.children.delete(child)) {
+            child.parent = null;
+        }
+    }
 
-        // Update all children
-        this.children.forEach((child) => child.update(deltaTime));
+    setActive(active: boolean): void {
+        this.active = active;
+    }
+
+    update(deltaTime: number): void {
+        if (!this.active) return;
+
+        for (const component of this.components.values()) {
+            component.update(deltaTime);
+        }
+
+        for (const child of this.children) {
+            child.update(deltaTime);
+        }
+    }
+
+    destroy(): void {
+        for (const component of this.components.values()) {
+            component.onDestroy?.();
+        }
+
+        for (const child of this.children) {
+            child.destroy();
+        }
+
+        if (this.parent) {
+            this.parent.removeChild(this);
+        }
+
+        this.components.clear();
+        this.children.clear();
     }
 }
