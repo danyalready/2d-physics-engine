@@ -13,7 +13,7 @@ export class TransformComponent implements Component {
     ) {}
 
     // Transform a point from local space to world space
-    public transformPoint(point: Vector2D): Vector2D {
+    transformPoint(point: Vector2D): Vector2D {
         // First scale
         let transformed = new Vector2D(point.x * this.scale.x, point.y * this.scale.y);
 
@@ -25,7 +25,7 @@ export class TransformComponent implements Component {
     }
 
     // Transform a point from world space to local space
-    public inverseTransformPoint(point: Vector2D): Vector2D {
+    inverseTransformPoint(point: Vector2D): Vector2D {
         // Subtract position
         let transformed = point.subtract(this.position);
 
@@ -38,31 +38,31 @@ export class TransformComponent implements Component {
 
     // Getters and setters
 
-    public getPosition(): Vector2D {
+    getPosition(): Vector2D {
         return this.position.clone();
     }
 
-    public setPosition(position: Vector2D): void {
+    setPosition(position: Vector2D): void {
         this.position = position.clone();
     }
 
-    public getRotation(): number {
+    getRotation(): number {
         return this.rotation;
     }
 
-    public setRotation(rotation: number): void {
+    setRotation(rotation: number): void {
         this.rotation = rotation;
     }
 
-    public getScale(): Vector2D {
+    getScale(): Vector2D {
         return this.scale.clone();
     }
 
-    public setScale(scale: Vector2D): void {
+    setScale(scale: Vector2D): void {
         this.scale = scale.clone();
     }
 
-    public update(deltaTime: number): void {
+    update(deltaTime: number): void {
         // Component update logic if needed
     }
 }

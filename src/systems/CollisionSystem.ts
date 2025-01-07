@@ -5,12 +5,15 @@ import type { System } from './System.type';
 
 export class CollisionSystem implements System {
     private static readonly CELL_SIZE = 100;
+
+    readonly needsFixedUpdate = false;
     private grid: Map<string, Set<ColliderComponent>> = new Map();
     private colliders: Set<ColliderComponent> = new Set();
 
     private getCellKey(x: number, y: number): string {
         const cellX = Math.floor(x / CollisionSystem.CELL_SIZE);
         const cellY = Math.floor(y / CollisionSystem.CELL_SIZE);
+
         return `${cellX},${cellY}`;
     }
 

@@ -19,31 +19,31 @@ export class InputManager {
         window.addEventListener('mouseup', this.handleMouseUp.bind(this));
     }
 
-    public update(): void {
+    update(): void {
         // Update wasPressed states
         this.keyStates.forEach((state) => (state.wasPressed = state.isPressed));
         this.mouseButtons.forEach((state) => (state.wasPressed = state.isPressed));
     }
 
-    public isKeyPressed(key: string): boolean {
+    isKeyPressed(key: string): boolean {
         return this.keyStates.get(key)?.isPressed || false;
     }
 
-    public isKeyJustPressed(key: string): boolean {
+    isKeyJustPressed(key: string): boolean {
         const state = this.keyStates.get(key);
 
         return state ? state.isPressed && !state.wasPressed : false;
     }
 
-    public isMouseButtonPressed(button: number): boolean {
+    isMouseButtonPressed(button: number): boolean {
         return this.mouseButtons.get(button)?.isPressed || false;
     }
 
-    public isMouseButtonJustPressed(button: number): boolean {
+    isMouseButtonJustPressed(button: number): boolean {
         return this.mouseButtons.get(button)?.wasPressed || false;
     }
 
-    public getMousePosition(): Vector2D {
+    getMousePosition(): Vector2D {
         return this.mousePosition;
     }
 

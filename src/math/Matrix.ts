@@ -38,7 +38,7 @@ export class Matrix {
         return result;
     }
 
-    public subtract(matrix: Matrix): Matrix {
+    subtract(matrix: Matrix): Matrix {
         if (this.colsCount !== matrix.colsCount || this.rowsCount !== matrix.rowsCount) {
             throw new Error('The order of the matrices are not equal.');
         }
@@ -54,7 +54,7 @@ export class Matrix {
         return result;
     }
 
-    public add(matrix: Matrix): Matrix {
+    add(matrix: Matrix): Matrix {
         if (this.colsCount !== matrix.colsCount || this.rowsCount !== matrix.rowsCount) {
             throw new Error('The order of the matrices are not equal.');
         }
@@ -70,7 +70,7 @@ export class Matrix {
         return result;
     }
 
-    public multiplyBy(n: number): Matrix {
+    multiplyBy(n: number): Matrix {
         const result = new Matrix(this.rowsCount, this.colsCount);
 
         for (let iRow = 0; iRow < this.data.length; iRow++) {
@@ -82,7 +82,7 @@ export class Matrix {
         return result;
     }
 
-    public multiply(matrix: Matrix): Matrix {
+    multiply(matrix: Matrix): Matrix {
         if (this.colsCount !== matrix.rowsCount) {
             throw new Error('The number of columns in the first matrix must be equal to the number of rows in the second matrix.');
         }
@@ -106,11 +106,11 @@ export class Matrix {
         return result;
     }
 
-    public get data(): number[][] {
+    get data(): number[][] {
         return this._data;
     }
 
-    public set data(matrixData: number[][]) {
+    set data(matrixData: number[][]) {
         if (!Matrix.isValid(matrixData)) {
             throw new Error('The given matrix is not valid.');
         }

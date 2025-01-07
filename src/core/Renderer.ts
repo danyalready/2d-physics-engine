@@ -9,7 +9,7 @@ export class Renderer {
     ) {}
 
     /** Load a sprite into the cache for faster rendering. */
-    public async loadSprite(key: string, imagePath: string): Promise<void> {
+    async loadSprite(key: string, imagePath: string): Promise<void> {
         return new Promise((resolve, reject) => {
             const img = new Image();
             img.onload = () => {
@@ -22,7 +22,7 @@ export class Renderer {
     }
 
     /** Draw a sprite at the given position with optional rotation and scale. */
-    public drawSprite(key: string, position: Vector2D, rotation: number = 0, scale: Vector2D = new Vector2D(1, 1)): void {
+    drawSprite(key: string, position: Vector2D, rotation: number = 0, scale: Vector2D = new Vector2D(1, 1)): void {
         const sprite = this.spriteCache.get(key);
 
         if (!sprite) return;
@@ -36,7 +36,7 @@ export class Renderer {
     }
 
     // Clear the entire canvas
-    public clear(): void {
+    clear(): void {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 }
