@@ -76,7 +76,7 @@ describe('Matrix class:', () => {
             ]);
         });
 
-        test('`subtr`', () => {
+        test('`subtract`', () => {
             const matrixA = new Matrix(2, 2);
             const matrixB = new Matrix(2, 2);
 
@@ -89,13 +89,13 @@ describe('Matrix class:', () => {
                 [7, 8],
             ];
 
-            expect(matrixB.subtr(matrixA).data).toMatchObject([
+            expect(matrixB.subtract(matrixA).data).toMatchObject([
                 [4, 4],
                 [4, 4],
             ]);
         });
 
-        test('`multBy`', () => {
+        test('`multiplyBy`', () => {
             const matrixA = new Matrix(2, 2);
 
             matrixA.data = [
@@ -103,13 +103,13 @@ describe('Matrix class:', () => {
                 [3, 4],
             ];
 
-            expect(matrixA.multBy(2).data).toMatchObject([
+            expect(matrixA.multiplyBy(2).data).toMatchObject([
                 [2, 4],
                 [6, 8],
             ]);
         });
 
-        test('`mult`', () => {
+        test('`multiply`', () => {
             const matrixA = new Matrix(2, 3);
             const matrixB = new Matrix(3, 2);
 
@@ -123,7 +123,7 @@ describe('Matrix class:', () => {
                 [5, 6],
             ];
 
-            expect(matrixA.mult(matrixB).data).toMatchObject([
+            expect(matrixA.multiply(matrixB).data).toMatchObject([
                 [22, 28],
                 [49, 64],
             ]);

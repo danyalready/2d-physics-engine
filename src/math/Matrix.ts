@@ -1,19 +1,18 @@
-import { getDot } from '../utils';
+import { getDot } from '../uitls';
 
 export class Matrix {
-    public readonly rowsCount: number;
-    public readonly colsCount: number;
     private _data: number[][];
 
-    constructor(rows: number, cols: number) {
-        this.rowsCount = rows;
-        this.colsCount = cols;
+    constructor(
+        public readonly rowsCount: number,
+        public readonly colsCount: number,
+    ) {
         this._data = [];
 
-        for (let iRow = 0; iRow < rows; iRow++) {
+        for (let iRow = 0; iRow < rowsCount; iRow++) {
             const row: number[] = [];
 
-            for (let iCol = 0; iCol < cols; iCol++) row.push(0);
+            for (let iCol = 0; iCol < colsCount; iCol++) row.push(0);
 
             this._data.push(row);
         }
@@ -41,7 +40,7 @@ export class Matrix {
         return result;
     }
 
-    public subtr(matrix: Matrix): Matrix {
+    public subtract(matrix: Matrix): Matrix {
         if (this.colsCount !== matrix.colsCount || this.rowsCount !== matrix.rowsCount) {
             throw new Error('The order of the matrices are not equal.');
         }
@@ -73,7 +72,7 @@ export class Matrix {
         return result;
     }
 
-    public multBy(n: number): Matrix {
+    public multiplyBy(n: number): Matrix {
         const result = new Matrix(this.rowsCount, this.colsCount);
 
         for (let iRow = 0; iRow < this.data.length; iRow++) {
@@ -85,7 +84,7 @@ export class Matrix {
         return result;
     }
 
-    public mult(matrix: Matrix): Matrix {
+    public multiply(matrix: Matrix): Matrix {
         if (this.colsCount !== matrix.rowsCount) {
             throw new Error('The number of columns in the first matrix must be equal to the number of rows in the second matrix.');
         }
