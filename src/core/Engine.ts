@@ -31,6 +31,7 @@ export class Engine {
         }
 
         this.scene = scene;
+
         scene.onLoad();
     }
 
@@ -39,6 +40,7 @@ export class Engine {
             this.isRunning = true;
             this.lastFrameTime = performance.now();
             this.accumulator = 0;
+
             requestAnimationFrame(this.loop);
         }
     }

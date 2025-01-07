@@ -1,4 +1,4 @@
-import { ColliderComponent } from '../components/ColliderComponent';
+import { ColliderComponent } from '../components/Colliders/ColliderComponent';
 import { TransformComponent } from '../components/TransformComponent';
 import { Entity } from '../core/Entity';
 import { Vector2D } from '../math/Vector2D';
