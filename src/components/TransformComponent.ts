@@ -62,7 +62,5 @@ export class TransformComponent extends Component {
         this.scale = scale.clone();
     }
 
-    update(deltaTime: number): void {
-        // Component update logic if needed
-    }
+    update(): void {}
 }

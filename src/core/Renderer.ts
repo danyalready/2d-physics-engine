@@ -1,3 +1,4 @@
+import { TransformComponent } from '../components/TransformComponent';
 import { Vector2D } from '../math/Vector2D';
 
 export class Renderer {
@@ -33,6 +34,14 @@ export class Renderer {
         this.context.scale(scale.x, scale.y);
         this.context.drawImage(sprite, -sprite.width / 2, -sprite.height / 2);
         this.context.restore();
+    }
+
+    drawLineToPosition(transform: TransformComponent) {
+        this.context.beginPath();
+        this.context.moveTo(0, 0);
+        this.context.lineTo(transform.getPosition().x, transform.getPosition().y);
+        this.context.strokeStyle = 'red';
+        this.context.stroke();
     }
 
     // Clear the entire canvas
