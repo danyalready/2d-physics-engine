@@ -1,4 +1,3 @@
-import { AnimationSystem } from '../systems/AnimationSystem';
 import { PhysicsSystem } from '../systems/PhysicsSystem';
 import { System } from '../systems/System';
 import { InputManager } from './InputManager';
@@ -21,7 +20,7 @@ export class Engine {
         this.loop = this.loop.bind(this);
 
         // Initialize systems
-        this.systems.push(new PhysicsSystem(), new AnimationSystem());
+        this.systems.push(new PhysicsSystem());
     }
 
     setScene(scene: Scene): void {

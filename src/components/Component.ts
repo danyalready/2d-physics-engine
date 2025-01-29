@@ -1,9 +1,5 @@
-import { Entity } from '../core/Entity';
-
 export interface ComponentType {
     readonly componentId: symbol;
-
-    entity: Entity;
 
     onStart?(): void;
     onDestroy?(): void;
@@ -11,10 +7,7 @@ export interface ComponentType {
 }
 
 export abstract class Component implements ComponentType {
-    constructor(
-        public readonly componentId: symbol,
-        public entity: Entity,
-    ) {}
+    constructor(public readonly componentId: symbol) {}
 
     onStart(): void {}
     onDestroy(): void {}

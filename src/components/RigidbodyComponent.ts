@@ -1,6 +1,5 @@
 import { Vector2D } from '../math/Vector2D';
 import { Component } from './Component';
-import { Entity } from '../core/Entity';
 
 interface RigidbodyComponentOptions {
     mass?: number;
@@ -18,8 +17,8 @@ export class RigidbodyComponent extends Component {
     private restitution = 1;
     private friction = 0.1;
 
-    constructor(entity: Entity, options: RigidbodyComponentOptions) {
-        super(Symbol('Rigidbody'), entity);
+    constructor(options: RigidbodyComponentOptions) {
+        super(Symbol('Rigidbody'));
 
         this.mass = options.mass || this.mass;
         this.restitution = options.restitution || this.restitution;

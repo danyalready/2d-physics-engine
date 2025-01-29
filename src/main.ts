@@ -19,10 +19,10 @@ window.addEventListener('load', () => {
     // ====== OPEN PLAYGROUND ======
 
     const entity1 = new Entity();
-    entity1.addComponent(new TransformComponent(entity1, new Vector2D(600, 400)));
+    entity1.addComponent(new TransformComponent(new Vector2D(600, 400)));
 
     const entity2 = new Entity();
-    entity2.addComponent(new TransformComponent(entity2, new Vector2D(200, 350)));
+    entity2.addComponent(new TransformComponent(new Vector2D(200, 350)));
 
     scene.addEntity(entity1);
     scene.addEntity(entity2);

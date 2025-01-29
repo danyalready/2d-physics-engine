@@ -1,15 +1,13 @@
-import { Entity } from '../core/Entity';
 import { Vector2D } from '../math/Vector2D';
 import { Component } from './Component';
 
 export class TransformComponent extends Component {
     constructor(
-        entity: Entity,
         private position: Vector2D = new Vector2D(),
         private rotation: number = 0, // In radians
         private scale: Vector2D = new Vector2D(1, 1),
     ) {
-        super(Symbol('Transform'), entity);
+        super(Symbol('Transform'));
     }
 
     // Transform a point from local space to world space
