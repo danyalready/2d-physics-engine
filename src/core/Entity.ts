@@ -56,8 +56,8 @@ export class Entity {
             component.update(this, deltaTime);
         }
 
-        for (const child of this.children) {
-            child.update(deltaTime);
+        for (const entity of this.children) {
+            entity.update(deltaTime);
         }
     }
 

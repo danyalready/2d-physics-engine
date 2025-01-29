@@ -1,3 +1,4 @@
+import { Drawer } from '../components/DrawerComponents/Drawer.component';
 import { TransformComponent } from '../components/TransformComponent';
 import { Scene } from '../core/Scene';
 import { Vector2D } from '../math/Vector2D';
@@ -10,7 +11,7 @@ export class RenderingSystem extends System {
 
     constructor(
         private canvas: HTMLCanvasElement,
-        private context: CanvasRenderingContext2D,
+        private canvasCtx: CanvasRenderingContext2D,
     ) {
         super();
     }
@@ -34,34 +35,40 @@ export class RenderingSystem extends System {
 
         if (!sprite) return;
 
-        this.context.save();
-        this.context.translate(position.x, position.y);
-        this.context.rotate(rotation);
-        this.context.scale(scale.x, scale.y);
-        this.context.drawImage(sprite, -sprite.width / 2, -sprite.height / 2);
-        this.context.restore();
+        this.canvasCtx.save();
+        this.canvasCtx.translate(position.x, position.y);
+        this.canvasCtx.rotate(rotation);
+        this.canvasCtx.scale(scale.x, scale.y);
+        this.canvasCtx.drawImage(sprite, -sprite.width / 2, -sprite.height / 2);
+        this.canvasCtx.restore();
     }
 
     drawLineToPosition(transform: TransformComponent) {
-        this.context.beginPath();
-        this.context.moveTo(0, 0);
-        this.context.lineTo(transform.getPosition().x, transform.getPosition().y);
-        this.context.strokeStyle = 'red';
-        this.context.stroke();
+        this.canvasCtx.beginPath();
+        this.canvasCtx.moveTo(0, 0);
+        this.canvasCtx.lineTo(transform.getPosition().x, transform.getPosition().y);
+        this.canvasCtx.strokeStyle = 'red';
+        this.canvasCtx.stroke();
     }
 
     // Clear the entire canvas
     clear(): void {
-        this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
     update(scene: Scene): void {
         this.clear();
 
         for (const entity of scene.getAllEntities()) {
+            const drawer = entity.getComponent(Drawer);
             const transform = entity.getComponent(TransformComponent);
 
-            if (transform) this.drawLineToPosition(transform);
+            if (transform && drawer) {
+                this.drawLineToPosition(transform);
+                drawer.draw(this.canvasCtx, transform);
+            }
+
+            // if (shape) shape.draw(this.canvasCtx, entity);
         }
     }
 }
