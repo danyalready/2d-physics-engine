@@ -1,7 +1,7 @@
 import { AnimationSystem } from '../systems/AnimationSystem';
 import { CollisionSystem } from '../systems/CollisionSystem';
 import { PhysicsSystem } from '../systems/PhysicsSystem';
-import { System } from '../systems/System.type';
+import { System } from '../systems/System';
 import { InputManager } from './InputManager';
 import { Renderer } from './Renderer';
 import { Scene } from './Scene';

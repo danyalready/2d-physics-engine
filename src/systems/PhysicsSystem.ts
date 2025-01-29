@@ -1,9 +1,9 @@
 import { RigidbodyComponent } from '../components/RigidbodyComponent';
 import { TransformComponent } from '../components/TransformComponent';
 import { Scene } from '../core/Scene';
-import { type System } from './System.type';
+import { System } from './System';
 
-export class PhysicsSystem implements System {
+export class PhysicsSystem extends System {
     readonly needsFixedUpdate = true;
 
     update(scene: Scene, deltaTime: number): void {

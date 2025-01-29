@@ -1,6 +1,6 @@
 import { Entity } from '../../core/Entity';
 import { Vector2D } from '../../math/Vector2D';
-import { type Component } from '../Component.type';
+import { Component } from '../Component';
 import { RigidbodyComponent } from '../RigidbodyComponent';
 
 export interface CollisionInfo {
@@ -19,10 +19,10 @@ export interface BoundingBox {
     max: Vector2D;
 }
 
-export abstract class ColliderComponent implements Component {
-    readonly componentId = Symbol('Collider');
+export abstract class Collider extends Component {
+    constructor(entity: Entity) {
+        super(Symbol('Collider'), entity);
 
-    constructor(public entity: Entity) {
         // When a collider is added, calculate the rigidbody's inertia if needed
         const rigidBody = entity.getComponent(RigidbodyComponent);
 
@@ -32,8 +32,6 @@ export abstract class ColliderComponent implements Component {
     }
 
     abstract calculateInertia(mass: number): number;
-    abstract getCollisionInfo(other: ColliderComponent): CollisionInfo | null;
+    abstract getCollisionInfo(other: Collider): CollisionInfo | null;
     abstract getBoundingBox(): BoundingBox;
-
-    update(deltaTime: number): void {}
 }

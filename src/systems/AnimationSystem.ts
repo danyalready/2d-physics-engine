@@ -1,8 +1,8 @@
 import { AnimatorComponent } from '../components/AnimatorComponent';
 import { Scene } from '../core/Scene';
-import { type System } from './System.type';
+import { System } from './System';
 
-export class AnimationSystem implements System {
+export class AnimationSystem extends System {
     readonly needsFixedUpdate = false;
 
     update(scene: Scene, deltaTime: number): void {

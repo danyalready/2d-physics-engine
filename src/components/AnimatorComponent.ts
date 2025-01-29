@@ -2,7 +2,7 @@ import { Entity } from '../core/Entity';
 import { Component } from './Component';
 
 export class AnimatorComponent extends Component {
-    constructor(public entity: Entity) {
+    constructor(entity: Entity) {
         super(Symbol('Animator'), entity);
     }
 

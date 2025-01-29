@@ -4,7 +4,7 @@ import { Component } from './Component';
 
 export class TransformComponent extends Component {
     constructor(
-        public entity: Entity,
+        entity: Entity,
         private position: Vector2D = new Vector2D(),
         private rotation: number = 0, // In radians
         private scale: Vector2D = new Vector2D(1, 1),

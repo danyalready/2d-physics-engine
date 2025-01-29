@@ -2,9 +2,9 @@ import { Entity } from '../../core/Entity';
 import { Vector2D } from '../../math/Vector2D';
 import { TransformComponent } from '../TransformComponent';
 import { CircleCollider } from './CircleCollider';
-import { BoundingBox, ColliderComponent, CollisionInfo } from './ColliderComponent';
+import { BoundingBox, Collider, CollisionInfo } from './Collider';
 
-export class RectangleCollider extends ColliderComponent {
+export class RectangleCollider extends Collider {
     constructor(
         entity: Entity,
         private width: number,
@@ -54,7 +54,7 @@ export class RectangleCollider extends ColliderComponent {
         };
     }
 
-    getCollisionInfo(other: ColliderComponent): CollisionInfo | null {
+    getCollisionInfo(other: Collider): CollisionInfo | null {
         if (other instanceof CircleCollider) {
             const result = other.getCollisionInfo(this);
 
@@ -81,4 +81,6 @@ export class RectangleCollider extends ColliderComponent {
         // Implementation from earlier code
         return [];
     }
+
+    update() {}
 }

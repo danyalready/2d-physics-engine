@@ -5,20 +5,16 @@ export interface ComponentType {
 
     entity: Entity;
 
-    onStart(): void;
-    onDestroy(): void;
+    onStart?(): void;
+    onDestroy?(): void;
     update(deltaTime: number): void;
 }
 
-export class Component implements ComponentType {
+export abstract class Component implements ComponentType {
     constructor(
         public readonly componentId: symbol,
         public entity: Entity,
     ) {}
 
-    onStart() {}
-
-    onDestroy() {}
-
-    update(deltaTime: number) {}
+    abstract update(deltaTime: number): void;
 }
