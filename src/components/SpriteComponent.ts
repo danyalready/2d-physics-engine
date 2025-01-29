@@ -1,14 +1,14 @@
-import { type Component } from './Component.type';
 import { Entity } from '../core/Entity';
+import { Component } from './Component';
 import { TransformComponent } from './TransformComponent';
 
-export class SpriteComponent implements Component {
-    readonly componentId = Symbol('Sprite');
-
+export class SpriteComponent extends Component {
     constructor(
-        public entity: Entity,
+        entity: Entity,
         private spriteKey: string,
-    ) {}
+    ) {
+        super(Symbol('Sprite'), entity);
+    }
 
     update(deltaTime: number): void {
         const transform = this.entity.getComponent(TransformComponent);

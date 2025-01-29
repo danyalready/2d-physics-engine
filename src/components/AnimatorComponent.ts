@@ -1,10 +1,10 @@
 import { Entity } from '../core/Entity';
-import { type Component } from './Component.type';
+import { Component } from './Component';
 
-export class AnimatorComponent implements Component {
-    readonly componentId = Symbol('Animator');
-
-    constructor(public entity: Entity) {}
+export class AnimatorComponent extends Component {
+    constructor(public entity: Entity) {
+        super(Symbol('Animator'), entity);
+    }
 
     update(deltaTime: number): void {
         // Collision update logic if needed
