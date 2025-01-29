@@ -32,6 +32,7 @@ export abstract class Collider extends Component {
     }
 
     abstract calculateInertia(mass: number): number;
-    abstract getCollisionInfo(other: Collider): CollisionInfo | null;
     abstract getBoundingBox(): BoundingBox;
+
+    abstract checkCollision(other: Collider): CollisionInfo | null;
 }

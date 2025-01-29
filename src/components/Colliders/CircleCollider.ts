@@ -29,19 +29,7 @@ export class CircleCollider extends Collider {
         };
     }
 
-    getCollisionInfo(other: Collider): CollisionInfo | null {
-        if (other instanceof CircleCollider) {
-            return this.circleCircleCollision(other);
-        }
-
-        // if (collider instanceof RectangleCollider) {
-        //     return this.circleRectangleCollision(collider);
-        // }
-
-        return null;
-    }
-
-    private circleCircleCollision(other: CircleCollider): CollisionInfo | null {
+    private circleCollision(other: CircleCollider): CollisionInfo | null {
         const myPos = this.entity.getComponent(TransformComponent)?.getPosition() || new Vector2D();
         const otherPos = other.entity.getComponent(TransformComponent)?.getPosition() || new Vector2D();
 
@@ -60,10 +48,13 @@ export class CircleCollider extends Collider {
         return null;
     }
 
-    // private circleRectangleCollision(rect: RectangleCollider): CollisionInfo | null {
-    //     // Implementation from earlier code
-    //     // Returns { normal, penetration, contact } or null
-    // }
+    checkCollision(other: Collider): CollisionInfo | null {
+        if (other instanceof CircleCollider) {
+            return this.circleCollision(other);
+        }
+
+        return null;
+    }
 
     update() {}
 }
