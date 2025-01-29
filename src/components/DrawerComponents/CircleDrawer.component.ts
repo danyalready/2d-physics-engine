@@ -1,4 +1,4 @@
-import { TransformComponent } from '../TransformComponent';
+import { Transform } from '../Transform.component';
 import { Drawer } from './Drawer.component';
 
 export class CircleDrawer extends Drawer {
@@ -6,7 +6,7 @@ export class CircleDrawer extends Drawer {
         super();
     }
 
-    draw(canvasCtx: CanvasRenderingContext2D, transform: TransformComponent): void {
+    draw(canvasCtx: CanvasRenderingContext2D, transform: Transform): void {
         const { x, y } = transform.getPosition();
 
         canvasCtx.beginPath();

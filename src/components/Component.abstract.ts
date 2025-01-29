@@ -3,8 +3,8 @@ import { Entity } from '../core/Entity';
 export interface ComponentType {
     readonly componentId: symbol;
 
-    onStart?(): void;
-    onDestroy?(): void;
+    onStart(): void;
+    onDestroy(): void;
     update(parentEntity: Entity, deltaTime: number): void;
 }
 

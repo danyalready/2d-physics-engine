@@ -1,7 +1,7 @@
 import { Vector2D } from '../math/Vector2D';
 import { Component } from './Component.abstract';
 
-export class TransformComponent extends Component {
+export class Transform extends Component {
     readonly componentId = Symbol('Transform');
 
     constructor(

@@ -1,5 +1,5 @@
 import { CircleDrawer } from './components/DrawerComponents/CircleDrawer.component';
-import { TransformComponent } from './components/TransformComponent';
+import { Transform } from './components/Transform.component';
 import { Engine } from './core/Engine';
 import { Entity } from './core/Entity';
 import { InputManager } from './core/InputManager';
@@ -18,11 +18,11 @@ window.addEventListener('load', () => {
     // ====== OPEN PLAYGROUND ======
 
     const entity1 = new Entity();
-    entity1.addComponent(new TransformComponent(new Vector2D(600, 400)));
+    entity1.addComponent(new Transform(new Vector2D(600, 400)));
     entity1.addComponent(new CircleDrawer(50));
 
     const entity2 = new Entity();
-    entity2.addComponent(new TransformComponent(new Vector2D(200, 350)));
+    entity2.addComponent(new Transform(new Vector2D(200, 350)));
     entity2.addComponent(new CircleDrawer(70));
 
     scene.addEntity(entity1);

@@ -2,13 +2,13 @@ import { Entity } from '../core/Entity';
 import { Vector2D } from '../math/Vector2D';
 import { Component } from './Component.abstract';
 
-interface RigidbodyComponentOptions {
+interface RigidbodyOptions {
     mass?: number;
     restitution?: number;
     friction?: number;
 }
 
-export class RigidbodyComponent extends Component {
+export class Rigidbody extends Component {
     readonly componentId = Symbol('Rigidbody');
 
     private velocity = new Vector2D();
@@ -20,7 +20,7 @@ export class RigidbodyComponent extends Component {
     private restitution = 1;
     private friction = 0.1;
 
-    constructor(options: RigidbodyComponentOptions) {
+    constructor(options: RigidbodyOptions) {
         super();
 
         this.mass = options.mass || this.mass;

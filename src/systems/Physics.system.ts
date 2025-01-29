@@ -1,17 +1,17 @@
-import { RigidbodyComponent } from '../components/RigidbodyComponent';
-import { TransformComponent } from '../components/TransformComponent';
+import { Rigidbody } from '../components/Rigidbody.component';
+import { Transform } from '../components/Transform.component';
 import { Scene } from '../core/Scene';
 import { System } from './System.abstract';
 
-export class PhysicsSystem extends System {
+export class Physics extends System {
     readonly needsFixedUpdate = true;
 
     update(scene: Scene, deltaTime: number): void {
         const entities = scene.getAllEntities();
 
         for (const entity of entities) {
-            const transform = entity.getComponent(TransformComponent);
-            const rigidbody = entity.getComponent(RigidbodyComponent);
+            const transform = entity.getComponent(Transform);
+            const rigidbody = entity.getComponent(Rigidbody);
 
             if (transform && rigidbody) {
                 // Apply velocity

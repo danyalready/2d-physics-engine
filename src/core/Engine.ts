@@ -1,5 +1,5 @@
-import { PhysicsSystem } from '../systems/PhysicsSystem';
-import { RenderingSystem } from '../systems/RenderingSystem';
+import { Physics } from '../systems/Physics.system';
+import { Rendering } from '../systems/Rendering.system';
 import { System } from '../systems/System.abstract';
 import { InputManager } from './InputManager';
 import { Scene } from './Scene';
@@ -21,7 +21,7 @@ export class Engine {
         this.loop = this.loop.bind(this);
 
         // Initialize systems
-        this.systems.push(new RenderingSystem(canvas, canvasCtx), new PhysicsSystem());
+        this.systems.push(new Rendering(canvas, canvasCtx), new Physics());
     }
 
     setScene(scene: Scene): void {

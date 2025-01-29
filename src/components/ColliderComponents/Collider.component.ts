@@ -1,3 +1,4 @@
+import { Entity } from '../../core/Entity';
 import { Vector2D } from '../../math/Vector2D';
 import { Component } from '../Component.abstract';
 
@@ -17,7 +18,7 @@ export interface BoundingBox {
     max: Vector2D;
 }
 
-export abstract class Collider extends Component {
+export class Collider extends Component {
     readonly componentId = Symbol('Collider');
 
     // constructor() {
@@ -35,4 +36,6 @@ export abstract class Collider extends Component {
     // abstract getBoundingBox(): BoundingBox;
 
     // abstract checkCollision(other: Collider): CollisionInfo | null;
+
+    update(_parentEntity: Entity, _deltaTime: number): void {}
 }

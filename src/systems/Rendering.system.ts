@@ -1,10 +1,10 @@
 import { Drawer } from '../components/DrawerComponents/Drawer.component';
-import { TransformComponent } from '../components/TransformComponent';
+import { Transform } from '../components/Transform.component';
 import { Scene } from '../core/Scene';
 import { Vector2D } from '../math/Vector2D';
 import { System } from './System.abstract';
 
-export class RenderingSystem extends System {
+export class Rendering extends System {
     readonly needsFixedUpdate = false;
 
     private spriteCache: Map<string, HTMLImageElement> = new Map();
@@ -43,7 +43,7 @@ export class RenderingSystem extends System {
         this.canvasCtx.restore();
     }
 
-    drawLineToPosition(transform: TransformComponent) {
+    drawLineToPosition(transform: Transform) {
         this.canvasCtx.beginPath();
         this.canvasCtx.moveTo(0, 0);
         this.canvasCtx.lineTo(transform.getPosition().x, transform.getPosition().y);
@@ -61,7 +61,7 @@ export class RenderingSystem extends System {
 
         for (const entity of scene.getAllEntities()) {
             const drawer = entity.getComponent(Drawer);
-            const transform = entity.getComponent(TransformComponent);
+            const transform = entity.getComponent(Transform);
 
             if (transform && drawer) {
                 this.drawLineToPosition(transform);

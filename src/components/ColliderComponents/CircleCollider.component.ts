@@ -1,6 +1,6 @@
-import { Collider } from './Collider.abstract';
+import { Collider } from './Collider.component';
 
-export class CircleColliderComponent extends Collider {
+export class CircleCollider extends Collider {
     constructor(private radius: number) {
         super();
     }
