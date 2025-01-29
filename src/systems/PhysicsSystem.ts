@@ -1,7 +1,7 @@
 import { RigidbodyComponent } from '../components/RigidbodyComponent';
 import { TransformComponent } from '../components/TransformComponent';
 import { Scene } from '../core/Scene';
-import { System } from './System';
+import { System } from './System.abstract';
 
 export class PhysicsSystem extends System {
     readonly needsFixedUpdate = true;

@@ -7,7 +7,7 @@ export interface ComponentType {
 }
 
 export abstract class Component implements ComponentType {
-    constructor(public readonly componentId: symbol) {}
+    abstract readonly componentId: symbol;
 
     onStart(): void {}
     onDestroy(): void {}

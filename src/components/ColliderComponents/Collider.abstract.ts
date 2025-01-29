@@ -1,5 +1,5 @@
 import { Vector2D } from '../../math/Vector2D';
-import { Component } from '../Component';
+import { Component } from '../Component.abstract';
 
 export interface CollisionInfo {
     /** Direction of collision. */
@@ -18,8 +18,10 @@ export interface BoundingBox {
 }
 
 export abstract class Collider extends Component {
+    readonly componentId = Symbol('Collider');
+
     constructor() {
-        super(Symbol('Collider'));
+        super();
 
         // When a collider is added, calculate the rigidbody's inertia if needed
         // const rigidBody = entity.getComponent(RigidbodyComponent);

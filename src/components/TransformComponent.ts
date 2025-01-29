@@ -1,13 +1,15 @@
 import { Vector2D } from '../math/Vector2D';
-import { Component } from './Component';
+import { Component } from './Component.abstract';
 
 export class TransformComponent extends Component {
+    readonly componentId = Symbol('Transform');
+
     constructor(
         private position: Vector2D = new Vector2D(),
         private rotation: number = 0, // In radians
         private scale: Vector2D = new Vector2D(1, 1),
     ) {
-        super(Symbol('Transform'));
+        super();
     }
 
     // Transform a point from local space to world space

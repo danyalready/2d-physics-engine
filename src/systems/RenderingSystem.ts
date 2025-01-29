@@ -1,7 +1,7 @@
 import { TransformComponent } from '../components/TransformComponent';
 import { Scene } from '../core/Scene';
 import { Vector2D } from '../math/Vector2D';
-import { System } from './System';
+import { System } from './System.abstract';
 
 export class RenderingSystem extends System {
     readonly needsFixedUpdate = false;

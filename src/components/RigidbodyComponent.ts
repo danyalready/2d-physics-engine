@@ -1,5 +1,5 @@
 import { Vector2D } from '../math/Vector2D';
-import { Component } from './Component';
+import { Component } from './Component.abstract';
 
 interface RigidbodyComponentOptions {
     mass?: number;
@@ -8,6 +8,8 @@ interface RigidbodyComponentOptions {
 }
 
 export class RigidbodyComponent extends Component {
+    readonly componentId = Symbol('Rigidbody');
+
     private velocity = new Vector2D();
     private angularVelocity = 0;
     private forces = new Vector2D();
@@ -18,7 +20,7 @@ export class RigidbodyComponent extends Component {
     private friction = 0.1;
 
     constructor(options: RigidbodyComponentOptions) {
-        super(Symbol('Rigidbody'));
+        super();
 
         this.mass = options.mass || this.mass;
         this.restitution = options.restitution || this.restitution;

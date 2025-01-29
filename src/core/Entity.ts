@@ -1,4 +1,4 @@
-import { Component } from '../components/Component';
+import { Component } from '../components/Component.abstract';
 
 export class Entity {
     private components = new Map<symbol, Component>();

@@ -1,6 +1,6 @@
 import { PhysicsSystem } from '../systems/PhysicsSystem';
 import { RenderingSystem } from '../systems/RenderingSystem';
-import { System } from '../systems/System';
+import { System } from '../systems/System.abstract';
 import { InputManager } from './InputManager';
 import { Scene } from './Scene';
 
