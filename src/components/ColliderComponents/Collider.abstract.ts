@@ -20,16 +20,16 @@ export interface BoundingBox {
 export abstract class Collider extends Component {
     readonly componentId = Symbol('Collider');
 
-    constructor() {
-        super();
+    // constructor() {
+    //     super();
 
-        // When a collider is added, calculate the rigidbody's inertia if needed
-        // const rigidBody = entity.getComponent(RigidbodyComponent);
+    //     // When a collider is added, calculate the rigidbody's inertia if needed
+    //     // const rigidBody = entity.getComponent(RigidbodyComponent);
 
-        // if (rigidBody) {
-        //     rigidBody.setInertia(this.calculateInertia(rigidBody.getMass()));
-        // }
-    }
+    //     // if (rigidBody) {
+    //     //     rigidBody.setInertia(this.calculateInertia(rigidBody.getMass()));
+    //     // }
+    // }
 
     // abstract calculateInertia(mass: number): number;
     // abstract getBoundingBox(): BoundingBox;

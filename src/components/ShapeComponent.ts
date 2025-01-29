@@ -1,7 +1,8 @@
+import { Entity } from '../core/Entity';
 import { Component } from './Component.abstract';
 
 export class ShapeComponent extends Component {
     readonly componentId = Symbol('Shape');
 
-    update(deltaTime: number): void {}
+    update(parentEntity: Entity, deltaTime: number): void {}
 }

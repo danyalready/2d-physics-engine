@@ -1,3 +1,4 @@
+import { Entity } from '../core/Entity';
 import { Vector2D } from '../math/Vector2D';
 import { Component } from './Component.abstract';
 
@@ -79,7 +80,7 @@ export class RigidbodyComponent extends Component {
         return this.friction;
     }
 
-    update(deltaTime: number): void {
+    update(_parentEntity: Entity, deltaTime: number): void {
         // Apply accumulated forces
         const acceleration = this.forces.scale(this.getInverseMass());
         this.velocity = this.velocity.add(acceleration.scale(deltaTime));

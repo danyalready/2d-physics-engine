@@ -1,9 +1,11 @@
+import { Entity } from '../core/Entity';
+
 export interface ComponentType {
     readonly componentId: symbol;
 
     onStart?(): void;
     onDestroy?(): void;
-    update(deltaTime: number): void;
+    update(parentEntity: Entity, deltaTime: number): void;
 }
 
 export abstract class Component implements ComponentType {
@@ -12,5 +14,5 @@ export abstract class Component implements ComponentType {
     onStart(): void {}
     onDestroy(): void {}
 
-    abstract update(deltaTime: number): void;
+    abstract update(parentEntity: Entity, deltaTime: number): void;
 }
