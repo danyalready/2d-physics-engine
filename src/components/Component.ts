@@ -5,9 +5,8 @@ export interface ComponentType {
 
     entity: Entity;
 
-    onStart?(): void;
-    onDestroy?(): void;
-
+    onStart(): void;
+    onDestroy(): void;
     update(deltaTime: number): void;
 }
 
