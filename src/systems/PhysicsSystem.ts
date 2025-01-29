@@ -24,7 +24,7 @@ export class PhysicsSystem extends System {
                 transform.setRotation(transform.getRotation() + angularVel * deltaTime);
 
                 // Apply forces and torques
-                rigidbody.applyAccumulatedForces(deltaTime);
+                // rigidbody.applyAccumulatedForces(deltaTime);
             }
         }
     }

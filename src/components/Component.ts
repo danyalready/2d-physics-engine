@@ -16,5 +16,8 @@ export abstract class Component implements ComponentType {
         public entity: Entity,
     ) {}
 
+    onStart(): void {}
+    onDestroy(): void {}
+
     abstract update(deltaTime: number): void;
 }
