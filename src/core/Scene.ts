@@ -1,6 +1,4 @@
-import { TransformComponent } from '../components/TransformComponent';
 import { Entity } from './Entity';
-import { Renderer } from './Renderer';
 
 export class Scene {
     private entities = new Set<Entity>();
@@ -28,14 +26,6 @@ export class Scene {
     update(deltaTime: number): void {
         for (const entity of this.entities) {
             entity.update(deltaTime);
-        }
-    }
-
-    render(renderer: Renderer): void {
-        for (const entity of this.entities) {
-            const transform = entity.getComponent(TransformComponent);
-
-            if (transform) renderer.drawLineToPosition(transform);
         }
     }
 

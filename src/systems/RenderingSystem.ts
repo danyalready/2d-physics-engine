@@ -1,13 +1,19 @@
 import { TransformComponent } from '../components/TransformComponent';
+import { Scene } from '../core/Scene';
 import { Vector2D } from '../math/Vector2D';
+import { System } from './System';
 
-export class Renderer {
+export class RenderingSystem extends System {
+    readonly needsFixedUpdate = false;
+
     private spriteCache: Map<string, HTMLImageElement> = new Map();
 
     constructor(
         private canvas: HTMLCanvasElement,
         private context: CanvasRenderingContext2D,
-    ) {}
+    ) {
+        super();
+    }
 
     /** Load a sprite into the cache for faster rendering. */
     async loadSprite(key: string, imagePath: string): Promise<void> {
@@ -47,5 +53,15 @@ export class Renderer {
     // Clear the entire canvas
     clear(): void {
         this.context.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    update(scene: Scene): void {
+        this.clear();
+
+        for (const entity of scene.getAllEntities()) {
+            const transform = entity.getComponent(TransformComponent);
+
+            if (transform) this.drawLineToPosition(transform);
+        }
     }
 }

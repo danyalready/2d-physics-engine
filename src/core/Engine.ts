@@ -1,7 +1,7 @@
 import { PhysicsSystem } from '../systems/PhysicsSystem';
+import { RenderingSystem } from '../systems/RenderingSystem';
 import { System } from '../systems/System';
 import { InputManager } from './InputManager';
-import { Renderer } from './Renderer';
 import { Scene } from './Scene';
 
 export class Engine {
@@ -14,13 +14,14 @@ export class Engine {
     private accumulator: number = 0;
 
     constructor(
-        private readonly renderer: Renderer,
         private readonly inputManager: InputManager,
+        canvas: HTMLCanvasElement,
+        canvasCtx: CanvasRenderingContext2D,
     ) {
         this.loop = this.loop.bind(this);
 
         // Initialize systems
-        this.systems.push(new PhysicsSystem());
+        this.systems.push(new RenderingSystem(canvas, canvasCtx), new PhysicsSystem());
     }
 
     setScene(scene: Scene): void {
@@ -63,7 +64,6 @@ export class Engine {
 
         // Variable timestep updates for everything else
         this.update(deltaTime);
-        this.render();
 
         requestAnimationFrame(this.loop);
     }
@@ -90,14 +90,6 @@ export class Engine {
             }
 
             this.scene.update(deltaTime);
-        }
-    }
-
-    private render(): void {
-        this.renderer.clear();
-
-        if (this.scene) {
-            this.scene.render(this.renderer);
         }
     }
 }

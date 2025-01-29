@@ -2,7 +2,6 @@ import { TransformComponent } from './components/TransformComponent';
 import { Engine } from './core/Engine';
 import { Entity } from './core/Entity';
 import { InputManager } from './core/InputManager';
-import { Renderer } from './core/Renderer';
 import { Scene } from './core/Scene';
 import { Vector2D } from './math/Vector2D';
 
@@ -10,10 +9,9 @@ window.addEventListener('load', () => {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
     const canvasCtx = canvas.getContext('2d') as CanvasRenderingContext2D;
 
-    const renderer = new Renderer(canvas, canvasCtx);
     const inputManager = new InputManager();
 
-    const engine = new Engine(renderer, inputManager);
+    const engine = new Engine(inputManager, canvas, canvasCtx);
     const scene = new Scene();
 
     // ====== OPEN PLAYGROUND ======
