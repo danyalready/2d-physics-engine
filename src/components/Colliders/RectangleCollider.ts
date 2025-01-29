@@ -37,8 +37,8 @@ export class RectangleCollider extends ColliderComponent {
         const corners = this.getCorners();
 
         let minX = Infinity,
-            minY = Infinity;
-        let maxX = -Infinity,
+            minY = Infinity,
+            maxX = -Infinity,
             maxY = -Infinity;
 
         for (const corner of corners) {
@@ -79,5 +79,6 @@ export class RectangleCollider extends ColliderComponent {
 
     private getCorners(): Vector2D[] {
         // Implementation from earlier code
+        return [];
     }
 }
