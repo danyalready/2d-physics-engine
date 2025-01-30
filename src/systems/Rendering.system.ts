@@ -59,7 +59,7 @@ export class Rendering extends System {
     update(scene: Scene): void {
         this.clear();
 
-        for (const entity of scene.getAllEntities()) {
+        for (const entity of scene.getEntities()) {
             const drawer = entity.getComponent(Drawer);
             const transform = entity.getComponent(Transform);
 

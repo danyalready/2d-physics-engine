@@ -14,7 +14,7 @@ export class Scene {
         this.entityCache = null; // Invalidate cache
     }
 
-    getAllEntities(): Entity[] {
+    getEntities(): Entity[] {
         // Cache entities array to avoid recreating it every frame
         if (!this.entityCache) {
             this.entityCache = Array.from(this.entities);

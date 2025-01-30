@@ -7,7 +7,7 @@ export class Physics extends System {
     readonly needsFixedUpdate = true;
 
     update(scene: Scene, deltaTime: number): void {
-        const entities = scene.getAllEntities();
+        const entities = scene.getEntities();
 
         for (const entity of entities) {
             const transform = entity.getComponent(Transform);
