@@ -1,3 +1,4 @@
+import { Controller } from './components/Controller.component';
 import { CircleDrawer } from './components/DrawerComponents/CircleDrawer.component';
 import { Transform } from './components/Transform.component';
 import { Engine } from './core/Engine';
@@ -20,6 +21,7 @@ window.addEventListener('load', () => {
     const entity1 = new Entity();
     entity1.addComponent(new Transform(new Vector2D(600, 400)));
     entity1.addComponent(new CircleDrawer(50));
+    entity1.addComponent(new Controller(inputManager, 10));
 
     const entity2 = new Entity();
     entity2.addComponent(new Transform(new Vector2D(200, 350)));
