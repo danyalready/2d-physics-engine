@@ -15,30 +15,20 @@ export class Rigidbody extends Component {
     private forces = new Vector2D();
     private torque = 0;
     private mass = 1;
-    private inertia = this.mass * 0.5; // Simple approximation for point mass
+    private inertia = this.mass * 0.5;
     private restitution = 1;
     private friction = 0.1;
 
     constructor(options?: RigidbodyOptions) {
         super();
-
         this.mass = options?.mass || this.mass;
         this.restitution = options?.restitution || this.restitution;
         this.friction = options?.friction || this.friction;
     }
 
-    applyForce(force: Vector2D): void {
-        this.forces = this.forces.add(force);
-    }
+    update(): void {}
 
-    applyImpulse(impulse: Vector2D): void {
-        this.velocity = this.velocity.add(impulse.scale(this.getInverseMass()));
-    }
-
-    applyTorque(torque: number): void {
-        this.torque += torque;
-    }
-
+    // Getters and setters for state
     getVelocity(): Vector2D {
         return this.velocity.clone();
     }
@@ -67,29 +57,34 @@ export class Rigidbody extends Component {
         return this.inertia;
     }
 
-    setInertia(inertia: number): void {
-        this.inertia = inertia;
+    // Force accumulation
+    getAccumulatedForces(): Vector2D {
+        return this.forces.clone();
     }
 
+    getTorque(): number {
+        return this.torque;
+    }
+
+    addForce(force: Vector2D): void {
+        this.forces = this.forces.add(force);
+    }
+
+    addTorque(torque: number): void {
+        this.torque += torque;
+    }
+
+    clearForces(): void {
+        this.forces = new Vector2D();
+        this.torque = 0;
+    }
+
+    // Material properties
     getRestitution(): number {
         return this.restitution;
     }
 
     getFriction(): number {
         return this.friction;
-    }
-
-    update(deltaTime: number): void {
-        // Apply accumulated forces
-        const acceleration = this.forces.scale(this.getInverseMass());
-        this.velocity = this.velocity.add(acceleration.scale(deltaTime));
-
-        // Apply angular acceleration
-        const angularAccel = this.torque / this.inertia;
-        this.angularVelocity += angularAccel * deltaTime;
-
-        // Reset forces and torque
-        this.forces = new Vector2D();
-        this.torque = 0;
     }
 }

@@ -42,7 +42,7 @@ export class Controller extends Component {
             }
 
             if (rigidbody) {
-                rigidbody.applyImpulse(force);
+                rigidbody.addForce(force);
             } else {
                 transform.setPosition(transform.getPosition().add(force));
             }
