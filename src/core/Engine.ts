@@ -103,7 +103,7 @@ export class Engine {
         if (this.scene) {
             for (const system of this.systems) {
                 if (system.needsFixedUpdate) {
-                    system.update(this.scene, fixedDeltaTime);
+                    system.update(fixedDeltaTime, this.scene);
                 }
             }
         }
@@ -116,7 +116,7 @@ export class Engine {
             // Update systems that don't need fixed timestep
             for (const system of this.systems) {
                 if (!system.needsFixedUpdate) {
-                    system.update(this.scene, deltaTime);
+                    system.update(deltaTime, this.scene);
                 }
             }
 
