@@ -6,7 +6,7 @@ import { System } from './System.abstract';
 export class Physics extends System {
     readonly needsFixedUpdate = true;
 
-    update(deltaTime: number, scene: Scene): void {
+    update(scene: Scene, deltaTime: number): void {
         const entities = scene.getEntities();
 
         for (const entity of entities) {
@@ -21,21 +21,35 @@ export class Physics extends System {
             // Step 2: Update positions using new velocities
             this.integrateVelocities(transform, rigidbody, deltaTime);
 
-            // Step 3: Clear accumulated forces for next frame
+            // Step 4: Clear accumulated forces for next frame
             rigidbody.clearForces();
         }
     }
 
     private integrateForces(rigidbody: Rigidbody, deltaTime: number): void {
-        // Update linear velocity from forces
+        const velocity = rigidbody.getVelocity();
+
+        // Apply friction force based on current velocity
+        if (velocity.magnitude !== 0) {
+            // Clamp friction between 0 and 1
+            const frictionCoeff = Math.max(0, Math.min(1, rigidbody.getFriction()));
+
+            const frictionForce = velocity.unit.scale(-frictionCoeff * velocity.magnitude);
+            rigidbody.addForce(frictionForce);
+        }
+
+        // Update linear velocity from all forces (including friction)
         const acceleration = rigidbody.getAccumulatedForces().scale(rigidbody.getInverseMass());
         const deltaV = acceleration.scale(deltaTime);
         rigidbody.setVelocity(rigidbody.getVelocity().add(deltaV));
 
-        // Update angular velocity from torque
-        const angularAccel = rigidbody.getTorque() / rigidbody.getInertia();
-        const deltaAngularV = angularAccel * deltaTime;
-        rigidbody.setAngularVelocity(rigidbody.getAngularVelocity() + deltaAngularV);
+        // Angular velocity decay with clamped friction
+        const angularVelocity = rigidbody.getAngularVelocity();
+        if (angularVelocity !== 0) {
+            const frictionCoeff = Math.max(0, Math.min(1, rigidbody.getFriction()));
+            const angularFriction = angularVelocity * (1 - frictionCoeff * deltaTime);
+            rigidbody.setAngularVelocity(angularFriction);
+        }
     }
 
     private integrateVelocities(transform: Transform, rigidbody: Rigidbody, deltaTime: number): void {

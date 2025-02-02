@@ -56,19 +56,16 @@ export class Rendering extends System {
         this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    update(_deltaTime: number, scene: Scene): void {
+    update(scene: Scene): void {
         this.clear();
 
         for (const entity of scene.getEntities()) {
             const drawer = entity.getComponent(Drawer);
             const transform = entity.getComponent(Transform);
 
-            if (transform && drawer) {
-                this.drawLineToPosition(transform);
-                drawer.draw(this.canvasCtx, transform);
-            }
+            if (!transform || !drawer) continue;
 
-            // if (shape) shape.draw(this.canvasCtx, entity);
+            drawer.draw(this.canvasCtx, transform);
         }
     }
 }

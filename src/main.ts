@@ -21,7 +21,7 @@ window.addEventListener('load', () => {
 
     const entity1 = new Entity();
     entity1.addComponent(new Transform(new Vector2D(600, 400)));
-    entity1.addComponent(new Rigidbody({ friction: 10 }));
+    entity1.addComponent(new Rigidbody({ friction: 1 }));
     entity1.addComponent(new CircleDrawer(50));
     entity1.addComponent(new Controller(inputManager, 100));
 
