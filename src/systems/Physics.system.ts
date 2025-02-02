@@ -6,7 +6,7 @@ import { System } from './System.abstract';
 export class Physics extends System {
     readonly needsFixedUpdate = true;
 
-    update(scene: Scene, deltaTime: number): void {
+    update(deltaTime: number, scene: Scene): void {
         const entities = scene.getEntities();
 
         for (const entity of entities) {
@@ -15,9 +15,7 @@ export class Physics extends System {
 
             if (transform && rigidbody) {
                 // Apply velocity
-                const velocity = rigidbody.getVelocity();
-                const newPosition = transform.getPosition().add(velocity.scale(deltaTime));
-                transform.setPosition(newPosition);
+                transform.setPosition(transform.getPosition().add(rigidbody.getVelocity().scale(deltaTime)));
 
                 // Apply angular velocity
                 const angularVel = rigidbody.getAngularVelocity();

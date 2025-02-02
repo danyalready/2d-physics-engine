@@ -1,5 +1,6 @@
 import { Controller } from './components/Controller.component';
 import { CircleDrawer } from './components/DrawerComponents/CircleDrawer.component';
+import { Rigidbody } from './components/Rigidbody.component';
 import { Transform } from './components/Transform.component';
 import { Engine } from './core/Engine';
 import { Entity } from './core/Entity';
@@ -20,8 +21,9 @@ window.addEventListener('load', () => {
 
     const entity1 = new Entity();
     entity1.addComponent(new Transform(new Vector2D(600, 400)));
+    entity1.addComponent(new Rigidbody({ friction: 10 }));
     entity1.addComponent(new CircleDrawer(50));
-    entity1.addComponent(new Controller(inputManager, 10));
+    entity1.addComponent(new Controller(inputManager, 100));
 
     const entity2 = new Entity();
     entity2.addComponent(new Transform(new Vector2D(200, 350)));

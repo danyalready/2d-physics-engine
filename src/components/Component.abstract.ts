@@ -5,7 +5,7 @@ export interface ComponentType {
 
     onStart(): void;
     onDestroy(): void;
-    update(parentEntity: Entity, deltaTime: number): void;
+    update(deltaTime: number, parentEntity: Entity): void;
 }
 
 export abstract class Component implements ComponentType {
@@ -14,5 +14,5 @@ export abstract class Component implements ComponentType {
     onStart(): void {}
     onDestroy(): void {}
 
-    abstract update(parentEntity: Entity, deltaTime: number): void;
+    abstract update(deltaTime: number, parentEntity: Entity): void;
 }

@@ -2,6 +2,7 @@ import { Entity } from '../core/Entity';
 import { InputManager } from '../core/InputManager';
 import { Vector2D } from '../math/Vector2D';
 import { Component } from './Component.abstract';
+import { Rigidbody } from './Rigidbody.component';
 import { Transform } from './Transform.component';
 
 export class Controller extends Component {
@@ -14,7 +15,7 @@ export class Controller extends Component {
         super();
     }
 
-    update(parentEntity: Entity, _deltaTime: number): void {
+    update(_deltaTime: number, parentEntity: Entity): void {
         const input = new Vector2D();
 
         // Get input vector from WASD or arrow keys
@@ -34,12 +35,17 @@ export class Controller extends Component {
         if (input.magnitude > 0) {
             const force = input.unit.scale(this.moveForce);
             const transform = parentEntity.getComponent(Transform);
+            const rigidbody = parentEntity.getComponent(Rigidbody);
 
             if (!transform) {
                 throw new Error(`Entity ${parentEntity.name} must have a Transform component to be controlled.`);
             }
 
-            transform.setPosition(transform.getPosition().add(force));
+            if (rigidbody) {
+                rigidbody.applyImpulse(force);
+            } else {
+                transform.setPosition(transform.getPosition().add(force));
+            }
         }
     }
 }

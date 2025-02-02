@@ -1,4 +1,3 @@
-import { Entity } from '../core/Entity';
 import { Vector2D } from '../math/Vector2D';
 import { Component } from './Component.abstract';
 
@@ -20,12 +19,12 @@ export class Rigidbody extends Component {
     private restitution = 1;
     private friction = 0.1;
 
-    constructor(options: RigidbodyOptions) {
+    constructor(options?: RigidbodyOptions) {
         super();
 
-        this.mass = options.mass || this.mass;
-        this.restitution = options.restitution || this.restitution;
-        this.friction = options.friction || this.friction;
+        this.mass = options?.mass || this.mass;
+        this.restitution = options?.restitution || this.restitution;
+        this.friction = options?.friction || this.friction;
     }
 
     applyForce(force: Vector2D): void {
@@ -80,7 +79,7 @@ export class Rigidbody extends Component {
         return this.friction;
     }
 
-    update(_parentEntity: Entity, deltaTime: number): void {
+    update(deltaTime: number): void {
         // Apply accumulated forces
         const acceleration = this.forces.scale(this.getInverseMass());
         this.velocity = this.velocity.add(acceleration.scale(deltaTime));

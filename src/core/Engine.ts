@@ -14,8 +14,8 @@ export class Engine {
     private readonly fixedTimeStep: number = 1 / 60; // 60 FPS physics
     private readonly maxDeltaTime: number = 0.1;
     private readonly debug: boolean = false;
-    private readonly systems: System[] = [];
 
+    private systems: System[] = [];
     private scene: Scene | null = null;
     private lastFrameTime: number = 0;
     private isRunning: boolean = false;
@@ -68,6 +68,7 @@ export class Engine {
     private loop(currentTime: number): void {
         if (!this.isRunning) return;
 
+        // Clamps the delta time to maxDeltaTime to prevent large jumps if the game lags
         const deltaTime = Math.min((currentTime - this.lastFrameTime) / 1000, this.maxDeltaTime);
         this.lastFrameTime = currentTime;
 

@@ -1,4 +1,3 @@
-import { Entity } from '../../core/Entity';
 import { Vector2D } from '../../math/Vector2D';
 import { Component } from '../Component.abstract';
 
@@ -37,5 +36,5 @@ export class Collider extends Component {
 
     // abstract checkCollision(other: Collider): CollisionInfo | null;
 
-    update(_parentEntity: Entity, _deltaTime: number): void {}
+    update(): void {}
 }
