@@ -1,3 +1,4 @@
+import { CircleCollider } from './components/ColliderComponents/CircleCollider.component';
 import { Controller } from './components/Controller.component';
 import { CircleDrawer } from './components/DrawerComponents/CircleDrawer.component';
 import { Rigidbody } from './components/Rigidbody.component';
@@ -21,12 +22,14 @@ window.addEventListener('load', () => {
 
     const entity1 = new Entity();
     entity1.addComponent(new Transform(new Vector2D(600, 400)));
-    entity1.addComponent(new Rigidbody({ friction: 1 }));
+    entity1.addComponent(new Rigidbody({ friction: 0.1, mass: 0.01 }));
+    entity1.addComponent(new CircleCollider(50));
     entity1.addComponent(new CircleDrawer(50));
-    entity1.addComponent(new Controller(inputManager, 100));
+    entity1.addComponent(new Controller(inputManager, 20));
 
     const entity2 = new Entity();
     entity2.addComponent(new Transform(new Vector2D(200, 350)));
+    entity2.addComponent(new CircleCollider(70));
     entity2.addComponent(new CircleDrawer(70));
 
     scene.addEntity(entity1);

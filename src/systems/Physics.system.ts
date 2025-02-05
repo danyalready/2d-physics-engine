@@ -1,13 +1,26 @@
+import { CollisionDispatcher, type CollisionInfo } from '../CollisionDispatcher';
+import { Collider } from '../components/ColliderComponents/Collider.abstract';
 import { Rigidbody } from '../components/Rigidbody.component';
 import { Transform } from '../components/Transform.component';
+import { Entity } from '../core/Entity';
 import { Scene } from '../core/Scene';
 import { System } from './System.abstract';
 
+interface Collision {
+    colliderA: Collider;
+    colliderB: Collider;
+    info: CollisionInfo;
+}
+
 export class Physics extends System {
     readonly needsFixedUpdate = true;
+    private collisionDispatcher = new CollisionDispatcher();
 
     update(scene: Scene, deltaTime: number): void {
         const entities = scene.getEntities();
+
+        // Step 0: Detect and resolve collisions
+        this.resolveCollisions(this.detectCollisions(entities));
 
         for (const entity of entities) {
             const transform = entity.getComponent(Transform);
@@ -61,4 +74,40 @@ export class Physics extends System {
         const deltaRotation = rigidbody.getAngularVelocity() * deltaTime;
         transform.setRotation(transform.getRotation() + deltaRotation);
     }
+
+    private detectCollisions(entities: Entity[]): Collision[] {
+        const collisions: Collision[] = [];
+
+        for (let i = 0; i < entities.length; i++) {
+            const entityA = entities[i];
+            const colliderA = entityA.getComponent(Collider);
+            const transformA = entityA.getComponent(Transform);
+            const rigidbodyA = entityA.getComponent(Rigidbody);
+
+            if (!colliderA || !transformA) continue;
+
+            for (let j = i + 1; j < entities.length; j++) {
+                const entityB = entities[j];
+                const colliderB = entityB.getComponent(Collider);
+                const transformB = entityB.getComponent(Transform);
+                const rigidbodyB = entityB.getComponent(Rigidbody);
+
+                if (!colliderB || !transformB) continue;
+
+                const collisionInfo = this.collisionDispatcher.checkCollision(transformA, transformB, colliderA, colliderB);
+
+                if (!collisionInfo) continue;
+
+                collisions.push({
+                    colliderA,
+                    colliderB,
+                    info: collisionInfo,
+                });
+            }
+        }
+
+        return collisions;
+    }
+
+    private resolveCollisions(collisions: Collision[]): void {}
 }

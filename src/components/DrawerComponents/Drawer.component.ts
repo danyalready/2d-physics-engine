@@ -1,10 +1,10 @@
 import { Component } from '../Component.abstract';
 import { Transform } from '../Transform.component';
 
-export class Drawer extends Component {
+export abstract class Drawer extends Component {
     readonly componentId = Symbol('Drawer');
 
-    draw(_canvasCtx: CanvasRenderingContext2D, _transform: Transform): void {}
+    abstract draw(canvasCtx: CanvasRenderingContext2D, transform: Transform): void;
 
     update(): void {}
 }

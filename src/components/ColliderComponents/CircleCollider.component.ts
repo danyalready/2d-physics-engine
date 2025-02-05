@@ -1,12 +1,21 @@
-import { Collider } from './Collider.component';
+import { AABB } from '../../math/AABB';
+import { Vector2D } from '../../math/Vector2D';
+import { Collider } from './Collider.abstract';
 
 export class CircleCollider extends Collider {
+    static readonly COLLIDER_ID = Symbol('CircleCollider');
+    readonly colliderId = CircleCollider.COLLIDER_ID;
+
     constructor(private radius: number) {
         super();
     }
 
-    getRadius(): number {
+    getRadius() {
         return this.radius;
+    }
+
+    getAABB(): AABB {
+        return new AABB(new Vector2D(-this.radius, -this.radius), new Vector2D(this.radius, this.radius));
     }
 
     calculateInertia(mass: number): number {
@@ -14,41 +23,7 @@ export class CircleCollider extends Collider {
         return (mass * this.radius * this.radius) / 2;
     }
 
-    // getBoundingBox(): BoundingBox {
-    //     const pos = this.entity.getComponent(TransformComponent)?.getPosition() || new Vector2D();
-
-    //     return {
-    //         min: new Vector2D(pos.x - this.radius, pos.y - this.radius),
-    //         max: new Vector2D(pos.x + this.radius, pos.y + this.radius),
-    //     };
-    // }
-
-    // private circleCollision(other: CircleCollider): CollisionInfo | null {
-    //     const myPos = this.entity.getComponent(TransformComponent)?.getPosition() || new Vector2D();
-    //     const otherPos = other.entity.getComponent(TransformComponent)?.getPosition() || new Vector2D();
-
-    //     const diff = otherPos.subtract(myPos);
-    //     const distance = diff.magnitude;
-    //     const sumRadii = this.radius + other.getRadius();
-
-    //     if (distance < sumRadii) {
-    //         const normal = diff.scale(1 / distance);
-    //         const penetration = sumRadii - distance;
-    //         const contact = myPos.add(normal.scale(this.radius));
-
-    //         return { normal, penetration, contact };
-    //     }
-
-    //     return null;
-    // }
-
-    // checkCollision(other: Collider): CollisionInfo | null {
-    //     if (other instanceof CircleCollider) {
-    //         return this.circleCollision(other);
-    //     }
-
-    //     return null;
-    // }
-
-    update() {}
+    getClosestPoint(point: Vector2D): Vector2D {
+        return point.unit.scale(this.radius);
+    }
 }
