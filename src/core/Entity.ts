@@ -19,7 +19,7 @@ export class Entity {
         return component;
     }
 
-    getComponent<T extends Component>(componentType: { new (...args: any[]): T }): T | undefined {
+    getComponent<T extends Component>(componentType: abstract new (...args: any[]) => T): T | undefined {
         return Array.from(this.components.values()).find((c): c is T => c instanceof componentType);
     }
 
