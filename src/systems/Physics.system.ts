@@ -1,4 +1,5 @@
-import { CollisionDispatcher, type CollisionInfo } from '../CollisionDispatcher';
+import { CollisionDetector } from '../CollisionDetector';
+import { type Collision, CollisionResolver } from '../CollisionResolver';
 import { Collider } from '../components/ColliderComponents/Collider.abstract';
 import { Rigidbody } from '../components/Rigidbody.component';
 import { Transform } from '../components/Transform.component';
@@ -6,15 +7,11 @@ import { Entity } from '../core/Entity';
 import { Scene } from '../core/Scene';
 import { System } from './System.abstract';
 
-interface Collision {
-    colliderA: Collider;
-    colliderB: Collider;
-    info: CollisionInfo;
-}
-
 export class Physics extends System {
     readonly needsFixedUpdate = true;
-    private collisionDispatcher = new CollisionDispatcher();
+
+    private collisionDetector = new CollisionDetector();
+    private collisionResolver = new CollisionResolver();
 
     update(scene: Scene, deltaTime: number): void {
         const entities = scene.getEntities();
@@ -78,7 +75,7 @@ export class Physics extends System {
     private detectCollisions(entities: Entity[]): Collision[] {
         const collisions: Collision[] = [];
 
-        for (let i = 0; i < entities.length; i++) {
+        for (let i = 0; i < entities.length - 1; i++) {
             const entityA = entities[i];
             const colliderA = entityA.getComponent(Collider);
             const transformA = entityA.getComponent(Transform);
@@ -94,13 +91,15 @@ export class Physics extends System {
 
                 if (!colliderB || !transformB) continue;
 
-                const collisionInfo = this.collisionDispatcher.checkCollision(transformA, transformB, colliderA, colliderB);
+                const collisionInfo = this.collisionDetector.detectCollision(transformA, transformB, colliderA, colliderB);
 
                 if (!collisionInfo) continue;
 
                 collisions.push({
                     colliderA,
                     colliderB,
+                    rigidbodyA,
+                    rigidbodyB,
                     info: collisionInfo,
                 });
             }
@@ -109,5 +108,9 @@ export class Physics extends System {
         return collisions;
     }
 
-    private resolveCollisions(collisions: Collision[]): void {}
+    private resolveCollisions(collisions: Collision[]): void {
+        for (const collision of collisions) {
+            this.collisionResolver.resolveCollision(collision);
+        }
+    }
 }

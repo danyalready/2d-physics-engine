@@ -3,7 +3,7 @@ import { Collider } from './components/ColliderComponents/Collider.abstract';
 import { Transform } from './components/Transform.component';
 import { Vector2D } from './math/Vector2D';
 
-export type CollisionDetector<T extends Collider = Collider, U extends Collider = Collider> = (
+type Detector<T extends Collider = Collider, U extends Collider = Collider> = (
     transformA: Transform,
     transformB: Transform,
     colliderA: T,
@@ -16,31 +16,36 @@ export interface CollisionInfo {
     penetration: number;
 }
 
-export class CollisionDispatcher {
-    private collisionMatrix: Map<symbol, Map<symbol, CollisionDetector>> = new Map();
+export class CollisionDetector {
+    private collisionMatrix: Map<symbol, Map<symbol, Detector>> = new Map();
 
     constructor() {
         // Register circle vs circle collision
-        this.registerCollisionHandler<CircleCollider, CircleCollider>(
+        this.registerCollisionDetector<CircleCollider, CircleCollider>(
             CircleCollider.COLLIDER_ID,
             CircleCollider.COLLIDER_ID,
             this.circleVsCircleDetector,
         );
     }
 
-    private registerCollisionHandler<T extends Collider, U extends Collider>(
+    private registerCollisionDetector<T extends Collider, U extends Collider>(
         typeA: symbol,
         typeB: symbol,
-        detector: CollisionDetector<T, U>,
+        detector: Detector<T, U>,
     ): void {
         if (!this.collisionMatrix.has(typeA)) {
             this.collisionMatrix.set(typeA, new Map());
         }
 
-        this.collisionMatrix.get(typeA)!.set(typeB, detector as CollisionDetector);
+        this.collisionMatrix.get(typeA)!.set(typeB, detector as Detector);
     }
 
-    checkCollision(transformA: Transform, transformB: Transform, colliderA: Collider, colliderB: Collider): CollisionInfo | null {
+    detectCollision(
+        transformA: Transform,
+        transformB: Transform,
+        colliderA: Collider,
+        colliderB: Collider,
+    ): CollisionInfo | null {
         const handlersForA = this.collisionMatrix.get(colliderA.colliderId);
         if (!handlersForA) return null;
 
