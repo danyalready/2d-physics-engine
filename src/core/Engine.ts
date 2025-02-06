@@ -1,4 +1,4 @@
-import { Physics } from '../systems/Physics.system';
+import { Physics } from '../systems/PhysicsSystem/Physics.system';
 import { Rendering } from '../systems/Rendering.system';
 import { System } from '../systems/System.abstract';
 import { InputManager } from './InputManager';

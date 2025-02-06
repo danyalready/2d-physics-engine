@@ -1,11 +1,11 @@
-import { CollisionDetector } from '../CollisionDetector';
-import { type Collision, CollisionResolver } from '../CollisionResolver';
-import { Collider } from '../components/ColliderComponents/Collider.abstract';
-import { Rigidbody } from '../components/Rigidbody.component';
-import { Transform } from '../components/Transform.component';
-import { Entity } from '../core/Entity';
-import { Scene } from '../core/Scene';
-import { System } from './System.abstract';
+import { CollisionDetector } from './CollisionDetector';
+import { type Collision, CollisionResolver } from './CollisionResolver';
+import { Collider } from '../../components/ColliderComponents/Collider.abstract';
+import { Rigidbody } from '../../components/Rigidbody.component';
+import { Transform } from '../../components/Transform.component';
+import { Entity } from '../../core/Entity';
+import { Scene } from '../../core/Scene';
+import { System } from '../System.abstract';
 
 export class Physics extends System {
     readonly needsFixedUpdate = true;

@@ -15,7 +15,7 @@ export class Controller extends Component {
         super();
     }
 
-    update(_deltaTime: number, parentEntity: Entity): void {
+    update(parentEntity: Entity): void {
         const input = new Vector2D();
 
         // Get input vector from WASD or arrow keys

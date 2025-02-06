@@ -1,7 +1,7 @@
 import { CollisionInfo } from './CollisionDetector';
-import { CircleCollider } from './components/ColliderComponents/CircleCollider.component';
-import { Collider } from './components/ColliderComponents/Collider.abstract';
-import { Rigidbody } from './components/Rigidbody.component';
+import { CircleCollider } from '../../components/ColliderComponents/CircleCollider.component';
+import { Collider } from '../../components/ColliderComponents/Collider.abstract';
+import { Rigidbody } from '../../components/Rigidbody.component';
 
 export interface Collision<T extends Collider = Collider, U extends Collider = Collider> {
     colliderA: T;

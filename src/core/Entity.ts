@@ -53,7 +53,7 @@ export class Entity {
         if (!this.active) return;
 
         for (const component of this.components.values()) {
-            component.update(deltaTime, this);
+            component.update(this, deltaTime);
         }
 
         for (const entity of this.children) {
