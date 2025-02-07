@@ -14,7 +14,7 @@ describe('Vector class:', () => {
 
         test('`normal`', () => {
             for (const vector of vectors) {
-                expect(vector.normal).toMatchObject({ x: -vector.y, y: vector.x });
+                expect(vector.tangent).toMatchObject({ x: -vector.y, y: vector.x });
             }
         });
 

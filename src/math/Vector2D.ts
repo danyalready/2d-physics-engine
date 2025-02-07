@@ -74,7 +74,7 @@ export class Vector2D {
     }
 
     /** Returns perpendicular vector. */
-    get normal(): Vector2D {
+    get tangent(): Vector2D {
         return new Vector2D(-this.y, this.x);
     }
 }

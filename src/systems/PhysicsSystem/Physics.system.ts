@@ -10,13 +10,13 @@ import { System } from '../System.abstract';
 export class Physics extends System {
     readonly needsFixedUpdate = true;
 
-    private collisionDetector = new CollisionDetector();
-    private collisionResolver = new CollisionResolver();
+    private readonly collisionDetector = new CollisionDetector();
+    private readonly collisionResolver = new CollisionResolver();
 
     update(scene: Scene, deltaTime: number): void {
         const entities = scene.getEntities();
 
-        // Step 0: Detect and resolve collisions
+        // Step 0: Detect and resolve collisions after updating positions
         this.resolveCollisions(this.detectCollisions(entities));
 
         for (const entity of entities) {
@@ -51,7 +51,7 @@ export class Physics extends System {
         // Update linear velocity from all forces (including friction)
         const acceleration = rigidbody.getAccumulatedForces().scale(rigidbody.getInverseMass());
         const deltaV = acceleration.scale(deltaTime);
-        rigidbody.setVelocity(rigidbody.getVelocity().add(deltaV));
+        rigidbody.setVelocity(velocity.add(deltaV));
 
         // Angular velocity decay with clamped friction
         const angularVelocity = rigidbody.getAngularVelocity();
@@ -98,9 +98,11 @@ export class Physics extends System {
                 collisions.push({
                     colliderA,
                     colliderB,
+                    transformA,
+                    transformB,
+                    info: collisionInfo,
                     rigidbodyA,
                     rigidbodyB,
-                    info: collisionInfo,
                 });
             }
         }

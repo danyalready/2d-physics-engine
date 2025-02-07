@@ -2,13 +2,16 @@ import { CollisionInfo } from './CollisionDetector';
 import { CircleCollider } from '../../components/ColliderComponents/CircleCollider.component';
 import { Collider } from '../../components/ColliderComponents/Collider.abstract';
 import { Rigidbody } from '../../components/Rigidbody.component';
+import { Transform } from '../../components/Transform.component';
 
 export interface Collision<T extends Collider = Collider, U extends Collider = Collider> {
     colliderA: T;
     colliderB: U;
+    transformA: Transform;
+    transformB: Transform;
+    info: CollisionInfo;
     rigidbodyA?: Rigidbody;
     rigidbodyB?: Rigidbody;
-    info: CollisionInfo;
 }
 
 type Resolver<T extends Collider = Collider, U extends Collider = Collider> = (collision: Collision<T, U>) => boolean;
@@ -48,6 +51,42 @@ export class CollisionResolver {
     }
 
     private circleVsCircleResolver(collision: Collision<CircleCollider, CircleCollider>): boolean {
-        return false;
+        const { transformA, transformB, rigidbodyA, rigidbodyB } = collision;
+        const { penetration, normal } = collision.info;
+
+        if (!rigidbodyA || !rigidbodyB) {
+            return false; // No rigidbodies attached, cannot resolve collision
+        }
+
+        // Coefficient of Restitution (average of both colliders)
+        const effectiveCR = (rigidbodyA.getRestitution() + rigidbodyB.getRestitution()) / 2;
+
+        // Velocity components along the collision normal
+        const vANormal = normal.getDot(rigidbodyA.getVelocity());
+        const vBNormal = normal.getDot(rigidbodyB.getVelocity());
+
+        // Velocity components along the tangent (perpendicular to normal)
+        const tangent = normal.tangent;
+        const vATangent = tangent.getDot(rigidbodyA.getVelocity());
+        const vBTangent = tangent.getDot(rigidbodyB.getVelocity());
+
+        // Total momentum and mass
+        const totalMomentum = rigidbodyA.getMass() * vANormal + rigidbodyB.getMass() * vBNormal;
+        const totalMass = rigidbodyA.getMass() + rigidbodyB.getMass();
+
+        // New normal velocities after collision
+        const vANormalAfter = (effectiveCR * rigidbodyB.getMass() * (vBNormal - vANormal) + totalMomentum) / totalMass;
+        const vBNormalAfter = (effectiveCR * rigidbodyA.getMass() * (vANormal - vBNormal) + totalMomentum) / totalMass;
+
+        // Update velocities
+        rigidbodyA.setVelocity(normal.scale(vANormalAfter).add(tangent.scale(vATangent)));
+        rigidbodyB.setVelocity(normal.scale(vBNormalAfter).add(tangent.scale(vBTangent)));
+
+        // Resolve penetration by adjusting positions
+        const resolutionVector = normal.scale(penetration / totalMass);
+        transformA.setPosition(transformA.getPosition().subtract(resolutionVector.scale(rigidbodyB.getMass())));
+        transformB.setPosition(transformB.getPosition().add(resolutionVector.scale(rigidbodyA.getMass())));
+
+        return true;
     }
 }

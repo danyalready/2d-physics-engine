@@ -22,13 +22,14 @@ window.addEventListener('load', () => {
 
     const entity1 = new Entity();
     entity1.addComponent(new Transform(new Vector2D(600, 400)));
-    entity1.addComponent(new Rigidbody({ friction: 0.1, mass: 0.01 }));
+    entity1.addComponent(new Rigidbody({ friction: 0.1, mass: 1, restitution: 0.5 }));
     entity1.addComponent(new CircleCollider(50));
     entity1.addComponent(new CircleDrawer(50));
-    entity1.addComponent(new Controller(inputManager, 20));
+    entity1.addComponent(new Controller(inputManager, 100));
 
     const entity2 = new Entity();
     entity2.addComponent(new Transform(new Vector2D(200, 350)));
+    entity2.addComponent(new Rigidbody({ friction: 1, mass: 1, restitution: 0.1 }));
     entity2.addComponent(new CircleCollider(70));
     entity2.addComponent(new CircleDrawer(70));
 

@@ -11,7 +11,7 @@ type Detector<T extends Collider = Collider, U extends Collider = Collider> = (
 ) => CollisionInfo | null;
 
 export interface CollisionInfo {
-    unit: Vector2D;
+    normal: Vector2D;
     point: Vector2D;
     penetration: number;
 }
@@ -71,7 +71,7 @@ export class CollisionDetector {
         if (radiusSum >= distance) {
             return {
                 // Handle perfectly overlapping circles
-                unit: distance === 0 ? new Vector2D(1, 0) : diff.unit,
+                normal: distance === 0 ? new Vector2D(1, 0) : diff.unit,
                 penetration: radiusSum - distance,
                 point: posA.add(diff.unit.scale(colliderA.getRadius())),
             };
