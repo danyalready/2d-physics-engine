@@ -26,7 +26,6 @@ I keep track of tasks and the process in [my trello board](https://trello.com/b/
 
 ## Resources:
 
--   [danielszabo88 repository](https://github.com/danielszabo88/mocorgo/tree/master) 🙌
 -   [Dot Product](https://www.mathsisfun.com/algebra/vectors-dot-product.html)
 -   [Cross Product](https://www.mathsisfun.com/algebra/vectors-cross-product.html)
 -   [2D Collisions](https://www.vobarian.com/collisions/2dcollisions2.pdf)
