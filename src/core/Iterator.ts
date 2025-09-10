@@ -4,13 +4,13 @@ import { System } from '../systems/System.abstract';
 import { InputManager } from './InputManager';
 import { Scene } from './Scene';
 
-interface EngineConfig {
+interface IteratorConfig {
     fixedTimeStep?: number;
     maxDeltaTime?: number;
     debug?: boolean;
 }
 
-export class Engine {
+export class Iterator {
     private readonly fixedTimeStep: number = 1 / 60; // 60 FPS physics
     private readonly maxDeltaTime: number = 0.1;
     private readonly debug: boolean = false;
@@ -25,7 +25,7 @@ export class Engine {
         private readonly inputManager: InputManager,
         canvas: HTMLCanvasElement,
         canvasCtx: CanvasRenderingContext2D,
-        config?: EngineConfig,
+        config?: IteratorConfig,
     ) {
         if (!canvas || !canvasCtx) {
             throw new Error('Canvas and canvas-context are required for engine initialization.');

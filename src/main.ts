@@ -3,7 +3,7 @@ import { Controller } from './components/Controller.component';
 import { CircleDrawer } from './components/DrawerComponents/CircleDrawer.component';
 import { Rigidbody } from './components/Rigidbody.component';
 import { Transform } from './components/Transform.component';
-import { Engine } from './core/Engine';
+import { Iterator } from './core/Iterator';
 import { Entity } from './core/Entity';
 import { InputManager } from './core/InputManager';
 import { Scene } from './core/Scene';
@@ -15,7 +15,7 @@ window.addEventListener('load', () => {
 
     const inputManager = new InputManager();
 
-    const engine = new Engine(inputManager, canvas, canvasCtx);
+    const engine = new Iterator(inputManager, canvas, canvasCtx);
     const scene = new Scene();
 
     // ====== OPEN PLAYGROUND ======
