@@ -2,7 +2,7 @@ import { Component } from '../components/Component.abstract';
 
 export class Entity {
     private components = new Map<symbol, Component>();
-    private children: Set<Entity> = new Set();
+    private children: Set<Entity> = new Set<Entity>();
     private active: boolean = true;
     public parent: Entity | null = null;
 

@@ -68,7 +68,7 @@ export class Iterator {
     private loop(currentTime: number): void {
         if (!this.isRunning) return;
 
-        // Clamps the delta time to maxDeltaTime to prevent large jumps if the game lags
+        // Clamps the delta time to maxDeltaTime in seconds to prevent large jumps if the game lags
         const deltaTime = Math.min((currentTime - this.lastFrameTime) / 1000, this.maxDeltaTime);
         this.lastFrameTime = currentTime;
 
