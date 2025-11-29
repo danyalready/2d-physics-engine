@@ -1,132 +1,246 @@
 import { Matrix } from '../Matrix';
 
-describe('Matrix class:', () => {
-    describe('static methods:', () => {
-        test('`isValid`', () => {
-            const validMatrixData = [
-                [[1]],
-                [[1, 2]],
-                [
-                    [1, 2],
-                    [3, 4],
-                ],
-                [
-                    [1, 2, 3],
-                    [4, 5, 6],
-                ],
-                [
-                    [1, 2, 3],
-                    [4, 5, 6],
-                    [7, 8, 9],
-                ],
-                [
-                    [1, 2, 3],
-                    [4, 5, 6],
-                    [7, 8, 9],
-                    [10, 11, 12],
-                ],
-            ];
-            const invalidMatrixData = [
-                [[], []],
-                [[1, 2], [3]],
-                [
-                    [1, 2, 3],
-                    [4, 5],
-                    [6, 7, 8, 9],
-                ],
-            ];
+describe('Matrix', () => {
+    describe('constructor', () => {
+        it('creates a matrix with correct dimensions filled with zeros', () => {
+            const m = new Matrix(2, 3);
+            expect(m.rowsCount).toBe(2);
+            expect(m.colsCount).toBe(3);
 
-            for (const matrixData of validMatrixData) {
-                expect(Matrix.isValid(matrixData)).toBeTruthy();
-            }
-
-            for (const matrixData of invalidMatrixData) {
-                expect(Matrix.isValid(matrixData)).toBeFalsy();
-            }
+            expect(m.data).toEqual([
+                [0, 0, 0],
+                [0, 0, 0],
+            ]);
         });
 
-        test('`getRotationMatrix`', () => {
-            const rotationMatrix = Matrix.getRotationMatrix(Math.PI);
+        it('throws for non-positive dimensions', () => {
+            expect(() => new Matrix(0, 3)).toThrow();
+            expect(() => new Matrix(3, 0)).toThrow();
+        });
+    });
 
-            // TODO: should be replaced with an another approach
-            expect(rotationMatrix.data).toMatchObject([
-                [-1, -1.2246467991473532e-16],
-                [1.2246467991473532e-16, -1],
+    describe('static isValid', () => {
+        it('validates correct matrices', () => {
+            expect(
+                Matrix.isValid([
+                    [1, 2],
+                    [3, 4],
+                ]),
+            ).toBe(true);
+        });
+
+        it('rejects jagged arrays', () => {
+            expect(Matrix.isValid([[1, 2], [3]])).toBe(false);
+        });
+
+        it('rejects empty matrix', () => {
+            expect(Matrix.isValid([])).toBe(false);
+        });
+
+        it('rejects matrix with empty rows', () => {
+            expect(Matrix.isValid([[]])).toBe(false);
+        });
+    });
+
+    describe('static identity', () => {
+        it('creates an identity matrix', () => {
+            const m = Matrix.identity(3);
+            expect(m.data).toEqual([
+                [1, 0, 0],
+                [0, 1, 0],
+                [0, 0, 1],
             ]);
         });
     });
 
-    describe('public methods:', () => {
-        test('`add`', () => {
-            const matrixA = new Matrix(2, 2);
-            const matrixB = new Matrix(2, 2);
+    describe('static rotation2D', () => {
+        it('creates a proper rotation matrix', () => {
+            const angle = Math.PI / 2;
+            const m = Matrix.rotation2D(angle);
 
-            matrixA.data = [
+            expect(m.data[0][0]).toBeCloseTo(0);
+            expect(m.data[0][1]).toBeCloseTo(-1);
+            expect(m.data[1][0]).toBeCloseTo(1);
+            expect(m.data[1][1]).toBeCloseTo(0);
+        });
+    });
+
+    describe('add', () => {
+        it('adds two matrices', () => {
+            const a = new Matrix(2, 2);
+            a.data = [
                 [1, 2],
                 [3, 4],
             ];
-            matrixB.data = [
+
+            const b = new Matrix(2, 2);
+            b.data = [
                 [5, 6],
                 [7, 8],
             ];
 
-            expect(matrixA.add(matrixB).data).toMatchObject([
+            expect(a.add(b).data).toEqual([
                 [6, 8],
                 [10, 12],
             ]);
         });
 
-        test('`subtract`', () => {
-            const matrixA = new Matrix(2, 2);
-            const matrixB = new Matrix(2, 2);
+        it('throws for mismatched dimensions', () => {
+            const a = new Matrix(2, 2);
+            const b = new Matrix(3, 2);
+            expect(() => a.add(b)).toThrow();
+        });
+    });
 
-            matrixA.data = [
+    describe('subtract', () => {
+        it('subtracts two matrices', () => {
+            const a = new Matrix(2, 2);
+            a.data = [
+                [5, 5],
+                [5, 5],
+            ];
+
+            const b = new Matrix(2, 2);
+            b.data = [
                 [1, 2],
                 [3, 4],
             ];
-            matrixB.data = [
-                [5, 6],
-                [7, 8],
-            ];
 
-            expect(matrixB.subtract(matrixA).data).toMatchObject([
-                [4, 4],
-                [4, 4],
+            expect(a.subtract(b).data).toEqual([
+                [4, 3],
+                [2, 1],
             ]);
         });
+    });
 
-        test('`multiplyBy`', () => {
-            const matrixA = new Matrix(2, 2);
-
-            matrixA.data = [
+    describe('multiplyBy', () => {
+        it('multiplies by scalar', () => {
+            const a = new Matrix(2, 2);
+            a.data = [
                 [1, 2],
                 [3, 4],
             ];
+            const result = a.multiplyBy(2);
 
-            expect(matrixA.multiplyBy(2).data).toMatchObject([
+            expect(result.data).toEqual([
                 [2, 4],
                 [6, 8],
             ]);
         });
+    });
 
-        test('`multiply`', () => {
-            const matrixA = new Matrix(2, 3);
-            const matrixB = new Matrix(3, 2);
-
-            matrixA.data = [
+    describe('multiply matrices', () => {
+        it('multiplies matrices correctly', () => {
+            const a = new Matrix(2, 3);
+            a.data = [
                 [1, 2, 3],
                 [4, 5, 6],
             ];
-            matrixB.data = [
-                [1, 2],
-                [3, 4],
-                [5, 6],
+
+            const b = new Matrix(3, 2);
+            b.data = [
+                [7, 8],
+                [9, 10],
+                [11, 12],
             ];
 
-            expect(matrixA.multiply(matrixB).data).toMatchObject([
-                [22, 28],
-                [49, 64],
+            const result = a.multiply(b);
+
+            expect(result.data).toEqual([
+                [58, 64],
+                [139, 154],
             ]);
+        });
+
+        it('throws for mismatched dimensions', () => {
+            const a = new Matrix(2, 2);
+            const b = new Matrix(3, 3);
+            expect(() => a.multiply(b)).toThrow();
+        });
+    });
+
+    describe('transpose', () => {
+        it('transposes matrix correctly', () => {
+            const a = new Matrix(2, 3);
+            a.data = [
+                [1, 2, 3],
+                [4, 5, 6],
+            ];
+
+            expect(a.transpose().data).toEqual([
+                [1, 4],
+                [2, 5],
+                [3, 6],
+            ]);
+        });
+    });
+
+    describe('clone', () => {
+        it('makes a deep clone', () => {
+            const a = new Matrix(2, 2);
+            a.data = [
+                [1, 2],
+                [3, 4],
+            ];
+
+            const c = a.clone();
+
+            expect(c.data).toEqual(a.data);
+            expect(c.data).not.toBe(a.data); // different reference
+        });
+    });
+
+    describe('equals', () => {
+        it('returns true for equal matrices', () => {
+            const a = new Matrix(2, 2);
+            a.data = [
+                [1, 2],
+                [3, 4],
+            ];
+
+            const b = new Matrix(2, 2);
+            b.data = [
+                [1, 2],
+                [3, 4],
+            ];
+
+            expect(a.equals(b)).toBe(true);
+        });
+
+        it('returns false for different values', () => {
+            const a = new Matrix(2, 2);
+            a.data = [
+                [1, 2],
+                [3, 4],
+            ];
+
+            const b = new Matrix(2, 2);
+            b.data = [
+                [1, 2],
+                [3, 5],
+            ];
+
+            expect(a.equals(b)).toBe(false);
+        });
+    });
+
+    describe('data setter', () => {
+        it('sets data correctly with deep copy', () => {
+            const a = new Matrix(2, 2);
+            const newData = [
+                [7, 7],
+                [7, 7],
+            ];
+
+            a.data = newData;
+
+            expect(a.data).toEqual(newData);
+            expect(a.data).not.toBe(newData);
+        });
+
+        it('throws for invalid data', () => {
+            const a = new Matrix(2, 2);
+            expect(() => (a.data = [[1, 2, 3]])).toThrow();
         });
     });
 });
