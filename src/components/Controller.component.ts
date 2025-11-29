@@ -1,6 +1,6 @@
 import { Entity } from '../core/Entity';
 import { InputManager } from '../core/InputManager';
-import { Vector2D } from '../math/Vector2D';
+import Vector2 from '../math/Vector2';
 import { Component } from './Component.abstract';
 import { Rigidbody } from './Rigidbody.component';
 import { Transform } from './Transform.component';
@@ -16,7 +16,7 @@ export class Controller extends Component {
     }
 
     update(parentEntity: Entity): void {
-        const input = new Vector2D();
+        const input = new Vector2();
 
         // Get input vector from WASD or arrow keys
         if (this.inputManager.isKeyPressed('w') || this.inputManager.isKeyPressed('ArrowUp')) {
@@ -32,8 +32,8 @@ export class Controller extends Component {
             input.x += 1;
         }
 
-        if (input.magnitude > 0) {
-            const force = input.unit.scale(this.moveForce);
+        if (input.getMagnitude() > 0) {
+            const force = input.getNormal().scale(this.moveForce);
             const transform = parentEntity.getComponent(Transform);
             const rigidbody = parentEntity.getComponent(Rigidbody);
 

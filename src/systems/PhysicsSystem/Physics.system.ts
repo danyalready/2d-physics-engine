@@ -40,11 +40,11 @@ export class Physics extends System {
         const velocity = rigidbody.getVelocity();
 
         // Apply friction force based on current velocity
-        if (velocity.magnitude !== 0) {
+        if (velocity.getMagnitude() !== 0) {
             // Clamp friction between 0 and 1
             const frictionCoeff = Math.max(0, Math.min(1, rigidbody.getFriction()));
 
-            const frictionForce = velocity.unit.scale(-frictionCoeff * velocity.magnitude);
+            const frictionForce = velocity.getNormal().scale(-frictionCoeff * velocity.getMagnitude());
             rigidbody.addForce(frictionForce);
         }
 

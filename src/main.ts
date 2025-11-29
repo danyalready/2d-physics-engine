@@ -7,7 +7,7 @@ import { Iterator } from './core/Iterator';
 import { Entity } from './core/Entity';
 import { InputManager } from './core/InputManager';
 import { Scene } from './core/Scene';
-import { Vector2D } from './math/Vector2D';
+import Vector2 from './math/Vector2';
 
 window.addEventListener('load', () => {
     const canvas = document.getElementById('canvas') as HTMLCanvasElement;
@@ -21,14 +21,14 @@ window.addEventListener('load', () => {
     // ====== OPEN PLAYGROUND ======
 
     const entity1 = new Entity();
-    entity1.addComponent(new Transform(new Vector2D(600, 400)));
+    entity1.addComponent(new Transform(new Vector2(600, 400)));
     entity1.addComponent(new Rigidbody({ friction: 0.1, mass: 1, restitution: 0.5 }));
     entity1.addComponent(new CircleCollider(50));
     entity1.addComponent(new CircleDrawer(50));
     entity1.addComponent(new Controller(inputManager, 100));
 
     const entity2 = new Entity();
-    entity2.addComponent(new Transform(new Vector2D(200, 350)));
+    entity2.addComponent(new Transform(new Vector2(200, 350)));
     entity2.addComponent(new Rigidbody({ friction: 1, mass: 1, restitution: 0.1 }));
     entity2.addComponent(new CircleCollider(70));
     entity2.addComponent(new CircleDrawer(70));

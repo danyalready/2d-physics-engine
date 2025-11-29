@@ -1,21 +1,21 @@
-import { Vector2D } from '../math/Vector2D';
+import Vector2 from '../math/Vector2';
 import { Component } from './Component.abstract';
 
 export class Transform extends Component {
     readonly componentId = Symbol('Transform');
 
     constructor(
-        private position: Vector2D = new Vector2D(),
+        private position: Vector2 = new Vector2(),
         private rotation: number = 0, // In radians
-        private scale: Vector2D = new Vector2D(1, 1),
+        private scale: Vector2 = new Vector2(1, 1),
     ) {
         super();
     }
 
     // Transform a point from local space to world space
-    transformPoint(point: Vector2D): Vector2D {
+    transformPoint(point: Vector2): Vector2 {
         // First scale
-        let transformed = new Vector2D(point.x * this.scale.x, point.y * this.scale.y);
+        let transformed = new Vector2(point.x * this.scale.x, point.y * this.scale.y);
 
         // Then rotate
         transformed = transformed.rotate(this.rotation);
@@ -25,7 +25,7 @@ export class Transform extends Component {
     }
 
     // Transform a point from world space to local space
-    inverseTransformPoint(point: Vector2D): Vector2D {
+    inverseTransformPoint(point: Vector2): Vector2 {
         // Subtract position
         let transformed = point.subtract(this.position);
 
@@ -33,16 +33,16 @@ export class Transform extends Component {
         transformed = transformed.rotate(-this.rotation);
 
         // Inverse scale
-        return new Vector2D(transformed.x / this.scale.x, transformed.y / this.scale.y);
+        return new Vector2(transformed.x / this.scale.x, transformed.y / this.scale.y);
     }
 
     // Getters and setters
 
-    getPosition(): Vector2D {
+    getPosition(): Vector2 {
         return this.position.clone();
     }
 
-    setPosition(position: Vector2D): void {
+    setPosition(position: Vector2): void {
         this.position = position.clone();
     }
 
@@ -54,11 +54,11 @@ export class Transform extends Component {
         this.rotation = rotation;
     }
 
-    getScale(): Vector2D {
+    getScale(): Vector2 {
         return this.scale.clone();
     }
 
-    setScale(scale: Vector2D): void {
+    setScale(scale: Vector2): void {
         this.scale = scale.clone();
     }
 

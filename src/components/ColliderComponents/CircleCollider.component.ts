@@ -1,5 +1,5 @@
 import { AABB } from '../../math/AABB';
-import { Vector2D } from '../../math/Vector2D';
+import Vector2 from '../../math/Vector2';
 import { Collider } from './Collider.abstract';
 
 export class CircleCollider extends Collider {
@@ -15,7 +15,7 @@ export class CircleCollider extends Collider {
     }
 
     getAABB(): AABB {
-        return new AABB(new Vector2D(-this.radius, -this.radius), new Vector2D(this.radius, this.radius));
+        return new AABB(new Vector2(-this.radius, -this.radius), new Vector2(this.radius, this.radius));
     }
 
     calculateInertia(mass: number): number {
@@ -23,7 +23,7 @@ export class CircleCollider extends Collider {
         return (mass * this.radius * this.radius) / 2;
     }
 
-    getClosestPoint(point: Vector2D): Vector2D {
-        return point.unit.scale(this.radius);
+    getClosestPoint(point: Vector2): Vector2 {
+        return point.getNormal().scale(this.radius);
     }
 }

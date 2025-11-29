@@ -1,7 +1,7 @@
 import { CircleCollider } from '../../components/ColliderComponents/CircleCollider.component';
 import { Collider } from '../../components/ColliderComponents/Collider.abstract';
 import { Transform } from '../../components/Transform.component';
-import { Vector2D } from '../../math/Vector2D';
+import Vector2 from '../../math/Vector2';
 
 type Detector<T extends Collider = Collider, U extends Collider = Collider> = (
     transformA: Transform,
@@ -11,8 +11,8 @@ type Detector<T extends Collider = Collider, U extends Collider = Collider> = (
 ) => CollisionInfo | null;
 
 export interface CollisionInfo {
-    normal: Vector2D;
-    point: Vector2D;
+    normal: Vector2;
+    point: Vector2;
     penetration: number;
 }
 
@@ -65,15 +65,15 @@ export class CollisionDetector {
         const posB = transformB.getPosition();
 
         const diff = posB.subtract(posA);
-        const distance = diff.magnitude;
+        const distance = diff.getMagnitude();
         const radiusSum = colliderA.getRadius() + colliderB.getRadius();
 
         if (radiusSum >= distance) {
             return {
                 // Handle perfectly overlapping circles
-                normal: distance === 0 ? new Vector2D(1, 0) : diff.unit,
+                normal: distance === 0 ? new Vector2(1, 0) : diff.getNormal(),
                 penetration: radiusSum - distance,
-                point: posA.add(diff.unit.scale(colliderA.getRadius())),
+                point: posA.add(diff.getNormal().scale(colliderA.getRadius())),
             };
         }
 

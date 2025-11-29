@@ -1,4 +1,4 @@
-import { Vector2D } from '../math/Vector2D';
+import Vector2 from '../math/Vector2';
 import { Component } from './Component.abstract';
 
 interface RigidbodyOptions {
@@ -10,9 +10,9 @@ interface RigidbodyOptions {
 export class Rigidbody extends Component {
     readonly componentId = Symbol('Rigidbody');
 
-    private velocity = new Vector2D();
+    private velocity = new Vector2();
     private angularVelocity = 0;
-    private forces = new Vector2D();
+    private forces = new Vector2();
     private torque = 0;
     private mass = 1;
     private inertia = this.mass * 0.5;
@@ -29,11 +29,11 @@ export class Rigidbody extends Component {
     update(): void {}
 
     // Getters and setters for state
-    getVelocity(): Vector2D {
+    getVelocity(): Vector2 {
         return this.velocity.clone();
     }
 
-    setVelocity(velocity: Vector2D): void {
+    setVelocity(velocity: Vector2): void {
         this.velocity = velocity.clone();
     }
 
@@ -58,7 +58,7 @@ export class Rigidbody extends Component {
     }
 
     // Force accumulation
-    getAccumulatedForces(): Vector2D {
+    getAccumulatedForces(): Vector2 {
         return this.forces.clone();
     }
 
@@ -66,7 +66,7 @@ export class Rigidbody extends Component {
         return this.torque;
     }
 
-    addForce(force: Vector2D): void {
+    addForce(force: Vector2): void {
         this.forces = this.forces.add(force);
     }
 
@@ -75,7 +75,7 @@ export class Rigidbody extends Component {
     }
 
     clearForces(): void {
-        this.forces = new Vector2D();
+        this.forces = new Vector2();
         this.torque = 0;
     }
 

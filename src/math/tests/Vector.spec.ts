@@ -1,49 +1,49 @@
-import { Vector2D } from '../Vector2D';
+import Vector2 from '../Vector2';
 
 describe('Vector class:', () => {
     describe('values:', () => {
         const vectors = [
-            new Vector2D(4, 0),
-            new Vector2D(0, 11),
-            new Vector2D(7, 0),
-            new Vector2D(1, 1),
-            new Vector2D(3, 3),
-            new Vector2D(-7, -3),
-            new Vector2D(-13, 70),
+            new Vector2(4, 0),
+            new Vector2(0, 11),
+            new Vector2(7, 0),
+            new Vector2(1, 1),
+            new Vector2(3, 3),
+            new Vector2(-7, -3),
+            new Vector2(-13, 70),
         ];
 
         test('`normal`', () => {
             for (const vector of vectors) {
-                expect(vector.tangent).toMatchObject({ x: -vector.y, y: vector.x });
+                expect(vector.getTangent()).toMatchObject({ x: -vector.y, y: vector.x });
             }
         });
 
         test('`magnitude`', () => {
             for (const vector of vectors) {
-                expect(vector.magnitude).toBeCloseTo(Math.sqrt(vector.x ** 2 + vector.y ** 2));
+                expect(vector.getMagnitude()).toBeCloseTo(Math.sqrt(vector.x ** 2 + vector.y ** 2));
             }
         });
 
         test('`unit`', () => {
             for (const vector of vectors) {
-                expect(vector.unit.magnitude).toBeCloseTo(1);
+                expect(vector.getNormal().getMagnitude()).toBeCloseTo(1);
             }
         });
     });
 
     describe('methods:', () => {
-        const v1 = new Vector2D(4, 2);
-        const v2 = new Vector2D(2, 4);
+        const v1 = new Vector2(4, 2);
+        const v2 = new Vector2(2, 4);
 
         test('`getDot` - static method', () => {
-            expect(v1.getDot(v2)).toBe(v1.x * v2.x + v1.y * v2.y);
+            expect(v1.dotProduct(v2)).toBe(v1.x * v2.x + v1.y * v2.y);
         });
 
         test('`getRadians` - static method', () => {
-            const v1 = new Vector2D(1, 0);
-            const v2 = new Vector2D(1, 1);
+            const v1 = new Vector2(1, 0);
+            const v2 = new Vector2(1, 1);
 
-            const angle = (v1.getRadians(v2) * 180) / Math.PI;
+            const angle = (v1.radians(v2) * 180) / Math.PI;
 
             expect(angle).toBeCloseTo(45);
         });

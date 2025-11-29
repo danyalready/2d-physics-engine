@@ -62,13 +62,13 @@ export class CollisionResolver {
         const effectiveCR = (rigidbodyA.getRestitution() + rigidbodyB.getRestitution()) / 2;
 
         // Velocity components along the collision normal
-        const vANormal = normal.getDot(rigidbodyA.getVelocity());
-        const vBNormal = normal.getDot(rigidbodyB.getVelocity());
+        const vANormal = normal.dotProduct(rigidbodyA.getVelocity());
+        const vBNormal = normal.dotProduct(rigidbodyB.getVelocity());
 
         // Velocity components along the tangent (perpendicular to normal)
-        const tangent = normal.tangent;
-        const vATangent = tangent.getDot(rigidbodyA.getVelocity());
-        const vBTangent = tangent.getDot(rigidbodyB.getVelocity());
+        const tangent = normal.getTangent();
+        const vATangent = tangent.dotProduct(rigidbodyA.getVelocity());
+        const vBTangent = tangent.dotProduct(rigidbodyB.getVelocity());
 
         // Total momentum and mass
         const totalMomentum = rigidbodyA.getMass() * vANormal + rigidbodyB.getMass() * vBNormal;

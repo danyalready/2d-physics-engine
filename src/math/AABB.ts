@@ -1,9 +1,9 @@
-import { Vector2D } from './Vector2D';
+import Vector2 from './Vector2';
 
 export class AABB {
     constructor(
-        public min: Vector2D,
-        public max: Vector2D,
+        public min: Vector2,
+        public max: Vector2,
     ) {}
 
     get width(): number {
@@ -14,12 +14,12 @@ export class AABB {
         return this.max.y - this.min.y;
     }
 
-    get center(): Vector2D {
+    get center(): Vector2 {
         return this.min.add(this.max).scale(0.5);
     }
 
     /** Checks if a point is inside the bounds. */
-    containsPoint(point: Vector2D): boolean {
+    containsPoint(point: Vector2): boolean {
         return point.x >= this.min.x && point.x <= this.max.x && point.y >= this.min.y && point.y <= this.max.y;
     }
 
@@ -36,15 +36,15 @@ export class AABB {
     /** Creates bounds that contain both this bounds and another. */
     union(other: AABB): AABB {
         return new AABB(
-            new Vector2D(Math.min(this.min.x, other.min.x), Math.min(this.min.y, other.min.y)),
-            new Vector2D(Math.max(this.max.x, other.max.x), Math.max(this.max.y, other.max.y)),
+            new Vector2(Math.min(this.min.x, other.min.x), Math.min(this.min.y, other.min.y)),
+            new Vector2(Math.max(this.max.x, other.max.x), Math.max(this.max.y, other.max.y)),
         );
     }
 
     /** Creates bounds representing the intersection of this bounds and another. */
     intersection(other: AABB): AABB | null {
-        const min = new Vector2D(Math.max(this.min.x, other.min.x), Math.max(this.min.y, other.min.y));
-        const max = new Vector2D(Math.min(this.max.x, other.max.x), Math.min(this.max.y, other.max.y));
+        const min = new Vector2(Math.max(this.min.x, other.min.x), Math.max(this.min.y, other.min.y));
+        const max = new Vector2(Math.min(this.max.x, other.max.x), Math.min(this.max.y, other.max.y));
 
         // Check if there is a valid intersection
         if (min.x <= max.x && min.y <= max.y) {
@@ -57,8 +57,8 @@ export class AABB {
     /** Expands bounds by a margin. */
     expand(margin: number): AABB {
         return new AABB(
-            new Vector2D(this.min.x - margin, this.min.y - margin),
-            new Vector2D(this.max.x + margin, this.max.y + margin),
+            new Vector2(this.min.x - margin, this.min.y - margin),
+            new Vector2(this.max.x + margin, this.max.y + margin),
         );
     }
 

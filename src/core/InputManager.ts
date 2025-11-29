@@ -1,4 +1,4 @@
-import { Vector2D } from '../math/Vector2D';
+import Vector2 from '../math/Vector2';
 
 interface KeyState {
     isPressed: boolean;
@@ -7,7 +7,7 @@ interface KeyState {
 
 export class InputManager {
     private keyStates: Map<string, KeyState> = new Map();
-    private mousePosition: Vector2D = new Vector2D();
+    private mousePosition: Vector2 = new Vector2();
     private mouseButtons: Map<number, KeyState> = new Map();
 
     constructor() {
@@ -43,7 +43,7 @@ export class InputManager {
         return this.mouseButtons.get(button)?.wasPressed || false;
     }
 
-    getMousePosition(): Vector2D {
+    getMousePosition(): Vector2 {
         return this.mousePosition;
     }
 
@@ -56,7 +56,7 @@ export class InputManager {
     }
 
     private handleMouseMove(event: MouseEvent): void {
-        this.mousePosition = new Vector2D(event.clientX, event.clientY);
+        this.mousePosition = new Vector2(event.clientX, event.clientY);
     }
 
     private handleMouseDown(event: MouseEvent): void {
