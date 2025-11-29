@@ -1,16 +1,56 @@
 {
     "name": "2d-physics-engine",
-    "private": true,
-    "version": "0.0.0",
+    "version": "1.0.0",
+    "description": "A lightweight, flexible 2D physics engine with ECS architecture, built with TypeScript",
     "type": "module",
+    "main": "./dist/index.js",
+    "module": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js",
+            "default": "./dist/index.js"
+        }
+    },
+    "files": [
+        "dist",
+        "README.md",
+        "LICENSE"
+    ],
     "scripts": {
         "dev": "vite --open",
-        "build": "tsc && vite build",
+        "build": "tsc -p tsconfig.build.json",
+        "build:lib": "npm run build",
+        "build:demo": "vite build",
         "preview": "vite preview",
+        "prepublishOnly": "npm run build && npm test",
         "format": "prettier . --write",
         "format-check": "prettier . --check",
         "test": "jest"
     },
+    "keywords": [
+        "physics",
+        "2d",
+        "physics-engine",
+        "game-engine",
+        "ecs",
+        "entity-component-system",
+        "collision-detection",
+        "rigidbody",
+        "typescript",
+        "canvas"
+    ],
+    "author": "",
+    "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/danyalready/2d-physics-engine.git"
+    },
+    "bugs": {
+        "url": "https://github.com/danyalready/2d-physics-engine/issues"
+    },
+    "homepage": "https://github.com/danyalready/2d-physics-engine#readme",
     "devDependencies": {
         "@babel/preset-env": "^7.23.5",
         "@types/jest": "^29.5.10",

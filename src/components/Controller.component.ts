@@ -16,21 +16,24 @@ export class Controller extends Component {
     }
 
     update(parentEntity: Entity): void {
-        const input = new Vector2();
+        let x = 0;
+        let y = 0;
 
         // Get input vector from WASD or arrow keys
         if (this.inputManager.isKeyPressed('w') || this.inputManager.isKeyPressed('ArrowUp')) {
-            input.y -= 1;
+            y -= 1;
         }
         if (this.inputManager.isKeyPressed('s') || this.inputManager.isKeyPressed('ArrowDown')) {
-            input.y += 1;
+            y += 1;
         }
         if (this.inputManager.isKeyPressed('a') || this.inputManager.isKeyPressed('ArrowLeft')) {
-            input.x -= 1;
+            x -= 1;
         }
         if (this.inputManager.isKeyPressed('d') || this.inputManager.isKeyPressed('ArrowRight')) {
-            input.x += 1;
+            x += 1;
         }
+
+        const input = new Vector2(x, y);
 
         if (input.getMagnitude() > 0) {
             const force = input.getNormal().scale(this.moveForce);
