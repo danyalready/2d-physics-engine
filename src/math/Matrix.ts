@@ -18,10 +18,11 @@ export class Matrix {
     static isValid(matrix: number[][]): boolean {
         if (!Array.isArray(matrix) || matrix.length === 0) return false;
 
-        const rows = matrix.length;
-        const cols = matrix[0]?.length;
+        const firstRow = matrix[0];
 
-        if (cols === 0) return false;
+        if (!Array.isArray(firstRow) || firstRow.length === 0) return false;
+
+        const cols = firstRow.length;
 
         return matrix.every((row) => Array.isArray(row) && row.length === cols);
     }
