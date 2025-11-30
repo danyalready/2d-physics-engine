@@ -5,7 +5,7 @@ export { Iterator } from './core/Iterator';
 export { InputManager } from './core/InputManager';
 
 // Math
-export { default as Vector2 } from './math/Vector2';
+export { Vector2 } from './math/Vector2';
 export { AABB } from './math/AABB';
 export { QuadTree } from './math/QuadTree';
 

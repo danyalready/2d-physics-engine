@@ -1,4 +1,4 @@
-export default class Vector2 {
+export class Vector2 {
     constructor(
         public readonly x: number = 0,
         public readonly y: number = 0,

@@ -1,7 +1,7 @@
 import { CircleCollider } from '../../components/ColliderComponents/CircleCollider.component';
 import { Collider } from '../../components/ColliderComponents/Collider.abstract';
 import { Transform } from '../../components/Transform.component';
-import Vector2 from '../../math/Vector2';
+import { Vector2 } from '../../math/Vector2';
 
 type Detector<T extends Collider = Collider, U extends Collider = Collider> = (
     transformA: Transform,

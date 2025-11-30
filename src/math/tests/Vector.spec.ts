@@ -1,4 +1,4 @@
-import Vector2 from '../Vector2';
+import { Vector2 } from '../Vector2';
 
 describe('Vector2', () => {
     test('constructor sets x and y', () => {

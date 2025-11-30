@@ -1,6 +1,6 @@
 import { Entity } from '../core/Entity';
 import { InputManager } from '../core/InputManager';
-import Vector2 from '../math/Vector2';
+import { Vector2 } from '../math/Vector2';
 import { Component } from './Component.abstract';
 import { Rigidbody } from './Rigidbody.component';
 import { Transform } from './Transform.component';

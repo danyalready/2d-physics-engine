@@ -6,7 +6,7 @@ import { Iterator } from './core/Iterator';
 import { Entity } from './core/Entity';
 import { InputManager } from './core/InputManager';
 import { Scene } from './core/Scene';
-import Vector2 from './math/Vector2';
+import { Vector2 } from './math/Vector2';
 import { System } from './systems/System.abstract';
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;

@@ -1,5 +1,5 @@
 import { AABB } from './AABB';
-import Vector2 from './Vector2';
+import { Vector2 } from './Vector2';
 
 type NodeKey = 'NE' | 'SE' | 'SW' | 'NW';
 

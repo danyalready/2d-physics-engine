@@ -6,7 +6,7 @@ import { Transform } from '../../components/Transform.component';
 import { Entity } from '../../core/Entity';
 import { Scene } from '../../core/Scene';
 import { System } from '../System.abstract';
-import Vector2 from '../../math/Vector2';
+import { Vector2 } from '../../math/Vector2';
 
 type CollisionPair = string;
 
