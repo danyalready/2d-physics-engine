@@ -13,7 +13,7 @@ export class Physics extends System {
     private readonly collisionDetector = new CollisionDetector();
     private readonly collisionResolver = new CollisionResolver();
 
-    update(scene: Scene, deltaTime: number): void {
+    update(deltaTime: number, scene: Scene): void {
         const entities = scene.getEntities();
 
         // Step 0: Detect and resolve collisions after updating positions

@@ -56,7 +56,7 @@ export class Rendering extends System {
         this.canvasCtx.clearRect(0, 0, this.canvas.width, this.canvas.height);
     }
 
-    update(scene: Scene): void {
+    update(_deltaTime: number, scene: Scene): void {
         this.clear();
 
         for (const entity of scene.getEntities()) {

@@ -51,6 +51,10 @@ export class Iterator {
         scene.onLoad();
     }
 
+    addSystem(system: System) {
+        this.systems.push(system);
+    }
+
     start(): void {
         if (!this.isRunning) {
             this.isRunning = true;
@@ -103,7 +107,7 @@ export class Iterator {
         if (this.scene) {
             for (const system of this.systems) {
                 if (system.needsFixedUpdate) {
-                    system.update(this.scene, fixedDeltaTime);
+                    system.update(fixedDeltaTime, this.scene);
                 }
             }
         }
@@ -116,7 +120,7 @@ export class Iterator {
             // Update systems that don't need fixed timestep
             for (const system of this.systems) {
                 if (!system.needsFixedUpdate) {
-                    system.update(this.scene, deltaTime);
+                    system.update(deltaTime, this.scene);
                 }
             }
 

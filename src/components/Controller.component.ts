@@ -15,7 +15,7 @@ export class Controller extends Component {
         super();
     }
 
-    update(parentEntity: Entity): void {
+    update(_deltaTime: number, parentEntity: Entity): void {
         let x = 0;
         let y = 0;
 
