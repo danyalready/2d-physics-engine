@@ -15,9 +15,11 @@ export { Transform } from './components/Transform.component';
 export { Rigidbody } from './components/Rigidbody.component';
 export { Collider, type CollisionEvent } from './components/ColliderComponents/Collider.abstract';
 export { CircleCollider } from './components/ColliderComponents/CircleCollider.component';
+export { BoxCollider } from './components/ColliderComponents/BoxCollider.component';
 export { Controller } from './components/Controller.component';
 export { Drawer } from './components/DrawerComponents/Drawer.component';
 export { CircleDrawer } from './components/DrawerComponents/CircleDrawer.component';
+export { BoxDrawer } from './components/DrawerComponents/BoxDrawer.component';
 
 // Systems
 export { System } from './systems/System.abstract';

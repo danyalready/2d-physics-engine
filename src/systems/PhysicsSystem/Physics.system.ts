@@ -29,26 +29,27 @@ export class Physics extends System {
     update(deltaTime: number, scene: Scene): void {
         const entities = scene.getEntities();
 
-        // Step 0: Detect and resolve collisions after updating positions
-        const collisions = this.detectCollisions(entities);
-        this.handleCollisionEvents(collisions, entities);
-        this.resolveCollisions(collisions);
-
+        // Step 1: Update all entities (integrate forces and velocities)
         for (const entity of entities) {
             const transform = entity.getComponent(Transform);
             const rigidbody = entity.getComponent(Rigidbody);
 
             if (!transform || !rigidbody) continue;
 
-            // Step 1: Calculate new velocities from accumulated forces
+            // Calculate new velocities from accumulated forces
             this.integrateForces(rigidbody, deltaTime);
 
-            // Step 2: Update positions using new velocities
+            // Update positions using new velocities
             this.integrateVelocities(transform, rigidbody, deltaTime);
 
-            // Step 4: Clear accumulated forces for next frame
+            // Clear accumulated forces for next frame
             rigidbody.clearForces();
         }
+
+        // Step 2: Detect and resolve collisions after updating positions
+        const collisions = this.detectCollisions(entities);
+        this.handleCollisionEvents(collisions, entities);
+        this.resolveCollisions(collisions);
     }
 
     private integrateForces(rigidbody: Rigidbody, deltaTime: number): void {

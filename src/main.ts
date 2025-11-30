@@ -8,6 +8,8 @@ import { InputManager } from './core/InputManager';
 import { Scene } from './core/Scene';
 import { Vector2 } from './math/Vector2';
 import { System } from './systems/System.abstract';
+import { BoxCollider } from './components/ColliderComponents/BoxCollider.component';
+import { BoxDrawer } from './components/DrawerComponents/BoxDrawer.component';
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -19,7 +21,7 @@ const scene = new Scene();
 // --- CONFIG ---
 const BALL_RADIUS = 20;
 const SPAWN_INTERVAL = 100; // ms
-const BALL_SPEED = 500;
+const BALL_SPEED = 200;
 
 // --- SPAWN FUNCTION ---
 function spawnBall() {
@@ -33,20 +35,6 @@ function spawnBall() {
     const collider = new CircleCollider(BALL_RADIUS);
     const drawer = new CircleDrawer(BALL_RADIUS);
 
-    // Set collision callbacks
-    collider.onCollideEntry = (event) => {
-        console.log(`${ball.name} started colliding with ${event.otherEntity.name}`);
-    };
-
-    collider.onCollideStay = (_event) => {
-        // This fires every frame while colliding
-        // console.log(`${ball.name} is colliding with ${_event.otherEntity.name}`);
-    };
-
-    collider.onCollideExit = (event) => {
-        console.log(`${ball.name} stopped colliding with ${event.otherEntity.name}`);
-    };
-
     // Случайная скорость
     const angle = Math.random() * Math.PI * 2;
     rigidbody.setVelocity(new Vector2(Math.cos(angle), Math.sin(angle)).scale(BALL_SPEED));
@@ -57,6 +45,29 @@ function spawnBall() {
     ball.addComponent(drawer);
 
     scene.addEntity(ball);
+}
+
+function spawnBox() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
+
+    // Create a box entity
+    const box = new Entity(`Box_${Math.random()}`);
+
+    const transform = new Transform(new Vector2(x, y));
+    const rigidbody = new Rigidbody({ mass: 10, friction: 0.1 });
+    const collider = new BoxCollider(100, 50); // width, height
+    const drawer = new BoxDrawer(100, 50);
+
+    // Случайная скорость
+    const angle = Math.random() * Math.PI * 2;
+    rigidbody.setVelocity(new Vector2(Math.cos(angle), Math.sin(angle)).scale(BALL_SPEED));
+
+    box.addComponent(transform);
+    box.addComponent(rigidbody);
+    box.addComponent(collider);
+    box.addComponent(drawer);
+    scene.addEntity(box);
 }
 
 // --- REMOVE OUTSIDE ---
@@ -94,4 +105,7 @@ engine.setScene(scene);
 engine.start();
 
 // --- Periodic spawns ---
-setInterval(spawnBall, SPAWN_INTERVAL);
+setInterval(() => {
+    spawnBall();
+    spawnBox();
+}, SPAWN_INTERVAL);

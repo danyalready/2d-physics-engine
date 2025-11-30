@@ -1,5 +1,6 @@
 import { CollisionInfo } from './CollisionDetector';
 import { CircleCollider } from '../../components/ColliderComponents/CircleCollider.component';
+import { BoxCollider } from '../../components/ColliderComponents/BoxCollider.component';
 import { Collider } from '../../components/ColliderComponents/Collider.abstract';
 import { Rigidbody } from '../../components/Rigidbody.component';
 import { Transform } from '../../components/Transform.component';
@@ -24,7 +25,28 @@ export class CollisionResolver {
         this.registerCollisionResolver<CircleCollider, CircleCollider>(
             CircleCollider.COLLIDER_ID,
             CircleCollider.COLLIDER_ID,
-            this.circleVsCircleResolver,
+            this.circleVsCircleResolver.bind(this),
+        );
+
+        // Register box vs box collision
+        this.registerCollisionResolver<BoxCollider, BoxCollider>(
+            BoxCollider.COLLIDER_ID,
+            BoxCollider.COLLIDER_ID,
+            this.boxVsBoxResolver.bind(this),
+        );
+
+        // Register box vs circle collision
+        this.registerCollisionResolver<BoxCollider, CircleCollider>(
+            BoxCollider.COLLIDER_ID,
+            CircleCollider.COLLIDER_ID,
+            this.boxVsCircleResolver.bind(this),
+        );
+
+        // Register circle vs box collision (reverse)
+        this.registerCollisionResolver<CircleCollider, BoxCollider>(
+            CircleCollider.COLLIDER_ID,
+            BoxCollider.COLLIDER_ID,
+            this.circleVsBoxResolver.bind(this),
         );
     }
 
@@ -49,6 +71,8 @@ export class CollisionResolver {
 
         return resolver(collision);
     }
+
+    /** ---------------- Resolvers ---------------- **/
 
     private circleVsCircleResolver(collision: Collision<CircleCollider, CircleCollider>): boolean {
         const { transformA, transformB, rigidbodyA, rigidbodyB } = collision;
@@ -88,5 +112,90 @@ export class CollisionResolver {
         transformB.setPosition(transformB.getPosition().add(resolutionVector.scale(rigidbodyA.getMass())));
 
         return true;
+    }
+
+    private boxVsBoxResolver(collision: Collision<BoxCollider, BoxCollider>): boolean {
+        let { transformA, transformB, rigidbodyA, rigidbodyB } = collision;
+        let { penetration, normal } = collision.info;
+
+        if (!rigidbodyA || !rigidbodyB) return false;
+
+        const mA = rigidbodyA.getMass();
+        const mB = rigidbodyB.getMass();
+        const vA = rigidbodyA.getVelocity();
+        const vB = rigidbodyB.getVelocity();
+
+        // Relative velocity
+        const relVel = vB.subtract(vA);
+        const velAlongNormal = relVel.dotProduct(normal);
+
+        // If bodies are already separating -> no impulse
+        if (velAlongNormal > 0) return false;
+
+        // Impulse
+        const restitution = (rigidbodyA.getRestitution() + rigidbodyB.getRestitution()) / 2;
+
+        const j = (-(1 + restitution) * velAlongNormal) / (1 / mA + 1 / mB);
+        const impulse = normal.scale(j);
+
+        rigidbodyA.setVelocity(vA.subtract(impulse.scale(1 / mA)));
+        rigidbodyB.setVelocity(vB.add(impulse.scale(1 / mB)));
+
+        // Position correction
+        const percent = 0.8;
+        const slop = 0.01;
+
+        const correctionMag = (Math.max(penetration - slop, 0) / (mA + mB)) * percent;
+        const correction = normal.scale(correctionMag);
+
+        transformA.setPosition(transformA.getPosition().subtract(correction.scale(mB)));
+        transformB.setPosition(transformB.getPosition().add(correction.scale(mA)));
+
+        return true;
+    }
+
+    private boxVsCircleResolver(collision: Collision<BoxCollider, CircleCollider>): boolean {
+        const { transformA, transformB, rigidbodyA, rigidbodyB } = collision;
+        const { penetration, normal } = collision.info;
+
+        if (!rigidbodyA || !rigidbodyB) return false;
+
+        const mA = rigidbodyA.getMass();
+        const mB = rigidbodyB.getMass();
+
+        const vA = rigidbodyA.getVelocity();
+        const vB = rigidbodyB.getVelocity();
+
+        const restitution = (rigidbodyA.getRestitution() + rigidbodyB.getRestitution()) / 2;
+
+        const vANormal = normal.dotProduct(vA);
+        const vBNormal = normal.dotProduct(vB);
+
+        const tangent = normal.getTangent();
+        const vATangent = tangent.dotProduct(vA);
+        const vBTangent = tangent.dotProduct(vB);
+
+        const totalMomentum = mA * vANormal + mB * vBNormal;
+        const totalMass = mA + mB;
+
+        const vANormalAfter = (restitution * mB * (vBNormal - vANormal) + totalMomentum) / totalMass;
+
+        const vBNormalAfter = (restitution * mA * (vANormal - vBNormal) + totalMomentum) / totalMass;
+
+        rigidbodyA.setVelocity(normal.scale(vANormalAfter).add(tangent.scale(vATangent)));
+
+        rigidbodyB.setVelocity(normal.scale(vBNormalAfter).add(tangent.scale(vBTangent)));
+
+        const correction = normal.scale(penetration / totalMass);
+
+        transformA.setPosition(transformA.getPosition().subtract(correction.scale(mB)));
+
+        transformB.setPosition(transformB.getPosition().add(correction.scale(mA)));
+
+        return true;
+    }
+
+    private circleVsBoxResolver(collision: Collision<CircleCollider, BoxCollider>): boolean {
+        return this.boxVsCircleResolver({ ...collision, colliderA: collision.colliderB, colliderB: collision.colliderA });
     }
 }
