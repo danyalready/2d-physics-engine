@@ -13,7 +13,7 @@ export { QuadTree } from './math/QuadTree';
 export { Component } from './components/Component.abstract';
 export { Transform } from './components/Transform.component';
 export { Rigidbody } from './components/Rigidbody.component';
-export { Collider } from './components/ColliderComponents/Collider.abstract';
+export { Collider, type CollisionEvent } from './components/ColliderComponents/Collider.abstract';
 export { CircleCollider } from './components/ColliderComponents/CircleCollider.component';
 export { Controller } from './components/Controller.component';
 export { Drawer } from './components/DrawerComponents/Drawer.component';

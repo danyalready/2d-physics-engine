@@ -14,7 +14,7 @@ export class Entity {
         }
 
         this.components.set(component.componentId, component);
-        component.onStart();
+        component.onStart?.();
 
         return component;
     }
@@ -27,7 +27,7 @@ export class Entity {
         const component = this.getComponent(componentType);
 
         if (component) {
-            component.onDestroy();
+            component.onDestroy?.();
             this.components.delete(component.componentId);
         }
     }
@@ -53,7 +53,7 @@ export class Entity {
         if (!this.active) return;
 
         for (const component of this.components.values()) {
-            component.update(this, deltaTime);
+            component.update?.(deltaTime, this);
         }
 
         for (const entity of this.children) {
@@ -63,7 +63,7 @@ export class Entity {
 
     destroy(): void {
         for (const component of this.components.values()) {
-            component.onDestroy();
+            component.onDestroy?.();
         }
 
         for (const child of this.children) {

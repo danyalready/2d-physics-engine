@@ -1,23 +1,38 @@
 import { CollisionDetector } from './CollisionDetector';
 import { type Collision, CollisionResolver } from './CollisionResolver';
-import { Collider } from '../../components/ColliderComponents/Collider.abstract';
+import { Collider, CollisionEvent } from '../../components/ColliderComponents/Collider.abstract';
 import { Rigidbody } from '../../components/Rigidbody.component';
 import { Transform } from '../../components/Transform.component';
 import { Entity } from '../../core/Entity';
 import { Scene } from '../../core/Scene';
 import { System } from '../System.abstract';
+import Vector2 from '../../math/Vector2';
+
+type CollisionPair = string;
+
+interface StoredCollision {
+    colliderA: Collider;
+    colliderB: Collider;
+    entityA: Entity;
+    entityB: Entity;
+    transformA: Transform;
+    transformB: Transform;
+}
 
 export class Physics extends System {
     readonly needsFixedUpdate = true;
 
     private readonly collisionDetector = new CollisionDetector();
     private readonly collisionResolver = new CollisionResolver();
+    private currentCollisions: Map<CollisionPair, StoredCollision> = new Map();
 
     update(deltaTime: number, scene: Scene): void {
         const entities = scene.getEntities();
 
         // Step 0: Detect and resolve collisions after updating positions
-        this.resolveCollisions(this.detectCollisions(entities));
+        const collisions = this.detectCollisions(entities);
+        this.handleCollisionEvents(collisions, entities);
+        this.resolveCollisions(collisions);
 
         for (const entity of entities) {
             const transform = entity.getComponent(Transform);
@@ -103,7 +118,9 @@ export class Physics extends System {
                     info: collisionInfo,
                     rigidbodyA,
                     rigidbodyB,
-                });
+                    entityA, // Add entity info for collision events
+                    entityB,
+                } as Collision & { entityA: Entity; entityB: Entity });
             }
         }
 
@@ -114,5 +131,100 @@ export class Physics extends System {
         for (const collision of collisions) {
             this.collisionResolver.resolveCollision(collision);
         }
+    }
+
+    private handleCollisionEvents(collisions: Collision[], entities: Entity[]): void {
+        const newCollisions = new Map<CollisionPair, StoredCollision>();
+
+        // Process current collisions and detect entry events
+        for (const collision of collisions) {
+            // Get entities from collision if available, otherwise find them
+            const entityA = (collision as any).entityA || this.findEntityWithCollider(entities, collision.colliderA);
+            const entityB = (collision as any).entityB || this.findEntityWithCollider(entities, collision.colliderB);
+
+            if (!entityA || !entityB) continue;
+
+            const pair = this.getCollisionPair(entityA, entityB, collision.colliderA, collision.colliderB);
+
+            // Store this collision
+            newCollisions.set(pair, {
+                colliderA: collision.colliderA,
+                colliderB: collision.colliderB,
+                entityA,
+                entityB,
+                transformA: collision.transformA,
+                transformB: collision.transformB,
+            });
+
+            // Check if this is a new collision (entry event)
+            if (!this.currentCollisions.has(pair)) {
+                // Fire onCollideEntry for colliderA
+                const eventA: CollisionEvent = {
+                    otherEntity: entityB,
+                    otherCollider: collision.colliderB,
+                    otherTransform: collision.transformB,
+                    collisionInfo: collision.info,
+                };
+                collision.colliderA.onCollideEntry?.(eventA);
+
+                // Fire onCollideEntry for colliderB
+                const eventB: CollisionEvent = {
+                    otherEntity: entityA,
+                    otherCollider: collision.colliderA,
+                    otherTransform: collision.transformA,
+                    collisionInfo: {
+                        ...collision.info,
+                        normal: collision.info.normal.scale(-1), // Reverse normal for B's perspective
+                    },
+                };
+                collision.colliderB.onCollideEntry?.(eventB);
+            }
+        }
+
+        // Detect exit events (collisions that existed before but not now)
+        for (const [pair, storedCollision] of this.currentCollisions.entries()) {
+            if (!newCollisions.has(pair)) {
+                // This collision ended - fire exit events
+                // Fire onCollideExit for colliderA
+                const eventA: CollisionEvent = {
+                    otherEntity: storedCollision.entityB,
+                    otherCollider: storedCollision.colliderB,
+                    otherTransform: storedCollision.transformB,
+                    collisionInfo: {
+                        normal: new Vector2(0, 0),
+                        point: new Vector2(0, 0),
+                        penetration: 0,
+                    },
+                };
+                storedCollision.colliderA.onCollideExit?.(eventA);
+
+                // Fire onCollideExit for colliderB
+                const eventB: CollisionEvent = {
+                    otherEntity: storedCollision.entityA,
+                    otherCollider: storedCollision.colliderA,
+                    otherTransform: storedCollision.transformA,
+                    collisionInfo: {
+                        normal: new Vector2(0, 0),
+                        point: new Vector2(0, 0),
+                        penetration: 0,
+                    },
+                };
+                storedCollision.colliderB.onCollideExit?.(eventB);
+            }
+        }
+
+        // Update current collisions for next frame
+        this.currentCollisions = newCollisions;
+    }
+
+    private getCollisionPair(entityA: Entity, entityB: Entity, colliderA: Collider, colliderB: Collider): CollisionPair {
+        // Create a unique pair key using entity names and collider IDs (order-independent)
+        const entityKeyA = `${entityA.name}:${colliderA.componentId.toString()}`;
+        const entityKeyB = `${entityB.name}:${colliderB.componentId.toString()}`;
+        return entityKeyA < entityKeyB ? `${entityKeyA}:${entityKeyB}` : `${entityKeyB}:${entityKeyA}`;
+    }
+
+    private findEntityWithCollider(entities: Entity[], collider: Collider): Entity | undefined {
+        return entities.find((entity) => entity.getComponent(Collider) === collider);
     }
 }
