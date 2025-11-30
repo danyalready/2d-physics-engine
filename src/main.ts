@@ -1,5 +1,4 @@
 import { CircleCollider } from './components/ColliderComponents/CircleCollider.component';
-import { Controller } from './components/Controller.component';
 import { CircleDrawer } from './components/DrawerComponents/CircleDrawer.component';
 import { Rigidbody } from './components/Rigidbody.component';
 import { Transform } from './components/Transform.component';
@@ -8,36 +7,91 @@ import { Entity } from './core/Entity';
 import { InputManager } from './core/InputManager';
 import { Scene } from './core/Scene';
 import Vector2 from './math/Vector2';
+import { System } from './systems/System.abstract';
 
-window.addEventListener('load', () => {
-    const canvas = document.getElementById('canvas') as HTMLCanvasElement;
-    const canvasCtx = canvas.getContext('2d') as CanvasRenderingContext2D;
+const canvas = document.getElementById('canvas') as HTMLCanvasElement;
+const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
+const inputManager = new InputManager();
 
-    const inputManager = new InputManager();
+const engine = new Iterator(inputManager, canvas, ctx);
+const scene = new Scene();
 
-    const engine = new Iterator(inputManager, canvas, canvasCtx);
-    const scene = new Scene();
+// --- CONFIG ---
+const BALL_RADIUS = 20;
+const SPAWN_INTERVAL = 100; // ms
+const BALL_SPEED = 500;
 
-    // ====== OPEN PLAYGROUND ======
+// --- SPAWN FUNCTION ---
+function spawnBall() {
+    const x = Math.random() * canvas.width;
+    const y = Math.random() * canvas.height;
 
-    const entity1 = new Entity();
-    entity1.addComponent(new Transform(new Vector2(600, 400)));
-    entity1.addComponent(new Rigidbody({ friction: 0.1, mass: 1, restitution: 0.5 }));
-    entity1.addComponent(new CircleCollider(50));
-    entity1.addComponent(new CircleDrawer(50));
-    entity1.addComponent(new Controller(inputManager, 100));
+    const ball = new Entity(`Ball_${Math.random()}`);
 
-    const entity2 = new Entity();
-    entity2.addComponent(new Transform(new Vector2(200, 350)));
-    entity2.addComponent(new Rigidbody({ friction: 1, mass: 1, restitution: 0.1 }));
-    entity2.addComponent(new CircleCollider(70));
-    entity2.addComponent(new CircleDrawer(70));
+    const transform = new Transform(new Vector2(x, y));
+    const rigidbody = new Rigidbody({ mass: 1, friction: 0 });
+    const collider = new CircleCollider(BALL_RADIUS);
+    const drawer = new CircleDrawer(BALL_RADIUS);
 
-    scene.addEntity(entity1);
-    scene.addEntity(entity2);
+    // Set collision callbacks
+    collider.onCollideEntry = (event) => {
+        console.log(`${ball.name} started colliding with ${event.otherEntity.name}`);
+    };
 
-    // ====== CLOSE PLAYGROUND ======
+    collider.onCollideStay = (_event) => {
+        // This fires every frame while colliding
+        // console.log(`${ball.name} is colliding with ${_event.otherEntity.name}`);
+    };
 
-    engine.setScene(scene);
-    engine.start();
-});
+    collider.onCollideExit = (event) => {
+        console.log(`${ball.name} stopped colliding with ${event.otherEntity.name}`);
+    };
+
+    // Случайная скорость
+    const angle = Math.random() * Math.PI * 2;
+    rigidbody.setVelocity(new Vector2(Math.cos(angle), Math.sin(angle)).scale(BALL_SPEED));
+
+    ball.addComponent(transform);
+    ball.addComponent(rigidbody);
+    ball.addComponent(collider);
+    ball.addComponent(drawer);
+
+    scene.addEntity(ball);
+}
+
+// --- REMOVE OUTSIDE ---
+function removeBallsOutside() {
+    const toDelete: Entity[] = [];
+
+    for (const entity of scene.getEntities()) {
+        const tr = entity.getComponent(Transform);
+        if (!tr) continue;
+
+        const { x, y } = tr.getPosition();
+
+        if (x < -BALL_RADIUS || x > canvas.width + BALL_RADIUS || y < -BALL_RADIUS || y > canvas.height + BALL_RADIUS) {
+            toDelete.push(entity);
+        }
+    }
+
+    for (const e of toDelete) {
+        scene.removeEntity(e);
+    }
+}
+
+// --- HOOK Into engine update ---
+class Ballswapn extends System {
+    needsFixedUpdate = false;
+
+    update(): void {
+        removeBallsOutside();
+    }
+}
+engine.addSystem(new Ballswapn());
+
+// --- Start ---
+engine.setScene(scene);
+engine.start();
+
+// --- Periodic spawns ---
+setInterval(spawnBall, SPAWN_INTERVAL);

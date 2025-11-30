@@ -156,28 +156,33 @@ export class Physics extends System {
                 transformB: collision.transformB,
             });
 
+            // Create collision events for both colliders
+            const eventA: CollisionEvent = {
+                otherEntity: entityB,
+                otherCollider: collision.colliderB,
+                otherTransform: collision.transformB,
+                collisionInfo: collision.info,
+            };
+
+            const eventB: CollisionEvent = {
+                otherEntity: entityA,
+                otherCollider: collision.colliderA,
+                otherTransform: collision.transformA,
+                collisionInfo: {
+                    ...collision.info,
+                    normal: collision.info.normal.scale(-1), // Reverse normal for B's perspective
+                },
+            };
+
             // Check if this is a new collision (entry event)
             if (!this.currentCollisions.has(pair)) {
-                // Fire onCollideEntry for colliderA
-                const eventA: CollisionEvent = {
-                    otherEntity: entityB,
-                    otherCollider: collision.colliderB,
-                    otherTransform: collision.transformB,
-                    collisionInfo: collision.info,
-                };
+                // Fire onCollideEntry for both colliders
                 collision.colliderA.onCollideEntry?.(eventA);
-
-                // Fire onCollideEntry for colliderB
-                const eventB: CollisionEvent = {
-                    otherEntity: entityA,
-                    otherCollider: collision.colliderA,
-                    otherTransform: collision.transformA,
-                    collisionInfo: {
-                        ...collision.info,
-                        normal: collision.info.normal.scale(-1), // Reverse normal for B's perspective
-                    },
-                };
                 collision.colliderB.onCollideEntry?.(eventB);
+            } else {
+                // Fire onCollideStay for ongoing collisions
+                collision.colliderA.onCollideStay?.(eventA);
+                collision.colliderB.onCollideStay?.(eventB);
             }
         }
 

@@ -24,6 +24,11 @@ export abstract class Collider extends Component {
     onCollideEntry?(event: CollisionEvent): void;
 
     /**
+     * Called every frame while colliders are in contact
+     */
+    onCollideStay?(event: CollisionEvent): void;
+
+    /**
      * Called when a collision ends (colliders are no longer in contact)
      */
     onCollideExit?(event: CollisionEvent): void;
