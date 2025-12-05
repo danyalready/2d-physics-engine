@@ -43,15 +43,34 @@ export class QuadTree<T> {
 
     /** Subdivides the current node into four child nodes. */
     private subdivide(): void {
-        const { x, y } = this.aabb.center;
-        const width = this.aabb.width / 2;
-        const height = this.aabb.height / 2;
+        const nodeWidth = this.aabb.width / 2;
+        const nodeHeight = this.aabb.height / 2;
 
         this.nodes = new Map([
-            ['NE', new QuadTree(new AABB(new Vector2(x, y - height), new Vector2(x + width, y)), this.maxObjects, this.getAABB)],
-            ['SE', new QuadTree(new AABB(new Vector2(x, y), new Vector2(x + width, y + height)), this.maxObjects, this.getAABB)],
-            ['SW', new QuadTree(new AABB(new Vector2(x - width, y), new Vector2(x, y + height)), this.maxObjects, this.getAABB)],
-            ['NW', new QuadTree(new AABB(new Vector2(x - width, y - height), new Vector2(x, y)), this.maxObjects, this.getAABB)],
+            ['NE', new QuadTree(new AABB(this.aabb.center, this.aabb.max), this.maxObjects, this.getAABB)],
+            [
+                'SE',
+                new QuadTree(
+                    new AABB(
+                        this.aabb.center.subtract(new Vector2(0, nodeHeight)),
+                        this.aabb.center.add(new Vector2(nodeWidth, 0)),
+                    ),
+                    this.maxObjects,
+                    this.getAABB,
+                ),
+            ],
+            ['SW', new QuadTree(new AABB(this.aabb.min, this.aabb.center), this.maxObjects, this.getAABB)],
+            [
+                'NW',
+                new QuadTree(
+                    new AABB(
+                        this.aabb.center.subtract(new Vector2(nodeWidth, 0)),
+                        this.aabb.center.add(new Vector2(0, nodeHeight)),
+                    ),
+                    this.maxObjects,
+                    this.getAABB,
+                ),
+            ],
         ]);
     }
 
