@@ -91,6 +91,7 @@ export class Physics extends System {
     private detectCollisions(entities: Entity[]): Collision[] {
         const collisions: Collision[] = [];
 
+        // TODO: broad-phase based collision check
         for (let i = 0; i < entities.length - 1; i++) {
             const entityA = entities[i];
             const colliderA = entityA.getComponent(Collider);

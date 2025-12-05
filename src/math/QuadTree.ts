@@ -3,23 +3,24 @@ import { Vector2 } from './Vector2';
 
 type NodeKey = 'NE' | 'SE' | 'SW' | 'NW';
 
-export class QuadTree {
-    private points: Vector2[] = [];
-    private nodes: null | Map<NodeKey, QuadTree> = null;
+export class QuadTree<T> {
+    private items: T[] = [];
+    private nodes: null | Map<NodeKey, QuadTree<T>> = null;
 
     constructor(
         private aabb: AABB,
         private maxObjects: number,
+        private getAABB: (item: T) => AABB,
     ) {}
 
     /** Inserts a point into the quadtree. */
-    insert(point: Vector2): boolean {
-        if (!this.aabb.containsPoint(point)) {
+    insert(item: T): boolean {
+        if (!this.aabb.contains(this.getAABB(item))) {
             return false;
         }
 
-        if (this.points.length < this.maxObjects) {
-            this.points.push(point);
+        if (this.items.length < this.maxObjects) {
+            this.items.push(item);
 
             return true;
         }
@@ -29,10 +30,10 @@ export class QuadTree {
         }
 
         if (
-            this.nodes?.get('NE')?.insert(point) ||
-            this.nodes?.get('SE')?.insert(point) ||
-            this.nodes?.get('SW')?.insert(point) ||
-            this.nodes?.get('NW')?.insert(point)
+            this.nodes?.get('NE')?.insert(item) ||
+            this.nodes?.get('SE')?.insert(item) ||
+            this.nodes?.get('SW')?.insert(item) ||
+            this.nodes?.get('NW')?.insert(item)
         ) {
             return true;
         }
@@ -47,24 +48,24 @@ export class QuadTree {
         const height = this.aabb.height / 2;
 
         this.nodes = new Map([
-            ['NE', new QuadTree(new AABB(new Vector2(x, y - height), new Vector2(x + width, y)), this.maxObjects)],
-            ['SE', new QuadTree(new AABB(new Vector2(x, y), new Vector2(x + width, y + height)), this.maxObjects)],
-            ['SW', new QuadTree(new AABB(new Vector2(x - width, y), new Vector2(x, y + height)), this.maxObjects)],
-            ['NW', new QuadTree(new AABB(new Vector2(x - width, y - height), new Vector2(x, y)), this.maxObjects)],
+            ['NE', new QuadTree(new AABB(new Vector2(x, y - height), new Vector2(x + width, y)), this.maxObjects, this.getAABB)],
+            ['SE', new QuadTree(new AABB(new Vector2(x, y), new Vector2(x + width, y + height)), this.maxObjects, this.getAABB)],
+            ['SW', new QuadTree(new AABB(new Vector2(x - width, y), new Vector2(x, y + height)), this.maxObjects, this.getAABB)],
+            ['NW', new QuadTree(new AABB(new Vector2(x - width, y - height), new Vector2(x, y)), this.maxObjects, this.getAABB)],
         ]);
     }
 
     /** Query points within a range. */
-    query(range: AABB, foundPoints: Vector2[] = []): Vector2[] {
+    query(range: AABB, foundPoints: T[] = []): T[] {
         // If the range doesn't intersect this node, return
         if (!this.aabb.intersects(range)) {
             return foundPoints;
         }
 
         // Check points in this node
-        for (const point of this.points) {
-            if (range.containsPoint(point)) {
-                foundPoints.push(point);
+        for (const item of this.items) {
+            if (range.contains(this.getAABB(item))) {
+                foundPoints.push(item);
             }
         }
 
@@ -80,7 +81,7 @@ export class QuadTree {
 
     /** Clears the quadtree. */
     clear(): void {
-        this.points = [];
+        this.items = [];
         this.nodes = null;
     }
 }
