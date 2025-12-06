@@ -8,14 +8,14 @@ export class QuadTree<T> {
     private nodes: null | Map<NodeKey, QuadTree<T>> = null;
 
     constructor(
-        private aabb: AABB,
-        private maxObjects: number,
-        private getAABB: (item: T) => AABB,
+        public readonly aabb: AABB,
+        public readonly maxObjects: number,
+        public readonly getAABB: (item: T) => AABB,
     ) {}
 
     /** Inserts a point into the quadtree. */
     insert(item: T): boolean {
-        if (!this.aabb.contains(this.getAABB(item))) {
+        if (!this.aabb.intersects(this.getAABB(item))) {
             return false;
         }
 
@@ -83,7 +83,7 @@ export class QuadTree<T> {
 
         // Check points in this node
         for (const item of this.items) {
-            if (range.contains(this.getAABB(item))) {
+            if (range.intersects(this.getAABB(item))) {
                 foundPoints.push(item);
             }
         }
