@@ -88,7 +88,7 @@ export class Physics extends System {
         const deltaPosition = rigidbody.getVelocity().scale(deltaTime);
         transform.setPosition(transform.getPosition().add(deltaPosition));
 
-        // Update rotation (if you're tracking rotation in Transform)
+        // Update rotation
         const deltaRotation = rigidbody.getAngularVelocity() * deltaTime;
         transform.setRotation(transform.getRotation() + deltaRotation);
     }
@@ -96,6 +96,7 @@ export class Physics extends System {
     private detectCollisions(entities: Entity[]): Collision[] {
         const collisions: Collision[] = [];
 
+        // Reset broad-phase and insert entities
         this.broadPhase.clear();
         entities.forEach(this.broadPhase.add);
 
@@ -132,9 +133,7 @@ export class Physics extends System {
     }
 
     private resolveCollisions(collisions: Collision[]): void {
-        for (const collision of collisions) {
-            this.collisionResolver.resolveCollision(collision);
-        }
+        collisions.forEach(this.collisionResolver.resolveCollision);
     }
 
     private handleCollisionEvents(collisions: Collision[], entities: Entity[]): void {

@@ -21,6 +21,8 @@ export class CollisionDetector {
     private collisionMatrix: Map<symbol, Map<symbol, Detector>> = new Map();
 
     constructor() {
+        this.detectCollision = this.detectCollision.bind(this);
+
         // Register circle vs circle collision
         this.registerCollisionDetector<CircleCollider, CircleCollider>(
             CircleCollider.COLLIDER_ID,

@@ -29,6 +29,7 @@ export class BoxCollider extends Collider {
         const position = transform.getPosition();
         const halfWidth = this.width / 2;
         const halfHeight = this.height / 2;
+
         return new AABB(
             new Vector2(position.x - halfWidth, position.y - halfHeight),
             new Vector2(position.x + halfWidth, position.y + halfHeight),

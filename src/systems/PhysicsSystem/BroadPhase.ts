@@ -4,7 +4,7 @@ import { Transform } from '../../components/Transform.component';
 import { AABB } from '../../math/AABB';
 import { QuadTree } from '../../math/QuadTree';
 
-const MAX_OBJECTS: number = 6;
+const MAX_OBJECTS: number = 1;
 
 export class BroadPhase {
     private readonly root: QuadTree<Entity>;
@@ -37,24 +37,23 @@ export class BroadPhase {
         this.root.query(this.aabb, allEntities);
 
         // 2. Find pairs for each entity
-        for (let i = 0; i < allEntities.length; i++) {
-            const a = allEntities[i];
-            const aabb = this.root.getAABB(a);
+        allEntities.forEach((entity) => {
+            const aabb = this.root.getAABB(entity);
 
             // 3. Get all entities around an enity-A
             const candidates = this.root.query(aabb);
 
-            for (const b of candidates) {
-                if (a === b) continue;
+            for (const candidate of candidates) {
+                if (entity === candidate) continue;
 
                 // 4. Create IDs to avoid duplicates
-                const key = a.id < b.id ? `${a.id}-${b.id}` : `${b.id}-${a.id}`;
+                const key = entity.id < candidate.id ? `${entity.id}-${candidate.id}` : `${candidate.id}-${entity.id}`;
                 if (seen.has(key)) continue;
 
                 seen.add(key);
-                result.push([a, b]);
+                result.push([entity, candidate]);
             }
-        }
+        });
 
         return result;
     }

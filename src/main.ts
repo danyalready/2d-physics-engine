@@ -19,7 +19,7 @@ const engine = new Iterator(inputManager, canvas, ctx, { debug: true });
 const scene = new Scene();
 
 // --- CONFIG ---
-const SIZE = 10;
+const SIZE = 25;
 const SPAWN_INTERVAL = 10; // ms
 const BALL_SPEED = 100;
 
@@ -32,8 +32,8 @@ function spawnBall() {
 
     const transform = new Transform(new Vector2(x, y));
     const rigidbody = new Rigidbody({ mass: 1, friction: 0 });
-    const collider = new CircleCollider(SIZE);
-    const drawer = new CircleDrawer(SIZE);
+    const collider = new CircleCollider(SIZE / 2);
+    const drawer = new CircleDrawer(SIZE / 2);
 
     // Случайная скорость
     const angle = Math.random() * Math.PI * 2;
@@ -106,13 +106,6 @@ engine.start();
 
 // --- Periodic spawns ---
 setInterval(() => {
-    // spawnBall();
-    spawnBox();
-    spawnBox();
-    spawnBox();
-    spawnBox();
-    spawnBox();
-    spawnBox();
-    spawnBox();
+    spawnBall();
     spawnBox();
 }, SPAWN_INTERVAL);
