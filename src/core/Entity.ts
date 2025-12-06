@@ -1,6 +1,8 @@
 import { Component } from '../components/Component.abstract';
 
 export class Entity {
+    private static nextId: number = 0;
+    public id: number = Entity.nextId++;
     private components = new Map<symbol, Component>();
     private children: Set<Entity> = new Set<Entity>();
     private active: boolean = true;
