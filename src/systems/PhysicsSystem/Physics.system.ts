@@ -7,6 +7,8 @@ import { Entity } from '../../core/Entity';
 import { Scene } from '../../core/Scene';
 import { System } from '../System.abstract';
 import { Vector2 } from '../../math/Vector2';
+import { BroadPhase } from './BroadPhase';
+import { AABB } from '../../math/AABB';
 
 type CollisionPair = string;
 
@@ -19,9 +21,12 @@ interface StoredCollision {
     transformB: Transform;
 }
 
+const WORLD_BOUNDS: AABB = new AABB(new Vector2(0, 0), new Vector2(1200, 900));
+
 export class Physics extends System {
     readonly needsFixedUpdate = true;
 
+    private readonly broadPhase = new BroadPhase(WORLD_BOUNDS);
     private readonly collisionDetector = new CollisionDetector();
     private readonly collisionResolver = new CollisionResolver();
     private currentCollisions: Map<CollisionPair, StoredCollision> = new Map();
@@ -91,39 +96,36 @@ export class Physics extends System {
     private detectCollisions(entities: Entity[]): Collision[] {
         const collisions: Collision[] = [];
 
-        // TODO: broad-phase based collision check
-        for (let i = 0; i < entities.length - 1; i++) {
-            const entityA = entities[i];
+        this.broadPhase.clear();
+        entities.forEach(this.broadPhase.add);
+
+        const potentialPairs = this.broadPhase.getPotentialPairs();
+
+        for (const [entityA, entityB] of potentialPairs) {
             const colliderA = entityA.getComponent(Collider);
+            const colliderB = entityB.getComponent(Collider);
             const transformA = entityA.getComponent(Transform);
+            const transformB = entityB.getComponent(Transform);
             const rigidbodyA = entityA.getComponent(Rigidbody);
+            const rigidbodyB = entityB.getComponent(Rigidbody);
 
-            if (!colliderA || !transformA) continue;
+            if (!colliderA || !colliderB || !transformA || !transformB || !rigidbodyA || !rigidbodyB) continue;
 
-            for (let j = i + 1; j < entities.length; j++) {
-                const entityB = entities[j];
-                const colliderB = entityB.getComponent(Collider);
-                const transformB = entityB.getComponent(Transform);
-                const rigidbodyB = entityB.getComponent(Rigidbody);
+            const collisionInfo = this.collisionDetector.detectCollision(transformA, transformB, colliderA, colliderB);
 
-                if (!colliderB || !transformB) continue;
+            if (!collisionInfo) continue;
 
-                const collisionInfo = this.collisionDetector.detectCollision(transformA, transformB, colliderA, colliderB);
-
-                if (!collisionInfo) continue;
-
-                collisions.push({
-                    colliderA,
-                    colliderB,
-                    transformA,
-                    transformB,
-                    info: collisionInfo,
-                    rigidbodyA,
-                    rigidbodyB,
-                    entityA, // Add entity info for collision events
-                    entityB,
-                } as Collision & { entityA: Entity; entityB: Entity });
-            }
+            collisions.push({
+                colliderA,
+                colliderB,
+                transformA,
+                transformB,
+                info: collisionInfo,
+                rigidbodyA,
+                rigidbodyB,
+                entityA,
+                entityB,
+            } as Collision & { entityA: Entity; entityB: Entity });
         }
 
         return collisions;
