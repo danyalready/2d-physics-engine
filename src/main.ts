@@ -15,13 +15,13 @@ const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const ctx = canvas.getContext('2d') as CanvasRenderingContext2D;
 const inputManager = new InputManager();
 
-const engine = new Iterator(inputManager, canvas, ctx);
+const engine = new Iterator(inputManager, canvas, ctx, { debug: true });
 const scene = new Scene();
 
 // --- CONFIG ---
-const BALL_RADIUS = 20;
-const SPAWN_INTERVAL = 100; // ms
-const BALL_SPEED = 200;
+const SIZE = 10;
+const SPAWN_INTERVAL = 10; // ms
+const BALL_SPEED = 100;
 
 // --- SPAWN FUNCTION ---
 function spawnBall() {
@@ -32,8 +32,8 @@ function spawnBall() {
 
     const transform = new Transform(new Vector2(x, y));
     const rigidbody = new Rigidbody({ mass: 1, friction: 0 });
-    const collider = new CircleCollider(BALL_RADIUS);
-    const drawer = new CircleDrawer(BALL_RADIUS);
+    const collider = new CircleCollider(SIZE);
+    const drawer = new CircleDrawer(SIZE);
 
     // Случайная скорость
     const angle = Math.random() * Math.PI * 2;
@@ -56,8 +56,8 @@ function spawnBox() {
 
     const transform = new Transform(new Vector2(x, y));
     const rigidbody = new Rigidbody({ mass: 10, friction: 0.1 });
-    const collider = new BoxCollider(100, 50); // width, height
-    const drawer = new BoxDrawer(100, 50);
+    const collider = new BoxCollider(SIZE, SIZE); // width, height
+    const drawer = new BoxDrawer(SIZE, SIZE);
 
     // Случайная скорость
     const angle = Math.random() * Math.PI * 2;
@@ -80,7 +80,7 @@ function removeBallsOutside() {
 
         const { x, y } = tr.getPosition();
 
-        if (x < -BALL_RADIUS || x > canvas.width + BALL_RADIUS || y < -BALL_RADIUS || y > canvas.height + BALL_RADIUS) {
+        if (x < -SIZE || x > canvas.width + SIZE || y < -SIZE || y > canvas.height + SIZE) {
             toDelete.push(entity);
         }
     }
@@ -106,6 +106,13 @@ engine.start();
 
 // --- Periodic spawns ---
 setInterval(() => {
-    spawnBall();
+    // spawnBall();
+    spawnBox();
+    spawnBox();
+    spawnBox();
+    spawnBox();
+    spawnBox();
+    spawnBox();
+    spawnBox();
     spawnBox();
 }, SPAWN_INTERVAL);

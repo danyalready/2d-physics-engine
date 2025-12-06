@@ -24,7 +24,7 @@ export class Iterator {
     constructor(
         private readonly inputManager: InputManager,
         canvas: HTMLCanvasElement,
-        canvasCtx: CanvasRenderingContext2D,
+        private readonly canvasCtx: CanvasRenderingContext2D,
         config?: IteratorConfig,
     ) {
         if (!canvas || !canvasCtx) {
@@ -76,10 +76,6 @@ export class Iterator {
         const deltaTime = Math.min((currentTime - this.lastFrameTime) / 1000, this.maxDeltaTime);
         this.lastFrameTime = currentTime;
 
-        if (this.debug) {
-            this.logDebugInfo(deltaTime);
-        }
-
         // Fixed timestep updates for physics
         this.accumulator += deltaTime;
         while (this.accumulator >= this.fixedTimeStep) {
@@ -90,17 +86,32 @@ export class Iterator {
         // Variable timestep updates for everything else
         this.update(deltaTime);
 
+        if (this.debug) {
+            this.logDebugInfo(deltaTime);
+        }
+
         requestAnimationFrame(this.loop);
     }
 
     private logDebugInfo(deltaTime: number): void {
-        // TODO: print log info on canvas instead of console
-        console.log({
-            fps: Math.round(1 / deltaTime),
-            deltaTime: deltaTime.toFixed(4),
-            entities: this.scene?.getEntities().length ?? 0,
-            accumulator: this.accumulator.toFixed(4),
-        });
+        const fps = Math.round(1 / deltaTime);
+        const entities = this.scene?.getEntities().length ?? 0;
+
+        // ---- Clear previous debug text area ----
+        this.canvasCtx.save();
+        this.canvasCtx.fillStyle = 'rgba(0, 0, 0, 0.35)';
+        this.canvasCtx.fillRect(0, 0, 160, 70);
+
+        // ---- Draw text ----
+        this.canvasCtx.fillStyle = 'white';
+        this.canvasCtx.font = '14px monospace';
+
+        this.canvasCtx.fillText(`FPS: ${fps}`, 10, 20);
+        this.canvasCtx.fillText(`Delta: ${deltaTime.toFixed(4)}`, 10, 35);
+        this.canvasCtx.fillText(`Entities: ${entities}`, 10, 50);
+        this.canvasCtx.fillText(`Acc: ${this.accumulator.toFixed(4)}`, 10, 65);
+
+        this.canvasCtx.restore();
     }
 
     private fixedUpdate(fixedDeltaTime: number): void {
