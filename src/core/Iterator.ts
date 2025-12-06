@@ -1,3 +1,5 @@
+import { AABB } from '../math/AABB';
+import { Vector2 } from '../math/Vector2';
 import { Physics } from '../systems/PhysicsSystem/Physics.system';
 import { Rendering } from '../systems/Rendering.system';
 import { System } from '../systems/System.abstract';
@@ -23,11 +25,11 @@ export class Iterator {
 
     constructor(
         private readonly inputManager: InputManager,
-        canvas: HTMLCanvasElement,
+        private readonly canvas: HTMLCanvasElement,
         private readonly canvasCtx: CanvasRenderingContext2D,
         config?: IteratorConfig,
     ) {
-        if (!canvas || !canvasCtx) {
+        if (!this.canvas || !this.canvasCtx) {
             throw new Error('Canvas and canvas-context are required for engine initialization.');
         }
 
@@ -36,7 +38,10 @@ export class Iterator {
         this.debug = config?.debug ?? this.debug;
 
         // Initialize systems
-        this.systems.push(new Rendering(canvas, canvasCtx), new Physics());
+        this.systems.push(
+            new Rendering(this.canvas, this.canvasCtx),
+            new Physics(new AABB(new Vector2(0, 0), new Vector2(this.canvas.width, this.canvas.height))),
+        );
 
         this.loop = this.loop.bind(this);
     }

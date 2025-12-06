@@ -21,15 +21,19 @@ interface StoredCollision {
     transformB: Transform;
 }
 
-const WORLD_BOUNDS: AABB = new AABB(new Vector2(0, 0), new Vector2(1200, 900));
-
 export class Physics extends System {
     readonly needsFixedUpdate = true;
 
-    private readonly broadPhase = new BroadPhase(WORLD_BOUNDS);
+    private readonly broadPhase: BroadPhase;
     private readonly collisionDetector = new CollisionDetector();
     private readonly collisionResolver = new CollisionResolver();
     private currentCollisions: Map<CollisionPair, StoredCollision> = new Map();
+
+    constructor(worldBounds: AABB) {
+        super();
+
+        this.broadPhase = new BroadPhase(worldBounds, 1);
+    }
 
     update(deltaTime: number, scene: Scene): void {
         const entities = scene.getEntities();

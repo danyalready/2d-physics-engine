@@ -4,13 +4,14 @@ import { Transform } from '../../components/Transform.component';
 import { AABB } from '../../math/AABB';
 import { QuadTree } from '../../math/QuadTree';
 
-const MAX_OBJECTS: number = 1;
-
 export class BroadPhase {
     private readonly root: QuadTree<Entity>;
 
-    constructor(private readonly aabb: AABB) {
-        this.root = new QuadTree(aabb, MAX_OBJECTS, (entity) => {
+    constructor(
+        private readonly aabb: AABB,
+        private readonly maxObjects: number,
+    ) {
+        this.root = new QuadTree(this.aabb, this.maxObjects, (entity) => {
             const collider = entity.getComponent(Collider);
             const transform = entity.getComponent(Transform);
 
