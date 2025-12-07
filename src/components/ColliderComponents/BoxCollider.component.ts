@@ -29,13 +29,23 @@ export class BoxCollider extends Collider {
 
     getAABB(transform: Transform): AABB {
         const position = transform.getPosition();
-        const halfWidth = this.width / 2;
-        const halfHeight = this.height / 2;
+        const rot = transform.getRotation();
 
-        return new AABB(
-            new Vector2(position.x - halfWidth, position.y - halfHeight),
-            new Vector2(position.x + halfWidth, position.y + halfHeight),
-        );
+        const halfW = this.width / 2;
+        const halfH = this.height / 2;
+
+        const cos = Math.cos(rot);
+        const sin = Math.sin(rot);
+
+        // Rotated half-extents
+        const rX = Math.abs(halfW * cos) + Math.abs(halfH * sin);
+
+        const rY = Math.abs(halfW * sin) + Math.abs(halfH * cos);
+
+        const min = new Vector2(position.x - rX, position.y - rY);
+        const max = new Vector2(position.x + rX, position.y + rY);
+
+        return new AABB(min, max);
     }
 
     calculateInertia(mass: number): number {

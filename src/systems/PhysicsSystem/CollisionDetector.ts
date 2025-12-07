@@ -146,75 +146,77 @@ export class CollisionDetector {
     private boxVsCircleDetector(
         transformA: Transform,
         transformB: Transform,
-        colliderA: BoxCollider,
-        colliderB: CircleCollider,
+        box: BoxCollider,
+        circle: CircleCollider,
     ): CollisionInfo | null {
-        const aabb = colliderA.getAABB(transformA);
+        const boxPos = transformA.getPosition();
         const circlePos = transformB.getPosition();
-        const radius = colliderB.getRadius();
+        const halfW = box.getWidth() / 2;
+        const halfH = box.getHeight() / 2;
+        const radius = circle.getRadius();
+        const rot = transformA.getRotation();
 
-        // Find closest point on AABB to circle center
-        const closestX = Math.max(aabb.min.x, Math.min(circlePos.x, aabb.max.x));
-        const closestY = Math.max(aabb.min.y, Math.min(circlePos.y, aabb.max.y));
-        const closestPoint = new Vector2(closestX, closestY);
+        const cos = Math.cos(rot);
+        const sin = Math.sin(rot);
 
-        // Calculate distance from closest point to circle center
-        const distanceVec = circlePos.subtract(closestPoint);
-        const distanceSquared = distanceVec.dotProduct(distanceVec);
-        const radiusSquared = radius * radius;
+        // Convert circle center into the box's local space using inverse rotation
+        const rel = new Vector2(circlePos.x - boxPos.x, circlePos.y - boxPos.y);
 
-        if (distanceSquared > radiusSquared) {
-            return null; // No collision
-        }
+        const localCircle = new Vector2(rel.x * cos + rel.y * sin, -rel.x * sin + rel.y * cos);
 
-        // Calculate penetration and normal
-        const distanceMagnitude = Math.sqrt(distanceSquared);
+        // Find closest point on local-space AABB
+        const closest = new Vector2(
+            Math.max(-halfW, Math.min(localCircle.x, halfW)),
+            Math.max(-halfH, Math.min(localCircle.y, halfH)),
+        );
 
-        // Handle case where circle center is inside the box
-        if (distanceMagnitude === 0) {
-            // Find the minimum distance to box edge
-            const distToLeft = circlePos.x - aabb.min.x;
-            const distToRight = aabb.max.x - circlePos.x;
-            const distToTop = circlePos.y - aabb.min.y;
-            const distToBottom = aabb.max.y - circlePos.y;
+        // Vector from closest point to circle center (local)
+        const diff = localCircle.subtract(closest);
+        const distSq = diff.x * diff.x + diff.y * diff.y;
 
-            const minDist = Math.min(distToLeft, distToRight, distToTop, distToBottom);
+        // Fast exit — circle doesn't touch
+        if (distSq > radius * radius) return null;
 
-            if (minDist === distToLeft) {
-                return {
-                    normal: new Vector2(-1, 0), // Push circle to the left (away from box)
-                    point: new Vector2(aabb.min.x, circlePos.y),
-                    penetration: radius + minDist,
-                };
-            } else if (minDist === distToRight) {
-                return {
-                    normal: new Vector2(1, 0), // Push circle to the right (away from box)
-                    point: new Vector2(aabb.max.x, circlePos.y),
-                    penetration: radius + minDist,
-                };
-            } else if (minDist === distToTop) {
-                return {
-                    normal: new Vector2(0, -1), // Push circle up (away from box)
-                    point: new Vector2(circlePos.x, aabb.min.y),
-                    penetration: radius + minDist,
-                };
+        let normalLocal: Vector2;
+        let penetration: number;
+
+        // Circle center inside the box (special case)
+        if (distSq < 1e-9) {
+            // Distances to each face
+            const dx = Math.min(halfW - localCircle.x, localCircle.x + halfW);
+            const dy = Math.min(halfH - localCircle.y, localCircle.y + halfH);
+
+            if (dx < dy) {
+                if (localCircle.x > 0) normalLocal = new Vector2(1, 0);
+                else normalLocal = new Vector2(-1, 0);
+                penetration = radius + dx;
             } else {
-                return {
-                    normal: new Vector2(0, 1), // Push circle down (away from box)
-                    point: new Vector2(circlePos.x, aabb.max.y),
-                    penetration: radius + minDist,
-                };
+                if (localCircle.y > 0) normalLocal = new Vector2(0, 1);
+                else normalLocal = new Vector2(0, -1);
+                penetration = radius + dy;
             }
         }
 
-        // Normal points from box to circle (to separate them)
-        const normal = distanceMagnitude > 0 ? distanceVec.scale(1 / distanceMagnitude) : new Vector2(1, 0);
-        const point = closestPoint;
-        const penetration = radius - distanceMagnitude;
+        // Normal overlap (circle contacting an edge or corner)
+        else {
+            const dist = Math.sqrt(distSq);
+            normalLocal = diff.scale(1 / dist);
+            penetration = radius - dist;
+        }
+
+        // Convert normal to world space
+        const normal = new Vector2(normalLocal.x * cos - normalLocal.y * sin, normalLocal.x * sin + normalLocal.y * cos);
+
+        // Convert contact point to world space
+        const contactLocal = closest;
+        const contactWorld = new Vector2(
+            contactLocal.x * cos - contactLocal.y * sin + boxPos.x,
+            contactLocal.x * sin + contactLocal.y * cos + boxPos.y,
+        );
 
         return {
             normal,
-            point,
+            point: contactWorld,
             penetration,
         };
     }
