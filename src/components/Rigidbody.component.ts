@@ -21,9 +21,9 @@ export class Rigidbody extends Component {
 
     constructor(options?: RigidbodyOptions) {
         super();
-        this.mass = options?.mass || this.mass;
-        this.restitution = options?.restitution || this.restitution;
-        this.friction = options?.friction || this.friction;
+        this.mass = options?.mass ?? this.mass;
+        this.restitution = options?.restitution ?? this.restitution;
+        this.friction = options?.friction ?? this.friction;
     }
 
     update(): void {}
