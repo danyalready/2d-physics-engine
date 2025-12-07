@@ -1,8 +1,14 @@
 import { Transform } from '../Transform.component';
 import { Drawer } from './Drawer.component';
 
+interface CircleDrawerProps {
+    radius: number;
+    strokeColor?: string;
+    fillColor?: string;
+}
+
 export class CircleDrawer extends Drawer {
-    constructor(private radius: number) {
+    constructor(private options: CircleDrawerProps) {
         super();
     }
 
@@ -10,7 +16,16 @@ export class CircleDrawer extends Drawer {
         const { x, y } = transform.getPosition();
 
         canvasCtx.beginPath();
-        canvasCtx.arc(x, y, this.radius, 0, Math.PI * 2, false);
-        canvasCtx.stroke();
+        canvasCtx.arc(x, y, this.options.radius, 0, Math.PI * 2, false);
+
+        if (this.options.fillColor) {
+            canvasCtx.fillStyle = this.options.fillColor;
+            canvasCtx.fill();
+        }
+
+        if (this.options.strokeColor) {
+            canvasCtx.strokeStyle = this.options.strokeColor;
+            canvasCtx.stroke();
+        }
     }
 }
