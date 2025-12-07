@@ -4,6 +4,7 @@ import { BoxCollider } from '../../components/ColliderComponents/BoxCollider.com
 import { Collider } from '../../components/ColliderComponents/Collider.abstract';
 import { Rigidbody } from '../../components/Rigidbody.component';
 import { Transform } from '../../components/Transform.component';
+import { Vector2 } from '../../math/Vector2';
 
 export interface Collision<T extends Collider = Collider, U extends Collider = Collider> {
     colliderA: T;
@@ -80,78 +81,56 @@ export class CollisionResolver {
         const { transformA, transformB, rigidbodyA, rigidbodyB } = collision;
         const { penetration, normal } = collision.info;
 
-        if (!rigidbodyA || !rigidbodyB) {
-            return false; // No rigidbodies attached, cannot resolve collision
-        }
+        const mA = rigidbodyA ? rigidbodyA.getMass() : Infinity;
+        const mB = rigidbodyB ? rigidbodyB.getMass() : Infinity;
 
-        // Coefficient of Restitution (average of both colliders)
-        const effectiveCR = (rigidbodyA.getRestitution() + rigidbodyB.getRestitution()) / 2;
+        const vA = rigidbodyA ? rigidbodyA.getVelocity() : Vector2.zero();
+        const vB = rigidbodyB ? rigidbodyB.getVelocity() : Vector2.zero();
 
-        // Velocity components along the collision normal
-        const vANormal = normal.dotProduct(rigidbodyA.getVelocity());
-        const vBNormal = normal.dotProduct(rigidbodyB.getVelocity());
+        const restitution = (rigidbodyA?.getRestitution() ?? 0) + (rigidbodyB?.getRestitution() ?? 0);
 
-        // Velocity components along the tangent (perpendicular to normal)
-        const tangent = normal.getTangent();
-        const vATangent = tangent.dotProduct(rigidbodyA.getVelocity());
-        const vBTangent = tangent.dotProduct(rigidbodyB.getVelocity());
-
-        // Total momentum and mass
-        const totalMomentum = rigidbodyA.getMass() * vANormal + rigidbodyB.getMass() * vBNormal;
-        const totalMass = rigidbodyA.getMass() + rigidbodyB.getMass();
-
-        // New normal velocities after collision
-        const vANormalAfter = (effectiveCR * rigidbodyB.getMass() * (vBNormal - vANormal) + totalMomentum) / totalMass;
-        const vBNormalAfter = (effectiveCR * rigidbodyA.getMass() * (vANormal - vBNormal) + totalMomentum) / totalMass;
-
-        // Update velocities
-        rigidbodyA.setVelocity(normal.scale(vANormalAfter).add(tangent.scale(vATangent)));
-        rigidbodyB.setVelocity(normal.scale(vBNormalAfter).add(tangent.scale(vBTangent)));
-
-        // Resolve penetration by adjusting positions
-        const resolutionVector = normal.scale(penetration / totalMass);
-        transformA.setPosition(transformA.getPosition().subtract(resolutionVector.scale(rigidbodyB.getMass())));
-        transformB.setPosition(transformB.getPosition().add(resolutionVector.scale(rigidbodyA.getMass())));
+        this.applyImpulseAndCorrection(
+            mA,
+            mB,
+            vA,
+            vB,
+            normal,
+            penetration,
+            restitution,
+            transformA,
+            transformB,
+            rigidbodyA,
+            rigidbodyB,
+        );
 
         return true;
     }
 
     private boxVsBoxResolver(collision: Collision<BoxCollider, BoxCollider>): boolean {
-        let { transformA, transformB, rigidbodyA, rigidbodyB } = collision;
-        let { penetration, normal } = collision.info;
+        const { transformA, transformB, rigidbodyA, rigidbodyB } = collision;
+        const { penetration, normal } = collision.info;
 
-        if (!rigidbodyA || !rigidbodyB) return false;
+        const mA = rigidbodyA ? rigidbodyA.getMass() : Infinity;
+        const mB = rigidbodyB ? rigidbodyB.getMass() : Infinity;
 
-        const mA = rigidbodyA.getMass();
-        const mB = rigidbodyB.getMass();
-        const vA = rigidbodyA.getVelocity();
-        const vB = rigidbodyB.getVelocity();
+        const vA = rigidbodyA ? rigidbodyA.getVelocity() : Vector2.zero();
+        const vB = rigidbodyB ? rigidbodyB.getVelocity() : Vector2.zero();
 
-        // Relative velocity
-        const relVel = vB.subtract(vA);
-        const velAlongNormal = relVel.dotProduct(normal);
+        const restitution = (rigidbodyA?.getRestitution() ?? 0) + (rigidbodyB?.getRestitution() ?? 0);
 
-        // If bodies are already separating -> no impulse
-        if (velAlongNormal > 0) return false;
-
-        // Impulse
-        const restitution = (rigidbodyA.getRestitution() + rigidbodyB.getRestitution()) / 2;
-
-        const j = (-(1 + restitution) * velAlongNormal) / (1 / mA + 1 / mB);
-        const impulse = normal.scale(j);
-
-        rigidbodyA.setVelocity(vA.subtract(impulse.scale(1 / mA)));
-        rigidbodyB.setVelocity(vB.add(impulse.scale(1 / mB)));
-
-        // Position correction
-        const percent = 0.8;
-        const slop = 0.01;
-
-        const correctionMag = (Math.max(penetration - slop, 0) / (mA + mB)) * percent;
-        const correction = normal.scale(correctionMag);
-
-        transformA.setPosition(transformA.getPosition().subtract(correction.scale(mB)));
-        transformB.setPosition(transformB.getPosition().add(correction.scale(mA)));
+        this.applyImpulseAndCorrection(
+            mA,
+            mB,
+            vA,
+            vB,
+            normal,
+            penetration,
+            restitution,
+            transformA,
+            transformB,
+            rigidbodyA,
+            rigidbodyB,
+        );
 
         return true;
     }
@@ -160,44 +139,87 @@ export class CollisionResolver {
         const { transformA, transformB, rigidbodyA, rigidbodyB } = collision;
         const { penetration, normal } = collision.info;
 
-        if (!rigidbodyA || !rigidbodyB) return false;
+        const mA = rigidbodyA ? rigidbodyA.getMass() : 0;
+        const mB = rigidbodyB ? rigidbodyB.getMass() : 0;
 
-        const mA = rigidbodyA.getMass();
-        const mB = rigidbodyB.getMass();
+        const vA = rigidbodyA ? rigidbodyA.getVelocity() : Vector2.zero();
+        const vB = rigidbodyB ? rigidbodyB.getVelocity() : Vector2.zero();
 
-        const vA = rigidbodyA.getVelocity();
-        const vB = rigidbodyB.getVelocity();
+        const restitution = (rigidbodyA?.getRestitution() ?? 0) + (rigidbodyB?.getRestitution() ?? 0);
 
-        const restitution = (rigidbodyA.getRestitution() + rigidbodyB.getRestitution()) / 2;
-
-        const vANormal = normal.dotProduct(vA);
-        const vBNormal = normal.dotProduct(vB);
-
-        const tangent = normal.getTangent();
-        const vATangent = tangent.dotProduct(vA);
-        const vBTangent = tangent.dotProduct(vB);
-
-        const totalMomentum = mA * vANormal + mB * vBNormal;
-        const totalMass = mA + mB;
-
-        const vANormalAfter = (restitution * mB * (vBNormal - vANormal) + totalMomentum) / totalMass;
-
-        const vBNormalAfter = (restitution * mA * (vANormal - vBNormal) + totalMomentum) / totalMass;
-
-        rigidbodyA.setVelocity(normal.scale(vANormalAfter).add(tangent.scale(vATangent)));
-
-        rigidbodyB.setVelocity(normal.scale(vBNormalAfter).add(tangent.scale(vBTangent)));
-
-        const correction = normal.scale(penetration / totalMass);
-
-        transformA.setPosition(transformA.getPosition().subtract(correction.scale(mB)));
-
-        transformB.setPosition(transformB.getPosition().add(correction.scale(mA)));
+        this.applyImpulseAndCorrection(
+            mA,
+            mB,
+            vA,
+            vB,
+            normal,
+            penetration,
+            restitution,
+            transformA,
+            transformB,
+            rigidbodyA,
+            rigidbodyB,
+        );
 
         return true;
     }
 
     private circleVsBoxResolver(collision: Collision<CircleCollider, BoxCollider>): boolean {
-        return this.boxVsCircleResolver({ ...collision, colliderA: collision.colliderB, colliderB: collision.colliderA });
+        return this.boxVsCircleResolver({
+            ...collision,
+            colliderA: collision.colliderB,
+            colliderB: collision.colliderA,
+            rigidbodyA: collision.rigidbodyB,
+            rigidbodyB: collision.rigidbodyA,
+            transformA: collision.transformB,
+            transformB: collision.transformA,
+        });
+    }
+
+    private applyImpulseAndCorrection(
+        mA: number,
+        mB: number,
+        vA: Vector2,
+        vB: Vector2,
+        normal: Vector2,
+        penetration: number,
+        restitution: number,
+        transformA: Transform,
+        transformB: Transform,
+        rigidbodyA?: Rigidbody,
+        rigidbodyB?: Rigidbody,
+    ) {
+        // Static body handling
+        const isAStatic = !rigidbodyA;
+        const isBStatic = !rigidbodyB;
+
+        // Relative velocity
+        const relVel = vB.subtract(vA);
+        const velAlongNormal = relVel.dotProduct(normal);
+
+        if (velAlongNormal > 0) return;
+
+        const invMassA = rigidbodyA?.getInverseMass() ?? 0;
+        const invMassB = rigidbodyB?.getInverseMass() ?? 0;
+
+        const totalInvMass = invMassA + invMassB;
+
+        if (totalInvMass === 0) return false; // both static
+
+        // If both dynamic: normal impulse
+        const e = restitution / 2;
+        const j = (-(1 + e) * velAlongNormal) / (invMassA + invMassB);
+
+        const impulse = normal.scale(j);
+
+        // Apply impulse
+        if (!isAStatic) rigidbodyA!.setVelocity(vA.subtract(impulse.scale(1 / mA)));
+        if (!isBStatic) rigidbodyB!.setVelocity(vB.add(impulse.scale(1 / mB)));
+
+        const correction = normal.scale(penetration / totalInvMass);
+
+        if (invMassA > 0) transformA.setPosition(transformA.getPosition().subtract(correction.scale(invMassA)));
+
+        if (invMassB > 0) transformB.setPosition(transformB.getPosition().add(correction.scale(invMassB)));
     }
 }

@@ -111,10 +111,8 @@ export class Physics extends System {
             const colliderB = entityB.getComponent(Collider);
             const transformA = entityA.getComponent(Transform);
             const transformB = entityB.getComponent(Transform);
-            const rigidbodyA = entityA.getComponent(Rigidbody);
-            const rigidbodyB = entityB.getComponent(Rigidbody);
 
-            if (!colliderA || !colliderB || !transformA || !transformB || !rigidbodyA || !rigidbodyB) continue;
+            if (!colliderA || !colliderB || !transformA || !transformB) continue;
 
             const collisionInfo = this.collisionDetector.detectCollision(transformA, transformB, colliderA, colliderB);
 
@@ -126,8 +124,8 @@ export class Physics extends System {
                 transformA,
                 transformB,
                 info: collisionInfo,
-                rigidbodyA,
-                rigidbodyB,
+                rigidbodyA: entityA.getComponent(Rigidbody),
+                rigidbodyB: entityB.getComponent(Rigidbody),
                 entityA,
                 entityB,
             } as Collision & { entityA: Entity; entityB: Entity });

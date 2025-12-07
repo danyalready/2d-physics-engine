@@ -21,7 +21,7 @@ const scene = new Scene();
 // --- CONFIG ---
 const SIZE = 35;
 const SPAWN_INTERVAL = 100; // ms
-const BALL_SPEED = 100;
+const SPEED = 300;
 
 // --- SPAWN FUNCTION ---
 function spawnBall() {
@@ -32,12 +32,12 @@ function spawnBall() {
 
     const transform = new Transform(new Vector2(x, y));
     const rigidbody = new Rigidbody({ mass: 1, friction: 0 });
-    const collider = new CircleCollider(SIZE / 2, { layer: 1 << 0, mask: 1 << 0 });
+    const collider = new CircleCollider(SIZE / 2, { layer: 1 << 1, mask: 1 << 1 });
     const drawer = new CircleDrawer(SIZE / 2);
 
     // Случайная скорость
     const angle = Math.random() * Math.PI * 2;
-    rigidbody.setVelocity(new Vector2(Math.cos(angle), Math.sin(angle)).scale(BALL_SPEED));
+    rigidbody.setVelocity(new Vector2(Math.cos(angle), Math.sin(angle)).scale(SPEED));
 
     ball.addComponent(transform);
     ball.addComponent(rigidbody);
@@ -61,10 +61,10 @@ function spawnBox() {
 
     // Случайная скорость
     const angle = Math.random() * Math.PI * 2;
-    rigidbody.setVelocity(new Vector2(Math.cos(angle), Math.sin(angle)).scale(BALL_SPEED));
+    rigidbody.setVelocity(new Vector2(Math.cos(angle), Math.sin(angle)).scale(SPEED));
 
     box.addComponent(transform);
-    box.addComponent(rigidbody);
+    // box.addComponent(rigidbody);
     box.addComponent(collider);
     box.addComponent(drawer);
     scene.addEntity(box);
@@ -105,7 +105,11 @@ engine.setScene(scene);
 engine.start();
 
 // --- Periodic spawns ---
+let isSet = false;
 setInterval(() => {
     spawnBall();
-    spawnBox();
+    if (!isSet) {
+        spawnBox();
+        isSet = true;
+    }
 }, SPAWN_INTERVAL);
