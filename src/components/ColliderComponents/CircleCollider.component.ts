@@ -1,13 +1,16 @@
 import { AABB } from '../../math/AABB';
 import { Vector2 } from '../../math/Vector2';
 import { Transform } from '../Transform.component';
-import { Collider } from './Collider.abstract';
+import { Collider, type CollisionFilter } from './Collider.abstract';
 
 export class CircleCollider extends Collider {
     static readonly COLLIDER_ID = Symbol('CircleCollider');
     readonly colliderId = CircleCollider.COLLIDER_ID;
 
-    constructor(private radius: number) {
+    constructor(
+        private radius: number,
+        public readonly collisionFilter: CollisionFilter,
+    ) {
         super();
     }
 

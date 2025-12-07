@@ -137,7 +137,15 @@ export class Physics extends System {
     }
 
     private resolveCollisions(collisions: Collision[]): void {
-        collisions.forEach(this.collisionResolver.resolveCollision);
+        for (const collision of collisions) {
+            // Check for layers and masks match to proceed with collision resolution
+            if (
+                collision.colliderA.collisionFilter.layer & collision.colliderB.collisionFilter.mask &&
+                collision.colliderB.collisionFilter.layer & collision.colliderA.collisionFilter.mask
+            ) {
+                this.collisionResolver.resolveCollision(collision);
+            }
+        }
     }
 
     private handleCollisionEvents(collisions: Collision[], entities: Entity[]): void {

@@ -19,8 +19,8 @@ const engine = new Iterator(inputManager, canvas, ctx, { debug: true });
 const scene = new Scene();
 
 // --- CONFIG ---
-const SIZE = 25;
-const SPAWN_INTERVAL = 10; // ms
+const SIZE = 35;
+const SPAWN_INTERVAL = 100; // ms
 const BALL_SPEED = 100;
 
 // --- SPAWN FUNCTION ---
@@ -32,7 +32,7 @@ function spawnBall() {
 
     const transform = new Transform(new Vector2(x, y));
     const rigidbody = new Rigidbody({ mass: 1, friction: 0 });
-    const collider = new CircleCollider(SIZE / 2);
+    const collider = new CircleCollider(SIZE / 2, { layer: 1 << 0, mask: 1 << 0 });
     const drawer = new CircleDrawer(SIZE / 2);
 
     // Случайная скорость
@@ -55,8 +55,8 @@ function spawnBox() {
     const box = new Entity(`Box_${Math.random()}`);
 
     const transform = new Transform(new Vector2(x, y));
-    const rigidbody = new Rigidbody({ mass: 10, friction: 0.1 });
-    const collider = new BoxCollider(SIZE, SIZE); // width, height
+    const rigidbody = new Rigidbody({ mass: 1, friction: 0.1 });
+    const collider = new BoxCollider(SIZE, SIZE, { layer: 1 << 1, mask: 1 << 1 });
     const drawer = new BoxDrawer(SIZE, SIZE);
 
     // Случайная скорость

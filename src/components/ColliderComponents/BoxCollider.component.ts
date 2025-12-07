@@ -1,6 +1,6 @@
 import { AABB } from '../../math/AABB';
 import { Vector2 } from '../../math/Vector2';
-import { Collider } from './Collider.abstract';
+import { Collider, type CollisionFilter } from './Collider.abstract';
 import { Transform } from '../Transform.component';
 
 export class BoxCollider extends Collider {
@@ -10,8 +10,10 @@ export class BoxCollider extends Collider {
     constructor(
         private width: number,
         private height: number,
+        public readonly collisionFilter: CollisionFilter,
     ) {
         super();
+
         if (width <= 0 || height <= 0) {
             throw new Error('BoxCollider width and height must be greater than 0');
         }

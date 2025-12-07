@@ -4,6 +4,11 @@ import { Transform } from '../Transform.component';
 import { Entity } from '../../core/Entity';
 import { CollisionInfo } from '../../systems/PhysicsSystem/CollisionDetector';
 
+export interface CollisionFilter {
+    layer: number;
+    mask: number;
+}
+
 export interface CollisionEvent {
     otherEntity: Entity;
     otherCollider: Collider;
@@ -14,6 +19,7 @@ export interface CollisionEvent {
 export abstract class Collider extends Component {
     readonly componentId = Symbol('Collider');
     abstract readonly colliderId: symbol;
+    abstract readonly collisionFilter: CollisionFilter;
 
     abstract calculateInertia(mass: number): number;
     abstract getAABB(transform: Transform): AABB;
@@ -32,17 +38,4 @@ export abstract class Collider extends Component {
      * Called when a collision ends (colliders are no longer in contact)
      */
     onCollideExit?(event: CollisionEvent): void;
-
-    // Optional method for broad phase collision detection
-    // isBoundingBoxColliding(other: Collider): boolean {
-    //     const myBox = this.getBoundingBox();
-    //     const otherBox = other.getBoundingBox();
-
-    //     return !(
-    //         myBox.max.x < otherBox.min.x ||
-    //         myBox.min.x > otherBox.max.x ||
-    //         myBox.max.y < otherBox.min.y ||
-    //         myBox.min.y > otherBox.max.y
-    //     );
-    // }
 }
