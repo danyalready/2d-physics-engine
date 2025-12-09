@@ -114,21 +114,26 @@ export class Physics extends System {
 
             if (!colliderA || !colliderB || !transformA || !transformB) continue;
 
-            const collisionInfo = this.collisionDetector.detectCollision(transformA, transformB, colliderA, colliderB);
+            if (
+                colliderA.collisionFilters.detector.layer & colliderB.collisionFilters.detector.mask &&
+                colliderB.collisionFilters.detector.layer & colliderA.collisionFilters.detector.mask
+            ) {
+                const collisionInfo = this.collisionDetector.detectCollision(transformA, transformB, colliderA, colliderB);
 
-            if (!collisionInfo) continue;
+                if (!collisionInfo) continue;
 
-            collisions.push({
-                colliderA,
-                colliderB,
-                transformA,
-                transformB,
-                info: collisionInfo,
-                rigidbodyA: entityA.getComponent(Rigidbody),
-                rigidbodyB: entityB.getComponent(Rigidbody),
-                entityA,
-                entityB,
-            } as Collision & { entityA: Entity; entityB: Entity });
+                collisions.push({
+                    colliderA,
+                    colliderB,
+                    transformA,
+                    transformB,
+                    info: collisionInfo,
+                    rigidbodyA: entityA.getComponent(Rigidbody),
+                    rigidbodyB: entityB.getComponent(Rigidbody),
+                    entityA,
+                    entityB,
+                } as Collision & { entityA: Entity; entityB: Entity });
+            }
         }
 
         return collisions;
@@ -138,8 +143,8 @@ export class Physics extends System {
         for (const collision of collisions) {
             // Check for layers and masks match to proceed with collision resolution
             if (
-                collision.colliderA.collisionFilter.layer & collision.colliderB.collisionFilter.mask &&
-                collision.colliderB.collisionFilter.layer & collision.colliderA.collisionFilter.mask
+                collision.colliderA.collisionFilters.resolver.layer & collision.colliderB.collisionFilters.resolver.mask &&
+                collision.colliderB.collisionFilters.resolver.layer & collision.colliderA.collisionFilters.resolver.mask
             ) {
                 this.collisionResolver.resolveCollision(collision);
             }

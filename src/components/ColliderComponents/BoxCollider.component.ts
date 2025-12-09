@@ -1,6 +1,6 @@
 import { AABB } from '../../math/AABB';
 import { Vector2 } from '../../math/Vector2';
-import { Collider, type CollisionFilter } from './Collider.abstract';
+import { Collider, type CollisionDetectorFilter, type CollisionResolverFilter } from './Collider.abstract';
 import { Transform } from '../Transform.component';
 
 export class BoxCollider extends Collider {
@@ -10,7 +10,10 @@ export class BoxCollider extends Collider {
     constructor(
         private width: number,
         private height: number,
-        public readonly collisionFilter: CollisionFilter,
+        public readonly collisionFilters: {
+            detector: CollisionDetectorFilter;
+            resolver: CollisionResolverFilter;
+        },
     ) {
         super();
 

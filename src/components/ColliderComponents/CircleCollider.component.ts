@@ -1,7 +1,7 @@
 import { AABB } from '../../math/AABB';
 import { Vector2 } from '../../math/Vector2';
 import { Transform } from '../Transform.component';
-import { Collider, type CollisionFilter } from './Collider.abstract';
+import { Collider, type CollisionDetectorFilter, type CollisionResolverFilter } from './Collider.abstract';
 
 export class CircleCollider extends Collider {
     static readonly COLLIDER_ID = Symbol('CircleCollider');
@@ -9,7 +9,10 @@ export class CircleCollider extends Collider {
 
     constructor(
         private radius: number,
-        public readonly collisionFilter: CollisionFilter,
+        public readonly collisionFilters: {
+            detector: CollisionDetectorFilter;
+            resolver: CollisionResolverFilter;
+        },
     ) {
         super();
     }

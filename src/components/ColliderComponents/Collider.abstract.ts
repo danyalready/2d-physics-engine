@@ -4,10 +4,13 @@ import { Transform } from '../Transform.component';
 import { Entity } from '../../core/Entity';
 import { CollisionInfo } from '../../systems/PhysicsSystem/CollisionDetector';
 
-export interface CollisionFilter {
+export interface Filter {
     layer: number;
     mask: number;
 }
+
+export type CollisionDetectorFilter = Filter;
+export type CollisionResolverFilter = Filter;
 
 export interface CollisionEvent {
     otherEntity: Entity;
@@ -19,7 +22,10 @@ export interface CollisionEvent {
 export abstract class Collider extends Component {
     readonly componentId = Symbol('Collider');
     abstract readonly colliderId: symbol;
-    abstract readonly collisionFilter: CollisionFilter;
+    abstract readonly collisionFilters: {
+        detector: CollisionDetectorFilter;
+        resolver: CollisionResolverFilter;
+    };
 
     abstract calculateInertia(mass: number): number;
     abstract getAABB(transform: Transform): AABB;
