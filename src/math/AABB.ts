@@ -87,9 +87,16 @@ export class AABB {
     /** Checks if a point is inside the bounds. */
     containsPoint(point: Vector2, inclusive: boolean = true): boolean {
         if (inclusive) {
-            return point.x >= this.min.x && point.x <= this.max.x && point.y >= this.min.y && point.y <= this.max.y;
+            return (
+                point.x >= this.min.x &&
+                point.x <= this.max.x &&
+                point.y >= this.min.y &&
+                point.y <= this.max.y
+            );
         } else {
-            return point.x > this.min.x && point.x < this.max.x && point.y > this.min.y && point.y < this.max.y;
+            return (
+                point.x > this.min.x && point.x < this.max.x && point.y > this.min.y && point.y < this.max.y
+            );
         }
     }
 
@@ -97,10 +104,18 @@ export class AABB {
     intersects(other: AABB, inclusive: boolean = true): boolean {
         if (inclusive) {
             return (
-                this.min.x <= other.max.x && this.max.x >= other.min.x && this.min.y <= other.max.y && this.max.y >= other.min.y
+                this.min.x <= other.max.x &&
+                this.max.x >= other.min.x &&
+                this.min.y <= other.max.y &&
+                this.max.y >= other.min.y
             );
         } else {
-            return this.min.x < other.max.x && this.max.x > other.min.x && this.min.y < other.max.y && this.max.y > other.min.y;
+            return (
+                this.min.x < other.max.x &&
+                this.max.x > other.min.x &&
+                this.min.y < other.max.y &&
+                this.max.y > other.min.y
+            );
         }
     }
 
@@ -108,10 +123,18 @@ export class AABB {
     contains(other: AABB, inclusive: boolean = true): boolean {
         if (inclusive) {
             return (
-                other.min.x >= this.min.x && other.max.x <= this.max.x && other.min.y >= this.min.y && other.max.y <= this.max.y
+                other.min.x >= this.min.x &&
+                other.max.x <= this.max.x &&
+                other.min.y >= this.min.y &&
+                other.max.y <= this.max.y
             );
         } else {
-            return other.min.x > this.min.x && other.max.x < this.max.x && other.min.y > this.min.y && other.max.y < this.max.y;
+            return (
+                other.min.x > this.min.x &&
+                other.max.x < this.max.x &&
+                other.min.y > this.min.y &&
+                other.max.y < this.max.y
+            );
         }
     }
 

@@ -30,7 +30,12 @@ export class Rendering extends System {
     }
 
     /** Draw a sprite at the given position with optional rotation and scale. */
-    drawSprite(key: string, position: Vector2, rotation: number = 0, scale: Vector2 = new Vector2(1, 1)): void {
+    drawSprite(
+        key: string,
+        position: Vector2,
+        rotation: number = 0,
+        scale: Vector2 = new Vector2(1, 1),
+    ): void {
         const sprite = this.spriteCache.get(key);
 
         if (!sprite) return;

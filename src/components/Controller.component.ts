@@ -41,7 +41,9 @@ export class Controller extends Component {
             const rigidbody = parentEntity.getComponent(Rigidbody);
 
             if (!transform) {
-                throw new Error(`Entity ${parentEntity.name} must have a Transform component to be controlled.`);
+                throw new Error(
+                    `Entity ${parentEntity.name} must have a Transform component to be controlled.`,
+                );
             }
 
             if (rigidbody) {

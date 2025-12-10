@@ -16,7 +16,9 @@ export interface Collision<T extends Collider = Collider, U extends Collider = C
     rigidbodyB?: Rigidbody;
 }
 
-type Resolver<T extends Collider = Collider, U extends Collider = Collider> = (collision: Collision<T, U>) => boolean;
+type Resolver<T extends Collider = Collider, U extends Collider = Collider> = (
+    collision: Collision<T, U>,
+) => boolean;
 
 export class CollisionResolver {
     private collisionMatrix: Map<symbol, Map<symbol, Resolver>> = new Map();
@@ -218,7 +220,8 @@ export class CollisionResolver {
 
         const correction = normal.scale(penetration / totalInvMass);
 
-        if (invMassA > 0) transformA.setPosition(transformA.getPosition().subtract(correction.scale(invMassA)));
+        if (invMassA > 0)
+            transformA.setPosition(transformA.getPosition().subtract(correction.scale(invMassA)));
 
         if (invMassB > 0) transformB.setPosition(transformB.getPosition().add(correction.scale(invMassB)));
     }

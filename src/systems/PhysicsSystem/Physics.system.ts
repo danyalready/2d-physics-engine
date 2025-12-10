@@ -118,7 +118,12 @@ export class Physics extends System {
                 colliderA.collisionFilters.detector.layer & colliderB.collisionFilters.detector.mask &&
                 colliderB.collisionFilters.detector.layer & colliderA.collisionFilters.detector.mask
             ) {
-                const collisionInfo = this.collisionDetector.detectCollision(transformA, transformB, colliderA, colliderB);
+                const collisionInfo = this.collisionDetector.detectCollision(
+                    transformA,
+                    transformB,
+                    colliderA,
+                    colliderB,
+                );
 
                 if (!collisionInfo) continue;
 
@@ -143,8 +148,10 @@ export class Physics extends System {
         for (const collision of collisions) {
             // Check for layers and masks match to proceed with collision resolution
             if (
-                collision.colliderA.collisionFilters.resolver.layer & collision.colliderB.collisionFilters.resolver.mask &&
-                collision.colliderB.collisionFilters.resolver.layer & collision.colliderA.collisionFilters.resolver.mask
+                collision.colliderA.collisionFilters.resolver.layer &
+                    collision.colliderB.collisionFilters.resolver.mask &&
+                collision.colliderB.collisionFilters.resolver.layer &
+                    collision.colliderA.collisionFilters.resolver.mask
             ) {
                 this.collisionResolver.resolveCollision(collision);
             }
@@ -157,8 +164,10 @@ export class Physics extends System {
         // Process current collisions and detect entry events
         for (const collision of collisions) {
             // Get entities from collision if available, otherwise find them
-            const entityA = (collision as any).entityA || this.findEntityWithCollider(entities, collision.colliderA);
-            const entityB = (collision as any).entityB || this.findEntityWithCollider(entities, collision.colliderB);
+            const entityA =
+                (collision as any).entityA || this.findEntityWithCollider(entities, collision.colliderA);
+            const entityB =
+                (collision as any).entityB || this.findEntityWithCollider(entities, collision.colliderB);
 
             if (!entityA || !entityB) continue;
 
@@ -240,7 +249,12 @@ export class Physics extends System {
         this.currentCollisions = newCollisions;
     }
 
-    private getCollisionPair(entityA: Entity, entityB: Entity, colliderA: Collider, colliderB: Collider): CollisionPair {
+    private getCollisionPair(
+        entityA: Entity,
+        entityB: Entity,
+        colliderA: Collider,
+        colliderB: Collider,
+    ): CollisionPair {
         // Create a unique pair key using entity names and collider IDs (order-independent)
         const entityKeyA = `${entityA.name}:${colliderA.componentId.toString()}`;
         const entityKeyB = `${entityB.name}:${colliderB.componentId.toString()}`;

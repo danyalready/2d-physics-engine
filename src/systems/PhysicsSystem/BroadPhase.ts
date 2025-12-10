@@ -48,7 +48,10 @@ export class BroadPhase {
                 if (entity === candidate) continue;
 
                 // 4. Create IDs to avoid duplicates
-                const key = entity.id < candidate.id ? `${entity.id}-${candidate.id}` : `${candidate.id}-${entity.id}`;
+                const key =
+                    entity.id < candidate.id
+                        ? `${entity.id}-${candidate.id}`
+                        : `${candidate.id}-${entity.id}`;
                 if (seen.has(key)) continue;
 
                 seen.add(key);

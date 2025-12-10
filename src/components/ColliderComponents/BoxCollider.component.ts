@@ -8,8 +8,7 @@ export class BoxCollider extends Collider {
     readonly colliderId = BoxCollider.COLLIDER_ID;
 
     constructor(
-        private width: number,
-        private height: number,
+        private size: { width: number; height: number },
         public readonly collisionFilters: {
             detector: CollisionDetectorFilter;
             resolver: CollisionResolverFilter;
@@ -17,25 +16,25 @@ export class BoxCollider extends Collider {
     ) {
         super();
 
-        if (width <= 0 || height <= 0) {
+        if (this.size.width <= 0 || this.size.height <= 0) {
             throw new Error('BoxCollider width and height must be greater than 0');
         }
     }
 
     getWidth(): number {
-        return this.width;
+        return this.size.width;
     }
 
     getHeight(): number {
-        return this.height;
+        return this.size.height;
     }
 
     getAABB(transform: Transform): AABB {
         const position = transform.getPosition();
         const rot = transform.getRotation();
 
-        const halfW = this.width / 2;
-        const halfH = this.height / 2;
+        const halfW = this.size.width / 2;
+        const halfH = this.size.height / 2;
 
         const cos = Math.cos(rot);
         const sin = Math.sin(rot);
@@ -54,6 +53,6 @@ export class BoxCollider extends Collider {
     calculateInertia(mass: number): number {
         // Moment of inertia for a rectangular plate
         // I = (1/12) * m * (w^2 + h^2)
-        return (mass * (this.width * this.width + this.height * this.height)) / 12;
+        return (mass * (this.size.width * this.size.width + this.size.height * this.size.height)) / 12;
     }
 }

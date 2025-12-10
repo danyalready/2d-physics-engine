@@ -205,7 +205,10 @@ export class CollisionDetector {
         }
 
         // Convert normal to world space
-        const normal = new Vector2(normalLocal.x * cos - normalLocal.y * sin, normalLocal.x * sin + normalLocal.y * cos);
+        const normal = new Vector2(
+            normalLocal.x * cos - normalLocal.y * sin,
+            normalLocal.x * sin + normalLocal.y * cos,
+        );
 
         // Convert contact point to world space
         const contactLocal = closest;
