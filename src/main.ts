@@ -2,12 +2,14 @@ import { Rigidbody } from './components/Rigidbody.component';
 import { InputManager } from './core/InputManager';
 import { Iterator } from './core/Iterator';
 import { Scene } from './core/Scene';
+import { Vector2 } from './math/Vector2';
 
 import { ControlRod } from './rbmk/ControlRod';
-import { Vector2 } from './math/Vector2';
 import { Neutron } from './rbmk/Neutron';
 import { Uranium } from './rbmk/Uranium';
 import { Moderator } from './rbmk/Moderator';
+import { Water } from './rbmk/Water';
+import { ReactorBlock } from './rbmk/ReactorBlock';
 
 const canvas = document.getElementById('canvas') as HTMLCanvasElement;
 const canvasCtx = canvas.getContext('2d') as CanvasRenderingContext2D;
@@ -25,29 +27,28 @@ const moderator1 = new Moderator(new Vector2(1100, 450));
 const moderator2 = new Moderator(new Vector2(800, 450));
 const moderator3 = new Moderator(new Vector2(500, 450));
 
-// Setup scene
-const entities = [controlRod];
+// const id = setInterval(() => {
+//     const neutron = new Neutron({
+//         position: new Vector2(100, 450),
+//         onLostEnergy: (neutron) => scene.removeEntity(neutron),
+//     });
+//     neutron.getComponent(Rigidbody)!.setVelocity(new Vector2(Neutron.speed, 0));
+//     // neutron.setToThermal();
+//     scene.addEntity(neutron);
+// }, 1000);
 
-// Generate U-235 particles
-for (let i = 0; i < 25; i++) {
-    for (let j = 0; j < 25; j++) {
-        entities.push(new Uranium(new Vector2(450 + 25 * i, 150 + 25 * j), scene));
+// setTimeout(() => {
+//     clearInterval(id);
+// }, 8000);
+
+for (let i = 0; i < 35; i++) {
+    for (let j = 0; j < 4; j++) {
+        new ReactorBlock({
+            position: new Vector2(300 + i * 22, 450 + j * 22),
+            parent: scene,
+        });
     }
 }
-
-// Neutron
-const neutron = new Neutron(new Vector2(420, 450));
-const neutronRigidbody = neutron.getComponent(Rigidbody)!;
-
-setTimeout(() => {
-    neutronRigidbody.setVelocity(new Vector2(Neutron.speed, 0));
-}, 1000);
-
-entities.push(neutron);
-entities.push(moderator1);
-entities.push(moderator2);
-entities.push(moderator3);
-entities.forEach((entity) => scene.addEntity(entity));
 
 iterator.setScene(scene);
 iterator.start();

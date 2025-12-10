@@ -21,7 +21,9 @@ export class Moderator extends Entity {
                 },
             ),
         );
-        this.addComponent(new BoxDrawer({ size: { width: 5, height: 400 }, strokeColor: 'azure' }));
+        this.addComponent(
+            new BoxDrawer({ size: { width: 5, height: 400 }, strokeColor: 'black', fillColor: 'azure' }),
+        );
         this.addComponent(new Transform(position));
 
         const collider = this.getComponent(BoxCollider)!;
@@ -30,7 +32,7 @@ export class Moderator extends Entity {
             if (event.otherEntity.name === 'Neutron') {
                 const neutron = event.otherEntity as Neutron;
 
-                neutron.moderate();
+                neutron.setToThermal();
             }
         };
     }
