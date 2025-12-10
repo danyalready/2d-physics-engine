@@ -256,8 +256,8 @@ export class Physics extends System {
         colliderB: Collider,
     ): CollisionPair {
         // Create a unique pair key using entity names and collider IDs (order-independent)
-        const entityKeyA = `${entityA.name}:${colliderA.componentId.toString()}`;
-        const entityKeyB = `${entityB.name}:${colliderB.componentId.toString()}`;
+        const entityKeyA = `${entityA.id}:${colliderA.componentId.toString()}`;
+        const entityKeyB = `${entityB.id}:${colliderB.componentId.toString()}`;
         return entityKeyA < entityKeyB ? `${entityKeyA}:${entityKeyB}` : `${entityKeyB}:${entityKeyA}`;
     }
 
