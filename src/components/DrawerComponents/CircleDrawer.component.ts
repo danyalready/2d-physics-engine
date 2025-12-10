@@ -8,7 +8,7 @@ interface CircleDrawerProps {
 }
 
 export class CircleDrawer extends Drawer {
-    constructor(private options: CircleDrawerProps) {
+    constructor(public options: CircleDrawerProps) {
         super();
     }
 

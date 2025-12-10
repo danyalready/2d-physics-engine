@@ -8,7 +8,7 @@ interface BoxDrawerProps {
 }
 
 export class BoxDrawer extends Drawer {
-    constructor(private options: BoxDrawerProps) {
+    constructor(public options: BoxDrawerProps) {
         super();
     }
 
