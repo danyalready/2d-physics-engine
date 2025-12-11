@@ -6,16 +6,15 @@ export class Scene {
 
     addEntity(entity: Entity): void {
         this.entities.add(entity);
-        this.entityCache = null; // Invalidate cache
+        this.entityCache = null;
     }
 
     removeEntity(entity: Entity): void {
         this.entities.delete(entity);
-        this.entityCache = null; // Invalidate cache
+        this.entityCache = null;
     }
 
     getEntities(): Entity[] {
-        // Cache entities array to avoid recreating it every frame
         if (!this.entityCache) {
             this.entityCache = Array.from(this.entities);
         }

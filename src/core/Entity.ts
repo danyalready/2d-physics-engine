@@ -2,11 +2,11 @@ import { Component } from '../components/Component.abstract';
 
 export class Entity {
     private static nextId: number = 0;
+
     public id: number = Entity.nextId++;
+    public active: boolean = true;
+
     private components = new Map<symbol, Component>();
-    private children: Set<Entity> = new Set<Entity>();
-    private active: boolean = true;
-    public parent: Entity | null = null;
 
     constructor(public readonly name: string = 'Entity') {}
 
@@ -34,16 +34,11 @@ export class Entity {
         }
     }
 
-    addChild(child: Entity): void {
-        if (child.parent) child.parent.removeChild(child);
+    update(deltaTime: number): void {
+        if (!this.active) return;
 
-        this.children.add(child);
-        child.parent = this;
-    }
-
-    removeChild(child: Entity): void {
-        if (this.children.delete(child)) {
-            child.parent = null;
+        for (const component of this.components.values()) {
+            component.update?.(deltaTime, this);
         }
     }
 
@@ -51,32 +46,11 @@ export class Entity {
         this.active = active;
     }
 
-    update(deltaTime: number): void {
-        if (!this.active) return;
-
-        for (const component of this.components.values()) {
-            component.update?.(deltaTime, this);
-        }
-
-        for (const entity of this.children) {
-            entity.update(deltaTime);
-        }
-    }
-
     destroy(): void {
         for (const component of this.components.values()) {
             component.onDestroy?.();
         }
 
-        for (const child of this.children) {
-            child.destroy();
-        }
-
-        if (this.parent) {
-            this.parent.removeChild(this);
-        }
-
         this.components.clear();
-        this.children.clear();
     }
 }
