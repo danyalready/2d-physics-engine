@@ -1,6 +1,6 @@
 import { CollisionDetector } from './CollisionDetector';
 import { type Collision, CollisionResolver } from './CollisionResolver';
-import { Collider, CollisionEvent } from '../../components/ColliderComponents/Collider.abstract';
+import { Collider, type CollisionEvent } from '../../components/ColliderComponents/Collider.abstract';
 import { Rigidbody } from '../../components/Rigidbody.component';
 import { Transform } from '../../components/Transform.component';
 import { Entity } from '../../core/Entity';

@@ -3,14 +3,16 @@ import { Component } from '../components/Component.abstract';
 export class Entity {
     private static nextId: number = 0;
 
-    public id: number = Entity.nextId++;
-    public active: boolean = true;
+    readonly id: number = Entity.nextId++;
+    active: boolean = true;
 
     private components = new Map<symbol, Component>();
 
     constructor(public readonly name: string = 'Entity') {}
 
     addComponent<T extends Component>(component: T): T {
+        component.parent = this;
+
         if (this.components.has(component.componentId)) {
             throw new Error(`Component ${component.constructor.name} already exists on entity ${this.name}`);
         }
@@ -38,7 +40,7 @@ export class Entity {
         if (!this.active) return;
 
         for (const component of this.components.values()) {
-            component.update?.(deltaTime, this);
+            component.update?.(deltaTime);
         }
     }
 

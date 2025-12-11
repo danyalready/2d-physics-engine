@@ -1,4 +1,4 @@
-import { CollisionInfo } from './CollisionDetector';
+import { type CollisionInfo } from './CollisionDetector';
 import { CircleCollider } from '../../components/ColliderComponents/CircleCollider.component';
 import { BoxCollider } from '../../components/ColliderComponents/BoxCollider.component';
 import { Collider } from '../../components/ColliderComponents/Collider.abstract';

@@ -66,11 +66,10 @@ export class Rendering extends System {
 
         for (const entity of scene.getEntities()) {
             const drawer = entity.getComponent(Drawer);
-            const transform = entity.getComponent(Transform);
 
-            if (!transform || !drawer) continue;
-
-            drawer.draw(this.canvasCtx, transform);
+            if (drawer) {
+                drawer.draw(this.canvasCtx);
+            }
         }
     }
 }
