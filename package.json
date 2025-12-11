@@ -1,6 +1,6 @@
 {
     "name": "2d-physics-engine",
-    "version": "1.4.1",
+    "version": "1.4.2",
     "description": "A lightweight, flexible 2D physics engine with ECS architecture, built with TypeScript",
     "type": "module",
     "main": "./dist/index.js",
