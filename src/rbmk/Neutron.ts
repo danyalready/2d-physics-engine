@@ -17,10 +17,10 @@ interface Props {
 export class Neutron extends Entity {
     static readonly nLayer: number = 1 << 4;
     static readonly tLayer: number = 1 << 3;
-    static readonly speed: number = 500;
+    static readonly speed: number = 450;
     static readonly heatingUnit: number = 10;
     static readonly nEnergy: number = 200;
-    static readonly tEnergy: number = 25;
+    static readonly tEnergy: number = 40;
     static readonly NEUTRON_MIN_ENERGY: number = 0.2;
 
     isThermal: boolean = false;
@@ -72,6 +72,6 @@ export class Neutron extends Entity {
         collider.collisionFilters.resolver.mask = Uranium.layer | ControlRod.layer;
 
         drawer.options.fillColor = 'royalblue';
-        rigidbody.setVelocity(rigidbody.getVelocity().scale(0.4));
+        rigidbody.setVelocity(rigidbody.getVelocity().scale(0.44));
     }
 }

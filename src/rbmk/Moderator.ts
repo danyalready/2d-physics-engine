@@ -14,7 +14,7 @@ export class Moderator extends Entity {
 
         this.addComponent(
             new BoxCollider(
-                { width: 5, height: 400 },
+                { width: 5, height: 500 },
                 {
                     detector: { layer: Moderator.layer, mask: Neutron.nLayer },
                     resolver: { layer: Moderator.layer, mask: Neutron.nLayer },
@@ -22,7 +22,7 @@ export class Moderator extends Entity {
             ),
         );
         this.addComponent(
-            new BoxDrawer({ size: { width: 5, height: 400 }, strokeColor: 'black', fillColor: 'azure' }),
+            new BoxDrawer({ size: { width: 5, height: 500 }, strokeColor: 'black', fillColor: 'azure' }),
         );
         this.addComponent(new Transform(position));
 
