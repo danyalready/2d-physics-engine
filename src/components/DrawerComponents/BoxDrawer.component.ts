@@ -12,7 +12,13 @@ export class BoxDrawer extends Drawer {
         super();
     }
 
-    draw(canvasCtx: CanvasRenderingContext2D, transform: Transform): void {
+    draw(canvasCtx: CanvasRenderingContext2D): void {
+        const transform = this.parent.getComponent(Transform);
+
+        if (!transform) {
+            throw new Error('Parent entity does not have Transform component.');
+        }
+
         const { x, y } = transform.getPosition();
         const rotation = transform.getRotation();
 

@@ -61,6 +61,4 @@ export class Transform extends Component {
     setScale(scale: Vector2): void {
         this.scale = scale.clone();
     }
-
-    update(): void {}
 }

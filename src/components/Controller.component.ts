@@ -1,4 +1,3 @@
-import { Entity } from '../core/Entity';
 import { InputManager } from '../core/InputManager';
 import { Vector2 } from '../math/Vector2';
 import { Component } from './Component.abstract';
@@ -15,7 +14,7 @@ export class Controller extends Component {
         super();
     }
 
-    update(_deltaTime: number, parentEntity: Entity): void {
+    update(_deltaTime: number): void {
         let x = 0;
         let y = 0;
 
@@ -37,12 +36,12 @@ export class Controller extends Component {
 
         if (input.getMagnitude() > 0) {
             const force = input.getNormal().scale(this.moveForce);
-            const transform = parentEntity.getComponent(Transform);
-            const rigidbody = parentEntity.getComponent(Rigidbody);
+            const transform = this.parent.getComponent(Transform);
+            const rigidbody = this.parent.getComponent(Rigidbody);
 
             if (!transform) {
                 throw new Error(
-                    `Entity ${parentEntity.name} must have a Transform component to be controlled.`,
+                    `Entity ${this.parent.name} must have a Transform component to be controlled.`,
                 );
             }
 

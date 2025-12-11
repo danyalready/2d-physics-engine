@@ -26,8 +26,6 @@ export class Rigidbody extends Component {
         this.friction = options?.friction ?? this.friction;
     }
 
-    update(): void {}
-
     // Getters and setters for state
     getVelocity(): Vector2 {
         return this.velocity.clone();

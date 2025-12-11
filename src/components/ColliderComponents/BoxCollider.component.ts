@@ -1,10 +1,11 @@
 import { AABB } from '../../math/AABB';
 import { Vector2 } from '../../math/Vector2';
-import { Collider, type CollisionDetectorFilter, type CollisionResolverFilter } from './Collider.abstract';
 import { Transform } from '../Transform.component';
+import { Collider, type CollisionDetectorFilter, type CollisionResolverFilter } from './Collider.abstract';
 
 export class BoxCollider extends Collider {
     static readonly COLLIDER_ID = Symbol('BoxCollider');
+
     readonly colliderId = BoxCollider.COLLIDER_ID;
 
     constructor(
@@ -17,7 +18,7 @@ export class BoxCollider extends Collider {
         super();
 
         if (this.size.width <= 0 || this.size.height <= 0) {
-            throw new Error('BoxCollider width and height must be greater than 0');
+            throw new Error('BoxCollider width and height must be greater than 0.');
         }
     }
 

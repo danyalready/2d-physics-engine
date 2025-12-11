@@ -5,6 +5,7 @@ import { Collider, type CollisionDetectorFilter, type CollisionResolverFilter } 
 
 export class CircleCollider extends Collider {
     static readonly COLLIDER_ID = Symbol('CircleCollider');
+
     readonly colliderId = CircleCollider.COLLIDER_ID;
 
     constructor(
@@ -15,6 +16,10 @@ export class CircleCollider extends Collider {
         },
     ) {
         super();
+
+        if (this.radius <= 0) {
+            throw new Error('CircleCollider radius must be greater than 0.');
+        }
     }
 
     getRadius() {

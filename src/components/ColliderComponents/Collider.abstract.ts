@@ -1,16 +1,16 @@
 import { AABB } from '../../math/AABB';
+import { Entity } from '../../core/Entity';
+import { type CollisionInfo } from '../../systems/PhysicsSystem/CollisionDetector';
 import { Component } from '../Component.abstract';
 import { Transform } from '../Transform.component';
-import { Entity } from '../../core/Entity';
-import { CollisionInfo } from '../../systems/PhysicsSystem/CollisionDetector';
 
-export interface Filter {
+export interface CollisionFilter {
     layer: number;
     mask: number;
 }
 
-export type CollisionDetectorFilter = Filter;
-export type CollisionResolverFilter = Filter;
+export type CollisionDetectorFilter = CollisionFilter;
+export type CollisionResolverFilter = CollisionFilter;
 
 export interface CollisionEvent {
     otherEntity: Entity;
@@ -21,6 +21,7 @@ export interface CollisionEvent {
 
 export abstract class Collider extends Component {
     readonly componentId = Symbol('Collider');
+
     abstract readonly colliderId: symbol;
     abstract readonly collisionFilters: {
         detector: CollisionDetectorFilter;
