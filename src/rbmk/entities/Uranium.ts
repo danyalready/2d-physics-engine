@@ -1,9 +1,9 @@
-import { CircleCollider } from '../components/ColliderComponents/CircleCollider.component';
-import { CircleDrawer } from '../components/DrawerComponents/CircleDrawer.component';
-import { Rigidbody } from '../components/Rigidbody.component';
-import { Transform } from '../components/Transform.component';
-import { Entity } from '../core/Entity';
-import { Vector2 } from '../math/Vector2';
+import { CircleCollider } from '../../components/ColliderComponents/CircleCollider.component';
+import { CircleDrawer } from '../../components/DrawerComponents/CircleDrawer.component';
+import { Rigidbody } from '../../components/Rigidbody.component';
+import { Transform } from '../../components/Transform.component';
+import { Entity } from '../../core/Entity';
+import { Vector2 } from '../../math/Vector2';
 import { Neutron } from './Neutron';
 
 interface Props {

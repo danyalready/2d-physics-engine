@@ -1,17 +1,26 @@
-import { Scene } from '../core/Scene';
-import { Vector2 } from '../math/Vector2';
+import { Scene } from '../../core/Scene';
+import { Vector2 } from '../../math/Vector2';
 import { ReactorBlock } from './ReactorBlock';
 
+interface Props {
+    position: Vector2;
+    size: { cols: number; rows: number };
+    scene: Scene;
+}
+
 export class ReactorSection {
-    private blockGap: number = 24;
+    private blockGap: number = 22;
+    private scene: Scene;
 
-    public readonly blocks: ReactorBlock[][] = [];
+    blocks: ReactorBlock[][] = [];
+    position: Vector2;
+    size: { cols: number; rows: number };
 
-    constructor(
-        public position: Vector2,
-        public size: { cols: number; rows: number },
-        public parent: Scene,
-    ) {
+    constructor(props: Props) {
+        this.scene = props.scene;
+        this.position = props.position;
+        this.size = props.size;
+
         this.initializeBlocks();
     }
 
@@ -25,7 +34,7 @@ export class ReactorSection {
                         this.position.x + colIndex * this.blockGap,
                         this.position.y + rowIndex * this.blockGap,
                     ),
-                    parent: this.parent,
+                    scene: this.scene,
                 });
 
                 rowBlocks.push(block);

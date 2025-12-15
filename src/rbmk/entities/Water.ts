@@ -1,8 +1,8 @@
-import { BoxCollider } from '../components/ColliderComponents/BoxCollider.component';
-import { BoxDrawer } from '../components/DrawerComponents/BoxDrawer.component';
-import { Transform } from '../components/Transform.component';
-import { Entity } from '../core/Entity';
-import { Vector2 } from '../math/Vector2';
+import { BoxCollider } from '../../components/ColliderComponents/BoxCollider.component';
+import { BoxDrawer } from '../../components/DrawerComponents/BoxDrawer.component';
+import { Transform } from '../../components/Transform.component';
+import { Entity } from '../../core/Entity';
+import { Vector2 } from '../../math/Vector2';
 import { Neutron } from './Neutron';
 
 interface Props {
@@ -30,7 +30,7 @@ export class Water extends Entity {
                 { width: 20, height: 20 },
                 {
                     detector: { layer: Water.layer, mask: Neutron.nLayer | Neutron.tLayer },
-                    resolver: { layer: Water.layer, mask: 0 },
+                    resolver: { layer: Water.layer, mask: NaN },
                 },
             ),
         );

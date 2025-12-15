@@ -1,9 +1,8 @@
-import { BoxCollider } from '../components/ColliderComponents/BoxCollider.component';
-import { BoxDrawer } from '../components/DrawerComponents/BoxDrawer.component';
-import { Transform } from '../components/Transform.component';
-import { Entity } from '../core/Entity';
-
-import { Vector2 } from '../math/Vector2';
+import { BoxCollider } from '../../components/ColliderComponents/BoxCollider.component';
+import { BoxDrawer } from '../../components/DrawerComponents/BoxDrawer.component';
+import { Transform } from '../../components/Transform.component';
+import { Entity } from '../../core/Entity';
+import { Vector2 } from '../../math/Vector2';
 import { Neutron } from './Neutron';
 
 export class Moderator extends Entity {
@@ -14,7 +13,7 @@ export class Moderator extends Entity {
 
         this.addComponent(
             new BoxCollider(
-                { width: 5, height: 500 },
+                { width: 5, height: 300 },
                 {
                     detector: { layer: Moderator.layer, mask: Neutron.nLayer },
                     resolver: { layer: Moderator.layer, mask: Neutron.nLayer },
@@ -22,7 +21,7 @@ export class Moderator extends Entity {
             ),
         );
         this.addComponent(
-            new BoxDrawer({ size: { width: 5, height: 500 }, strokeColor: 'black', fillColor: 'azure' }),
+            new BoxDrawer({ size: { width: 5, height: 300 }, strokeColor: 'black', fillColor: 'azure' }),
         );
         this.addComponent(new Transform(position));
 

@@ -1,13 +1,13 @@
-import { CircleCollider } from '../components/ColliderComponents/CircleCollider.component';
-import { CircleDrawer } from '../components/DrawerComponents/CircleDrawer.component';
-import { Rigidbody } from '../components/Rigidbody.component';
-import { Transform } from '../components/Transform.component';
-import { Entity } from '../core/Entity';
-import { Vector2 } from '../math/Vector2';
-import { ControlRod } from './ControlRod';
 import { Moderator } from './Moderator';
-import { Uranium } from './Uranium';
+import { ControlRod } from './ControlRod';
 import { Water } from './Water';
+import { Uranium } from './Uranium';
+import { Vector2 } from '../../math/Vector2';
+import { Entity } from '../../core/Entity';
+import { Transform } from '../../components/Transform.component';
+import { Rigidbody } from '../../components/Rigidbody.component';
+import { CircleDrawer } from '../../components/DrawerComponents/CircleDrawer.component';
+import { CircleCollider } from '../../components/ColliderComponents/CircleCollider.component';
 
 interface Props {
     position: Vector2;
@@ -36,8 +36,14 @@ export class Neutron extends Entity {
         this.addComponent(new CircleDrawer({ radius: 4, fillColor: 'azure' }));
         this.addComponent(
             new CircleCollider(4, {
-                detector: { layer: Neutron.nLayer, mask: Moderator.layer | ControlRod.layer | Water.layer },
-                resolver: { layer: Neutron.nLayer, mask: Moderator.layer | ControlRod.layer },
+                detector: {
+                    layer: Neutron.nLayer | Neutron.tLayer,
+                    mask: Moderator.layer | ControlRod.layer | Water.layer,
+                },
+                resolver: {
+                    layer: Neutron.nLayer | Neutron.tLayer,
+                    mask: Moderator.layer | ControlRod.layer,
+                },
             }),
         );
 
