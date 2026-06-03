@@ -1,11 +1,16 @@
 import { AABB } from './AABB';
 import { Vector2 } from './Vector2';
 
-type NodeKey = 'NE' | 'SE' | 'SW' | 'NW';
+type Nodes<T> = {
+    ne: QuadTree<T>;
+    se: QuadTree<T>;
+    sw: QuadTree<T>;
+    nw: QuadTree<T>;
+};
 
 export class QuadTree<T> {
     private items: T[] = [];
-    private nodes: null | Map<NodeKey, QuadTree<T>> = null;
+    private nodes: Nodes<T> | null = null;
 
     constructor(
         public readonly aabb: AABB,
@@ -30,10 +35,10 @@ export class QuadTree<T> {
         }
 
         if (
-            this.nodes?.get('NE')?.insert(item) ||
-            this.nodes?.get('SE')?.insert(item) ||
-            this.nodes?.get('SW')?.insert(item) ||
-            this.nodes?.get('NW')?.insert(item)
+            this.nodes?.ne.insert(item) ||
+            this.nodes?.se.insert(item) ||
+            this.nodes?.sw.insert(item) ||
+            this.nodes?.nw.insert(item)
         ) {
             return true;
         }
@@ -46,32 +51,26 @@ export class QuadTree<T> {
         const nodeWidth = this.aabb.width / 2;
         const nodeHeight = this.aabb.height / 2;
 
-        this.nodes = new Map([
-            ['NE', new QuadTree(new AABB(this.aabb.center, this.aabb.max), this.maxObjects, this.getAABB)],
-            [
-                'SE',
-                new QuadTree(
-                    new AABB(
-                        this.aabb.center.subtract(new Vector2(0, nodeHeight)),
-                        this.aabb.center.add(new Vector2(nodeWidth, 0)),
-                    ),
-                    this.maxObjects,
-                    this.getAABB,
+        this.nodes = {
+            ne: new QuadTree(new AABB(this.aabb.center, this.aabb.max), this.maxObjects, this.getAABB),
+            se: new QuadTree(
+                new AABB(
+                    this.aabb.center.subtract(new Vector2(0, nodeHeight)),
+                    this.aabb.center.add(new Vector2(nodeWidth, 0)),
                 ),
-            ],
-            ['SW', new QuadTree(new AABB(this.aabb.min, this.aabb.center), this.maxObjects, this.getAABB)],
-            [
-                'NW',
-                new QuadTree(
-                    new AABB(
-                        this.aabb.center.subtract(new Vector2(nodeWidth, 0)),
-                        this.aabb.center.add(new Vector2(0, nodeHeight)),
-                    ),
-                    this.maxObjects,
-                    this.getAABB,
+                this.maxObjects,
+                this.getAABB,
+            ),
+            sw: new QuadTree(new AABB(this.aabb.min, this.aabb.center), this.maxObjects, this.getAABB),
+            nw: new QuadTree(
+                new AABB(
+                    this.aabb.center.subtract(new Vector2(nodeWidth, 0)),
+                    this.aabb.center.add(new Vector2(0, nodeHeight)),
                 ),
-            ],
-        ]);
+                this.maxObjects,
+                this.getAABB,
+            ),
+        };
     }
 
     /** Query points within a range. */
@@ -90,7 +89,7 @@ export class QuadTree<T> {
 
         // Recursively check child nodes
         if (this.nodes) {
-            for (const node of this.nodes.values()) {
+            for (const node of Object.values(this.nodes)) {
                 node.query(range, foundPoints);
             }
         }
