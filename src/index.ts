@@ -22,8 +22,4 @@ export { CircleDrawer } from './components/DrawerComponents/CircleDrawer.compone
 export { BoxDrawer } from './components/DrawerComponents/BoxDrawer.component';
 
 // Systems
-export { System } from './systems/System.abstract';
-export { Physics } from './systems/PhysicsSystem/Physics.system';
-export { Rendering } from './systems/Rendering.system';
-export { CollisionDetector, type CollisionInfo } from './systems/PhysicsSystem/CollisionDetector';
-export { CollisionResolver, type Collision } from './systems/PhysicsSystem/CollisionResolver';
+export * from './systems';
