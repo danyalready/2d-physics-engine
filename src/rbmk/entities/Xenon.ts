@@ -3,8 +3,8 @@ import { CircleDrawer } from '../../components/DrawerComponents/CircleDrawer.com
 import { Transform } from '../../components/Transform.component';
 import { Entity } from '../../core/Entity';
 import { Vector2 } from '../../math/Vector2';
-import { Neutron } from './Neutron';
-import { Uranium } from './Uranium';
+import type { Neutron } from './Neutron';
+import { RBMK_LAYERS } from './layers';
 
 interface Props {
     position: Vector2;
@@ -12,7 +12,7 @@ interface Props {
 }
 
 export class Xenon extends Entity {
-    static readonly layer: number = 1 << 6;
+    static readonly layer: number = RBMK_LAYERS.xenon;
 
     private health: number = 1;
 
@@ -23,8 +23,8 @@ export class Xenon extends Entity {
         this.addComponent(new CircleDrawer({ radius: 7, fillColor: 'black' }));
         this.addComponent(
             new CircleCollider(7, {
-                detector: { layer: Uranium.layer, mask: Neutron.tLayer },
-                resolver: { layer: Uranium.layer, mask: Neutron.tLayer },
+                detector: { layer: Xenon.layer, mask: RBMK_LAYERS.neutronThermal },
+                resolver: { layer: Xenon.layer, mask: RBMK_LAYERS.neutronThermal },
             }),
         );
 

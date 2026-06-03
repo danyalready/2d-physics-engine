@@ -4,10 +4,10 @@ import { Transform } from '../../components/Transform.component';
 import { Entity } from '../../core/Entity';
 import { Scene } from '../../core/Scene';
 import { Vector2 } from '../../math/Vector2';
-import { Neutron } from './Neutron';
+import { RBMK_LAYERS } from './layers';
 
 export class ControlRod extends Entity {
-    static readonly layer: number = 1 << 1;
+    static readonly layer: number = RBMK_LAYERS.controlRod;
 
     constructor(position: Vector2, scene: Scene) {
         super('ControlRod');
@@ -16,8 +16,14 @@ export class ControlRod extends Entity {
             new BoxCollider(
                 { width: 5, height: 300 },
                 {
-                    detector: { layer: ControlRod.layer, mask: Neutron.nLayer | Neutron.tLayer },
-                    resolver: { layer: ControlRod.layer, mask: Neutron.nLayer | Neutron.tLayer },
+                    detector: {
+                        layer: ControlRod.layer,
+                        mask: RBMK_LAYERS.neutronFast | RBMK_LAYERS.neutronThermal,
+                    },
+                    resolver: {
+                        layer: ControlRod.layer,
+                        mask: RBMK_LAYERS.neutronFast | RBMK_LAYERS.neutronThermal,
+                    },
                 },
             ),
         );

@@ -3,7 +3,8 @@ import { BoxDrawer } from '../../components/DrawerComponents/BoxDrawer.component
 import { Transform } from '../../components/Transform.component';
 import { Entity } from '../../core/Entity';
 import { Vector2 } from '../../math/Vector2';
-import { Neutron } from './Neutron';
+import type { Neutron } from './Neutron';
+import { RBMK_LAYERS } from './layers';
 
 interface Props {
     position: Vector2;
@@ -11,7 +12,7 @@ interface Props {
 }
 
 export class Water extends Entity {
-    static readonly layer: number = 1 << 5;
+    static readonly layer: number = RBMK_LAYERS.water;
 
     temperature: number = 0;
 
@@ -29,8 +30,11 @@ export class Water extends Entity {
             new BoxCollider(
                 { width: 20, height: 20 },
                 {
-                    detector: { layer: Water.layer, mask: Neutron.nLayer | Neutron.tLayer },
-                    resolver: { layer: Water.layer, mask: NaN },
+                    detector: {
+                        layer: Water.layer,
+                        mask: RBMK_LAYERS.neutronFast | RBMK_LAYERS.neutronThermal,
+                    },
+                    resolver: { layer: Water.layer, mask: 0 },
                 },
             ),
         );

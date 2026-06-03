@@ -4,6 +4,7 @@ import { Rigidbody } from '../../components/Rigidbody.component';
 import { Transform } from '../../components/Transform.component';
 import { Entity } from '../../core/Entity';
 import { Vector2 } from '../../math/Vector2';
+import { RBMK_LAYERS } from './layers';
 import { Neutron } from './Neutron';
 
 interface Props {
@@ -13,7 +14,7 @@ interface Props {
 }
 
 export class Uranium extends Entity {
-    static readonly layer: number = 1 << 2;
+    static readonly layer: number = RBMK_LAYERS.uranium;
 
     constructor(props: Props) {
         super('Uranium');
@@ -22,8 +23,8 @@ export class Uranium extends Entity {
         this.addComponent(new CircleDrawer({ radius: 7, fillColor: 'springgreen' }));
         this.addComponent(
             new CircleCollider(7, {
-                detector: { layer: Uranium.layer, mask: Neutron.tLayer },
-                resolver: { layer: Uranium.layer, mask: Neutron.tLayer },
+                detector: { layer: Uranium.layer, mask: RBMK_LAYERS.neutronThermal },
+                resolver: { layer: Uranium.layer, mask: RBMK_LAYERS.neutronThermal },
             }),
         );
 

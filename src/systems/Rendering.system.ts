@@ -1,6 +1,6 @@
 import { Drawer } from '../components/DrawerComponents/Drawer.component';
 import { Transform } from '../components/Transform.component';
-import { Scene } from '../core/Scene';
+import type { Scene } from '../core/Scene';
 import { Vector2 } from '../math/Vector2';
 import { System } from './System.abstract';
 

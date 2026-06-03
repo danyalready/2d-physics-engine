@@ -1,4 +1,4 @@
-import { Scene } from '../core/Scene';
+import type { Scene } from '../core/Scene';
 
 export abstract class System {
     abstract readonly needsFixedUpdate: boolean;

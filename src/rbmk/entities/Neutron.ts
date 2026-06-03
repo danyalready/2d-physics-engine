@@ -1,13 +1,10 @@
-import { Moderator } from './Moderator';
-import { ControlRod } from './ControlRod';
-import { Water } from './Water';
-import { Uranium } from './Uranium';
 import { Vector2 } from '../../math/Vector2';
 import { Entity } from '../../core/Entity';
 import { Transform } from '../../components/Transform.component';
 import { Rigidbody } from '../../components/Rigidbody.component';
 import { CircleDrawer } from '../../components/DrawerComponents/CircleDrawer.component';
 import { CircleCollider } from '../../components/ColliderComponents/CircleCollider.component';
+import { RBMK_LAYERS } from './layers';
 
 interface Props {
     position: Vector2;
@@ -15,8 +12,8 @@ interface Props {
 }
 
 export class Neutron extends Entity {
-    static readonly nLayer: number = 1 << 4;
-    static readonly tLayer: number = 1 << 3;
+    static readonly nLayer: number = RBMK_LAYERS.neutronFast;
+    static readonly tLayer: number = RBMK_LAYERS.neutronThermal;
     static readonly speed: number = 450;
     static readonly heatingUnit: number = 10;
     static readonly nEnergy: number = 200;
@@ -37,12 +34,12 @@ export class Neutron extends Entity {
         this.addComponent(
             new CircleCollider(4, {
                 detector: {
-                    layer: Neutron.nLayer | Neutron.tLayer,
-                    mask: Moderator.layer | ControlRod.layer | Water.layer,
+                    layer: RBMK_LAYERS.neutronFast | RBMK_LAYERS.neutronThermal,
+                    mask: RBMK_LAYERS.moderator | RBMK_LAYERS.controlRod | RBMK_LAYERS.water,
                 },
                 resolver: {
-                    layer: Neutron.nLayer | Neutron.tLayer,
-                    mask: Moderator.layer | ControlRod.layer,
+                    layer: RBMK_LAYERS.neutronFast | RBMK_LAYERS.neutronThermal,
+                    mask: RBMK_LAYERS.moderator | RBMK_LAYERS.controlRod,
                 },
             }),
         );
@@ -72,10 +69,11 @@ export class Neutron extends Entity {
         const drawer = this.getComponent(CircleDrawer)!;
         const rigidbody = this.getComponent(Rigidbody)!;
 
-        collider.collisionFilters.detector.layer = Neutron.tLayer;
-        collider.collisionFilters.resolver.layer = Neutron.tLayer;
-        collider.collisionFilters.detector.mask = Uranium.layer | ControlRod.layer | Water.layer;
-        collider.collisionFilters.resolver.mask = Uranium.layer | ControlRod.layer;
+        collider.collisionFilters.detector.layer = RBMK_LAYERS.neutronThermal;
+        collider.collisionFilters.resolver.layer = RBMK_LAYERS.neutronThermal;
+        collider.collisionFilters.detector.mask =
+            RBMK_LAYERS.uranium | RBMK_LAYERS.controlRod | RBMK_LAYERS.water;
+        collider.collisionFilters.resolver.mask = RBMK_LAYERS.uranium | RBMK_LAYERS.controlRod;
 
         drawer.options.fillColor = 'royalblue';
         rigidbody.setVelocity(rigidbody.getVelocity().scale(0.44));

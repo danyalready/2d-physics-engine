@@ -2,9 +2,9 @@ import { AABB } from '../math/AABB';
 import { Vector2 } from '../math/Vector2';
 import { Physics } from '../systems/PhysicsSystem/Physics.system';
 import { Rendering } from '../systems/Rendering.system';
-import { System } from '../systems/System.abstract';
+import type { System } from '../systems/System.abstract';
 import { InputManager } from './InputManager';
-import { Scene } from './Scene';
+import type { Scene } from './Scene';
 
 interface IteratorConfig {
     fixedTimeStep?: number;

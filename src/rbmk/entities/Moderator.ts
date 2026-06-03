@@ -3,20 +3,21 @@ import { BoxDrawer } from '../../components/DrawerComponents/BoxDrawer.component
 import { Transform } from '../../components/Transform.component';
 import { Entity } from '../../core/Entity';
 import { Vector2 } from '../../math/Vector2';
-import { Neutron } from './Neutron';
+import type { Neutron } from './Neutron';
+import { RBMK_LAYERS } from './layers';
 
 export class Moderator extends Entity {
-    static readonly layer: number = 1 << 0;
+    static readonly layer: number = RBMK_LAYERS.moderator;
 
     constructor(position: Vector2) {
-        super('ControlRod');
+        super('Moderator');
 
         this.addComponent(
             new BoxCollider(
                 { width: 5, height: 300 },
                 {
-                    detector: { layer: Moderator.layer, mask: Neutron.nLayer },
-                    resolver: { layer: Moderator.layer, mask: Neutron.nLayer },
+                    detector: { layer: Moderator.layer, mask: RBMK_LAYERS.neutronFast },
+                    resolver: { layer: Moderator.layer, mask: RBMK_LAYERS.neutronFast },
                 },
             ),
         );

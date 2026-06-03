@@ -20,7 +20,7 @@
     ],
     "scripts": {
         "dev": "vite --open",
-        "build": "tsc -p tsconfig.build.json",
+        "build": "node scripts/clean-dist.mjs && tsc -p tsconfig.build.json",
         "build:lib": "npm run build",
         "build:demo": "vite build",
         "preview": "vite preview",

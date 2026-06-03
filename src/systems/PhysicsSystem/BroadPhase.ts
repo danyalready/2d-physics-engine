@@ -1,4 +1,4 @@
-import { Entity } from '../../core/Entity';
+import type { Entity } from '../../core/Entity';
 import { Collider } from '../../components/ColliderComponents/Collider.abstract';
 import { Transform } from '../../components/Transform.component';
 import { AABB } from '../../math/AABB';

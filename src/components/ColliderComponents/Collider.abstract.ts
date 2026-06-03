@@ -1,8 +1,8 @@
 import { AABB } from '../../math/AABB';
-import { Entity } from '../../core/Entity';
+import type { Entity } from '../../core/Entity';
 import { type CollisionInfo } from '../../systems/PhysicsSystem/CollisionDetector';
 import { Component } from '../Component.abstract';
-import { Transform } from '../Transform.component';
+import type { Transform } from '../Transform.component';
 
 export interface CollisionFilter {
     layer: number;

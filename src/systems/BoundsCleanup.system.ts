@@ -1,6 +1,6 @@
 import { Collider } from '../components/ColliderComponents/Collider.abstract';
 import { Transform } from '../components/Transform.component';
-import { Scene } from '../core/Scene';
+import type { Scene } from '../core/Scene';
 import { AABB } from '../math/AABB';
 import { System } from './System.abstract';
 
