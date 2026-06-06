@@ -24,7 +24,8 @@
         "build:lib": "npm run build",
         "build:demo": "vite build",
         "preview": "vite preview",
-        "prepublishOnly": "npm run build && npm test",
+        "prepare": "npm run build",
+        "prepublishOnly": "npm test",
         "format": "prettier . --write",
         "format-check": "prettier . --check",
         "test": "jest"
