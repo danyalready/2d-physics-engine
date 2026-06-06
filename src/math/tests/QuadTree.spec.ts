@@ -48,8 +48,9 @@ describe('QuadTree<T>', () => {
 
         // @ts-ignore
         expect(qt['nodes']).not.toBeNull();
-        // @ts-ignore
-        expect(qt['items'].length).toBe(1); // root keeps one item
+
+        const found = qt.query(worldAABB).map((i) => i.id);
+        expect(found).toEqual(expect.arrayContaining([1, 2]));
     });
 
     test('inserts items into correct quadrant', () => {
@@ -64,17 +65,10 @@ describe('QuadTree<T>', () => {
         const nodes = qt['nodes'];
         expect(nodes).not.toBeNull();
 
-        // @ts-ignore
-        const SW = nodes.get('SW');
-        // @ts-ignore
-        const NW = nodes.get('NW');
-        // @ts-ignore
-        const NE = nodes.get('NE');
-
-        expect(qt['items'].length).toBe(1);
-        expect(SW!['items'].length).toBe(1);
-        expect(NW!['items'].length).toBe(1);
-        expect(NE!['items'].length).toBe(1);
+        expect(nodes!.ne['items'].length).toBe(1);
+        expect(nodes!.nw['items'].length).toBe(1);
+        expect(nodes!.se['items'].length).toBe(1);
+        expect(nodes!.sw['items'].length).toBe(1);
     });
 
     test('query returns items inside range', () => {
@@ -142,5 +136,18 @@ describe('QuadTree<T>', () => {
         expect(found).toContain(2);
         expect(found).not.toContain(1);
         expect(found).not.toContain(3);
+    });
+
+    test('keeps items that span multiple child nodes queryable after subdivision', () => {
+        type BoxItem = { id: number; aabb: AABB };
+        const getBoxAABB = (item: BoxItem) => item.aabb;
+        const qt = new QuadTree<BoxItem>(worldAABB, 1, getBoxAABB);
+
+        qt.insert({ id: 1, aabb: new AABB(new Vector2(45, 45), new Vector2(55, 55)) });
+        qt.insert({ id: 2, aabb: new AABB(new Vector2(80, 80), new Vector2(82, 82)) });
+
+        const found = qt.query(new AABB(new Vector2(48, 48), new Vector2(52, 52))).map((i) => i.id);
+
+        expect(found).toContain(1);
     });
 });

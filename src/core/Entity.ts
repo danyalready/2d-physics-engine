@@ -1,5 +1,7 @@
 import { Component } from '../components/Component.abstract';
 
+type ComponentConstructor<T extends Component> = abstract new (...args: any[]) => T;
+
 export class Entity {
     private static nextId: number = 0;
 
@@ -7,6 +9,7 @@ export class Entity {
     active: boolean = true;
 
     private components = new Map<symbol, Component>();
+    private componentTypeCache = new Map<ComponentConstructor<Component>, Component | undefined>();
 
     constructor(public readonly name: string = 'Entity') {}
 
@@ -18,21 +21,35 @@ export class Entity {
         }
 
         this.components.set(component.componentId, component);
+        this.componentTypeCache.clear();
         component.onStart?.();
 
         return component;
     }
 
-    getComponent<T extends Component>(componentType: abstract new (...args: any[]) => T): T | undefined {
-        return Array.from(this.components.values()).find((c): c is T => c instanceof componentType);
+    getComponent<T extends Component>(componentType: ComponentConstructor<T>): T | undefined {
+        if (this.componentTypeCache.has(componentType)) {
+            return this.componentTypeCache.get(componentType) as T | undefined;
+        }
+
+        for (const component of this.components.values()) {
+            if (component instanceof componentType) {
+                this.componentTypeCache.set(componentType, component);
+                return component as T;
+            }
+        }
+
+        this.componentTypeCache.set(componentType, undefined);
+        return undefined;
     }
 
-    removeComponent(componentType: { new (...args: any[]): Component }): void {
+    removeComponent(componentType: ComponentConstructor<Component>): void {
         const component = this.getComponent(componentType);
 
         if (component) {
             component.onDestroy?.();
             this.components.delete(component.componentId);
+            this.componentTypeCache.clear();
         }
     }
 
@@ -54,5 +71,6 @@ export class Entity {
         }
 
         this.components.clear();
+        this.componentTypeCache.clear();
     }
 }

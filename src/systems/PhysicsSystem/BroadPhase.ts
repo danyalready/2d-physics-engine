@@ -31,7 +31,6 @@ export class BroadPhase {
 
     getPotentialPairs(): Array<[Entity, Entity]> {
         const result: Array<[Entity, Entity]> = [];
-        const seen = new Set<string>();
 
         // 1. Get all entities from the quad-tree
         const allEntities: Entity[] = [];
@@ -45,16 +44,8 @@ export class BroadPhase {
             const candidates = this.root.query(aabb);
 
             for (const candidate of candidates) {
-                if (entity === candidate) continue;
+                if (candidate.id <= entity.id) continue;
 
-                // 4. Create IDs to avoid duplicates
-                const key =
-                    entity.id < candidate.id
-                        ? `${entity.id}-${candidate.id}`
-                        : `${candidate.id}-${entity.id}`;
-                if (seen.has(key)) continue;
-
-                seen.add(key);
                 result.push([entity, candidate]);
             }
         });

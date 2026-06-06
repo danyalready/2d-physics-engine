@@ -20,8 +20,14 @@ export class QuadTree<T> {
 
     /** Inserts a point into the quadtree. */
     insert(item: T): boolean {
-        if (!this.aabb.intersects(this.getAABB(item))) {
+        const itemAABB = this.getAABB(item);
+
+        if (!this.aabb.contains(itemAABB)) {
             return false;
+        }
+
+        if (this.nodes) {
+            return this.insertIntoChild(item, itemAABB) || this.insertIntoCurrentNode(item);
         }
 
         if (this.items.length < this.maxObjects) {
@@ -30,19 +36,27 @@ export class QuadTree<T> {
             return true;
         }
 
+        this.subdivide();
+        this.redistributeItems();
+
+        return this.insertIntoChild(item, itemAABB) || this.insertIntoCurrentNode(item);
+    }
+
+    private insertIntoCurrentNode(item: T): boolean {
+        this.items.push(item);
+
+        return true;
+    }
+
+    private insertIntoChild(item: T, itemAABB: AABB): boolean {
         if (!this.nodes) {
-            this.subdivide();
-            this.redistributeItems();
+            return false;
         }
 
-        if (
-            this.nodes?.ne.insert(item) ||
-            this.nodes?.se.insert(item) ||
-            this.nodes?.sw.insert(item) ||
-            this.nodes?.nw.insert(item)
-        ) {
-            return true;
-        }
+        if (this.nodes.ne.aabb.contains(itemAABB)) return this.nodes.ne.insert(item);
+        if (this.nodes.se.aabb.contains(itemAABB)) return this.nodes.se.insert(item);
+        if (this.nodes.sw.aabb.contains(itemAABB)) return this.nodes.sw.insert(item);
+        if (this.nodes.nw.aabb.contains(itemAABB)) return this.nodes.nw.insert(item);
 
         return false;
     }
@@ -79,11 +93,16 @@ export class QuadTree<T> {
             return;
         }
 
-        for (const item of this.items) {
-            this.insert(item);
-        }
-
+        const items = this.items;
         this.items = [];
+
+        for (const item of items) {
+            const itemAABB = this.getAABB(item);
+
+            if (!this.insertIntoChild(item, itemAABB)) {
+                this.items.push(item);
+            }
+        }
     }
 
     /** Query points within a range. */
@@ -102,9 +121,10 @@ export class QuadTree<T> {
 
         // Recursively check child nodes
         if (this.nodes) {
-            for (const node of Object.values(this.nodes)) {
-                node.query(range, foundPoints);
-            }
+            this.nodes.ne.query(range, foundPoints);
+            this.nodes.se.query(range, foundPoints);
+            this.nodes.sw.query(range, foundPoints);
+            this.nodes.nw.query(range, foundPoints);
         }
 
         return foundPoints;
