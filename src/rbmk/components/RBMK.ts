@@ -1,7 +1,6 @@
 import { ReactorSection } from './ReactorSection';
 import { Moderator } from '../entities/Moderator';
 import { Neutron } from '../entities/Neutron';
-import { ControlRod } from '../entities/ControlRod';
 import { Scene } from '../../core/Scene';
 import { Vector2 } from '../../math/Vector2';
 
