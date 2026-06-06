@@ -32,6 +32,7 @@ export class QuadTree<T> {
 
         if (!this.nodes) {
             this.subdivide();
+            this.redistributeItems();
         }
 
         if (
@@ -71,6 +72,18 @@ export class QuadTree<T> {
                 this.getAABB,
             ),
         };
+    }
+
+    private redistributeItems(): void {
+        if (!this.nodes) {
+            return;
+        }
+
+        for (const item of this.items) {
+            this.insert(item);
+        }
+
+        this.items = [];
     }
 
     /** Query points within a range. */
