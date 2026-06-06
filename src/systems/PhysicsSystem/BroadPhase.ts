@@ -29,26 +29,21 @@ export class BroadPhase {
         this.root.insert(entity);
     }
 
-    getPotentialPairs(): Array<[Entity, Entity]> {
+    getPotentialPairs(queryEntities: Entity[]): Array<[Entity, Entity]> {
         const result: Array<[Entity, Entity]> = [];
+        const queryEntityIds = new Set(queryEntities.map((entity) => entity.id));
 
-        // 1. Get all entities from the quad-tree
-        const allEntities: Entity[] = [];
-        this.root.query(this.aabb, allEntities);
-
-        // 2. Find pairs for each entity
-        allEntities.forEach((entity) => {
+        for (const entity of queryEntities) {
             const aabb = this.root.getAABB(entity);
-
-            // 3. Get all entities around an enity-A
             const candidates = this.root.query(aabb);
 
             for (const candidate of candidates) {
-                if (candidate.id <= entity.id) continue;
+                if (candidate === entity) continue;
+                if (queryEntityIds.has(candidate.id) && candidate.id < entity.id) continue;
 
                 result.push([entity, candidate]);
             }
-        });
+        }
 
         return result;
     }

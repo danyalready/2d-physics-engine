@@ -32,7 +32,7 @@ export class Physics extends System {
     constructor(worldBounds: AABB) {
         super();
 
-        this.broadPhase = new BroadPhase(worldBounds, 1);
+        this.broadPhase = new BroadPhase(worldBounds, 8);
     }
 
     update(deltaTime: number, scene: Scene): void {
@@ -99,12 +99,33 @@ export class Physics extends System {
 
     private detectCollisions(entities: Entity[]): Collision[] {
         const collisions: Collision[] = [];
+        const colliderEntities: Entity[] = [];
+        const rigidbodyEntities: Entity[] = [];
 
-        // Reset broad-phase and insert entities
+        for (const entity of entities) {
+            const collider = entity.getComponent(Collider);
+            const transform = entity.getComponent(Transform);
+
+            if (!collider || !transform) continue;
+
+            colliderEntities.push(entity);
+
+            if (entity.getComponent(Rigidbody)) {
+                rigidbodyEntities.push(entity);
+            }
+        }
+
+        if (rigidbodyEntities.length === 0) {
+            return collisions;
+        }
+
+        // Reset broad-phase and insert collidable entities.
         this.broadPhase.clear();
-        entities.forEach(this.broadPhase.add);
+        for (const entity of colliderEntities) {
+            this.broadPhase.add(entity);
+        }
 
-        const potentialPairs = this.broadPhase.getPotentialPairs();
+        const potentialPairs = this.broadPhase.getPotentialPairs(rigidbodyEntities);
 
         for (const [entityA, entityB] of potentialPairs) {
             const colliderA = entityA.getComponent(Collider);
