@@ -195,9 +195,7 @@ export class CollisionResolver {
         const isAStatic = !rigidbodyA;
         const isBStatic = !rigidbodyB;
 
-        // Relative velocity
-        const relVel = vB.subtract(vA);
-        const velAlongNormal = relVel.dotProduct(normal);
+        const velAlongNormal = (vB.x - vA.x) * normal.x + (vB.y - vA.y) * normal.y;
 
         if (velAlongNormal > 0) return;
 
@@ -212,17 +210,34 @@ export class CollisionResolver {
         const e = restitution / 2;
         const j = (-(1 + e) * velAlongNormal) / (invMassA + invMassB);
 
-        const impulse = normal.scale(j);
+        const impulseX = normal.x * j;
+        const impulseY = normal.y * j;
 
         // Apply impulse
-        if (!isAStatic) rigidbodyA!.setVelocity(vA.subtract(impulse.scale(1 / mA)));
-        if (!isBStatic) rigidbodyB!.setVelocity(vB.add(impulse.scale(1 / mB)));
+        if (!isAStatic) {
+            rigidbodyA!.setVelocity(new Vector2(vA.x - impulseX / mA, vA.y - impulseY / mA));
+        }
 
-        const correction = normal.scale(penetration / totalInvMass);
+        if (!isBStatic) {
+            rigidbodyB!.setVelocity(new Vector2(vB.x + impulseX / mB, vB.y + impulseY / mB));
+        }
 
-        if (invMassA > 0)
-            transformA.setPosition(transformA.getPosition().subtract(correction.scale(invMassA)));
+        const correctionScale = penetration / totalInvMass;
+        const correctionX = normal.x * correctionScale;
+        const correctionY = normal.y * correctionScale;
 
-        if (invMassB > 0) transformB.setPosition(transformB.getPosition().add(correction.scale(invMassB)));
+        if (invMassA > 0) {
+            const positionA = transformA.getPosition();
+            transformA.setPosition(
+                new Vector2(positionA.x - correctionX * invMassA, positionA.y - correctionY * invMassA),
+            );
+        }
+
+        if (invMassB > 0) {
+            const positionB = transformB.getPosition();
+            transformB.setPosition(
+                new Vector2(positionB.x + correctionX * invMassB, positionB.y + correctionY * invMassB),
+            );
+        }
     }
 }

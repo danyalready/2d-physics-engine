@@ -1,6 +1,6 @@
 import { CollisionDetector } from './CollisionDetector';
 import { type Collision, CollisionResolver } from './CollisionResolver';
-import { Collider, type CollisionEvent } from '../../components/ColliderComponents/Collider.abstract';
+import { Collider } from '../../components/ColliderComponents/Collider.abstract';
 import { Rigidbody } from '../../components/Rigidbody.component';
 import { Transform } from '../../components/Transform.component';
 import type { Entity } from '../../core/Entity';
@@ -10,7 +10,12 @@ import { Vector2 } from '../../math/Vector2';
 import { BroadPhase } from './BroadPhase';
 import { AABB } from '../../math/AABB';
 
-type CollisionPair = string;
+type CollisionPair = number;
+
+type EntityCollision = Collision & {
+    entityA: Entity;
+    entityB: Entity;
+};
 
 interface StoredCollision {
     colliderA: Collider;
@@ -57,7 +62,7 @@ export class Physics extends System {
 
         // Step 2: Detect and resolve collisions after updating positions
         const collisions = this.detectCollisions(entities);
-        this.handleCollisionEvents(collisions, entities);
+        this.handleCollisionEvents(collisions);
         this.resolveCollisions(collisions);
     }
 
@@ -97,8 +102,8 @@ export class Physics extends System {
         transform.setRotation(transform.getRotation() + deltaRotation);
     }
 
-    private detectCollisions(entities: Entity[]): Collision[] {
-        const collisions: Collision[] = [];
+    private detectCollisions(entities: Entity[]): EntityCollision[] {
+        const collisions: EntityCollision[] = [];
         const colliderEntities: Entity[] = [];
         const rigidbodyEntities: Entity[] = [];
 
@@ -158,14 +163,14 @@ export class Physics extends System {
                     rigidbodyB: entityB.getComponent(Rigidbody),
                     entityA,
                     entityB,
-                } as Collision & { entityA: Entity; entityB: Entity });
+                });
             }
         }
 
         return collisions;
     }
 
-    private resolveCollisions(collisions: Collision[]): void {
+    private resolveCollisions(collisions: EntityCollision[]): void {
         for (const collision of collisions) {
             // Check for layers and masks match to proceed with collision resolution
             if (
@@ -179,20 +184,14 @@ export class Physics extends System {
         }
     }
 
-    private handleCollisionEvents(collisions: Collision[], entities: Entity[]): void {
+    private handleCollisionEvents(collisions: EntityCollision[]): void {
         const newCollisions = new Map<CollisionPair, StoredCollision>();
 
         // Process current collisions and detect entry events
         for (const collision of collisions) {
-            // Get entities from collision if available, otherwise find them
-            const entityA =
-                (collision as any).entityA || this.findEntityWithCollider(entities, collision.colliderA);
-            const entityB =
-                (collision as any).entityB || this.findEntityWithCollider(entities, collision.colliderB);
+            const { entityA, entityB } = collision;
 
-            if (!entityA || !entityB) continue;
-
-            const pair = this.getCollisionPair(entityA, entityB, collision.colliderA, collision.colliderB);
+            const pair = this.getCollisionPair(entityA, entityB);
 
             // Store this collision
             newCollisions.set(pair, {
@@ -204,65 +203,82 @@ export class Physics extends System {
                 transformB: collision.transformB,
             });
 
-            // Create collision events for both colliders
-            const eventA: CollisionEvent = {
-                otherEntity: entityB,
-                otherCollider: collision.colliderB,
-                otherTransform: collision.transformB,
-                collisionInfo: collision.info,
-            };
-
-            const eventB: CollisionEvent = {
-                otherEntity: entityA,
-                otherCollider: collision.colliderA,
-                otherTransform: collision.transformA,
-                collisionInfo: {
-                    ...collision.info,
-                    normal: collision.info.normal.scale(-1), // Reverse normal for B's perspective
-                },
-            };
-
             // Check if this is a new collision (entry event)
             if (!this.currentCollisions.has(pair)) {
                 // Fire onCollideEntry for both colliders
-                collision.colliderA.onCollideEntry?.(eventA);
-                collision.colliderB.onCollideEntry?.(eventB);
+                if (collision.colliderA.onCollideEntry) {
+                    collision.colliderA.onCollideEntry({
+                        otherEntity: entityB,
+                        otherCollider: collision.colliderB,
+                        otherTransform: collision.transformB,
+                        collisionInfo: collision.info,
+                    });
+                }
+
+                if (collision.colliderB.onCollideEntry) {
+                    collision.colliderB.onCollideEntry({
+                        otherEntity: entityA,
+                        otherCollider: collision.colliderA,
+                        otherTransform: collision.transformA,
+                        collisionInfo: {
+                            ...collision.info,
+                            normal: collision.info.normal.scale(-1), // Reverse normal for B's perspective
+                        },
+                    });
+                }
             } else {
                 // Fire onCollideStay for ongoing collisions
-                collision.colliderA.onCollideStay?.(eventA);
-                collision.colliderB.onCollideStay?.(eventB);
+                if (collision.colliderA.onCollideStay) {
+                    collision.colliderA.onCollideStay({
+                        otherEntity: entityB,
+                        otherCollider: collision.colliderB,
+                        otherTransform: collision.transformB,
+                        collisionInfo: collision.info,
+                    });
+                }
+
+                if (collision.colliderB.onCollideStay) {
+                    collision.colliderB.onCollideStay({
+                        otherEntity: entityA,
+                        otherCollider: collision.colliderA,
+                        otherTransform: collision.transformA,
+                        collisionInfo: {
+                            ...collision.info,
+                            normal: collision.info.normal.scale(-1), // Reverse normal for B's perspective
+                        },
+                    });
+                }
             }
         }
 
         // Detect exit events (collisions that existed before but not now)
         for (const [pair, storedCollision] of this.currentCollisions.entries()) {
             if (!newCollisions.has(pair)) {
-                // This collision ended - fire exit events
-                // Fire onCollideExit for colliderA
-                const eventA: CollisionEvent = {
-                    otherEntity: storedCollision.entityB,
-                    otherCollider: storedCollision.colliderB,
-                    otherTransform: storedCollision.transformB,
-                    collisionInfo: {
-                        normal: new Vector2(0, 0),
-                        point: new Vector2(0, 0),
-                        penetration: 0,
-                    },
-                };
-                storedCollision.colliderA.onCollideExit?.(eventA);
+                if (storedCollision.colliderA.onCollideExit) {
+                    storedCollision.colliderA.onCollideExit({
+                        otherEntity: storedCollision.entityB,
+                        otherCollider: storedCollision.colliderB,
+                        otherTransform: storedCollision.transformB,
+                        collisionInfo: {
+                            normal: Vector2.zero(),
+                            point: Vector2.zero(),
+                            penetration: 0,
+                        },
+                    });
+                }
 
-                // Fire onCollideExit for colliderB
-                const eventB: CollisionEvent = {
-                    otherEntity: storedCollision.entityA,
-                    otherCollider: storedCollision.colliderA,
-                    otherTransform: storedCollision.transformA,
-                    collisionInfo: {
-                        normal: new Vector2(0, 0),
-                        point: new Vector2(0, 0),
-                        penetration: 0,
-                    },
-                };
-                storedCollision.colliderB.onCollideExit?.(eventB);
+                if (storedCollision.colliderB.onCollideExit) {
+                    storedCollision.colliderB.onCollideExit({
+                        otherEntity: storedCollision.entityA,
+                        otherCollider: storedCollision.colliderA,
+                        otherTransform: storedCollision.transformA,
+                        collisionInfo: {
+                            normal: Vector2.zero(),
+                            point: Vector2.zero(),
+                            penetration: 0,
+                        },
+                    });
+                }
             }
         }
 
@@ -270,19 +286,10 @@ export class Physics extends System {
         this.currentCollisions = newCollisions;
     }
 
-    private getCollisionPair(
-        entityA: Entity,
-        entityB: Entity,
-        colliderA: Collider,
-        colliderB: Collider,
-    ): CollisionPair {
-        // Create a unique pair key using entity names and collider IDs (order-independent)
-        const entityKeyA = `${entityA.id}:${colliderA.componentId.toString()}`;
-        const entityKeyB = `${entityB.id}:${colliderB.componentId.toString()}`;
-        return entityKeyA < entityKeyB ? `${entityKeyA}:${entityKeyB}` : `${entityKeyB}:${entityKeyA}`;
-    }
+    private getCollisionPair(entityA: Entity, entityB: Entity): CollisionPair {
+        const minId = entityA.id < entityB.id ? entityA.id : entityB.id;
+        const maxId = entityA.id < entityB.id ? entityB.id : entityA.id;
 
-    private findEntityWithCollider(entities: Entity[], collider: Collider): Entity | undefined {
-        return entities.find((entity) => entity.getComponent(Collider) === collider);
+        return minId * 4294967296 + maxId;
     }
 }
