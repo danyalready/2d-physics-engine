@@ -9,7 +9,7 @@ interface Props {
 }
 
 export class ReactorSection {
-    private blockGap: number = 22;
+    private blockGap: number = 26;
     private scene: Scene;
 
     blocks: ReactorBlock[][] = [];

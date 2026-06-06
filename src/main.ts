@@ -15,7 +15,7 @@ const inputManager = new InputManager();
 const iterator = new Iterator(inputManager, canvas, canvasCtx, { debug: true });
 const scene = new Scene();
 
-new RBMK({ sections: 5, scene });
+new RBMK({ sections: 8, scene });
 
 iterator.addSystem(
     new BoundsCleanupSystem(new AABB(new Vector2(0, 0), new Vector2(canvas.width, canvas.width))),

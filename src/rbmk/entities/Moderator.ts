@@ -6,6 +6,8 @@ import { Vector2 } from '../../math/Vector2';
 import type { Neutron } from './Neutron';
 import { RBMK_LAYERS } from './layers';
 
+const HEIGHT = 780;
+
 export class Moderator extends Entity {
     static readonly layer: number = RBMK_LAYERS.moderator;
 
@@ -14,7 +16,7 @@ export class Moderator extends Entity {
 
         this.addComponent(
             new BoxCollider(
-                { width: 5, height: 300 },
+                { width: 5, height: HEIGHT },
                 {
                     detector: { layer: Moderator.layer, mask: RBMK_LAYERS.neutronFast },
                     resolver: { layer: Moderator.layer, mask: RBMK_LAYERS.neutronFast },
@@ -22,7 +24,7 @@ export class Moderator extends Entity {
             ),
         );
         this.addComponent(
-            new BoxDrawer({ size: { width: 5, height: 300 }, strokeColor: 'black', fillColor: 'azure' }),
+            new BoxDrawer({ size: { width: 5, height: HEIGHT }, strokeColor: 'black', fillColor: 'azure' }),
         );
         this.addComponent(new Transform(position));
 

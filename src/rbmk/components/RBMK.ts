@@ -11,7 +11,7 @@ interface Props {
 }
 
 export class RBMK {
-    private sectionsDistance: number = 100;
+    private sectionsDistance: number = 138;
     private sections: number;
     private scene: Scene;
 
@@ -24,23 +24,23 @@ export class RBMK {
 
     init() {
         for (let i = 0; i < this.sections + 1; i++) {
-            this.scene.addEntity(new Moderator(new Vector2(183 + i * this.sectionsDistance, 220)));
+            this.scene.addEntity(new Moderator(new Vector2(33 + i * this.sectionsDistance, 478)));
 
             if (i < this.sections) {
                 new ReactorSection({
-                    position: new Vector2(200 + i * this.sectionsDistance, 100),
-                    size: { cols: 4, rows: 12 },
+                    position: new Vector2(50 + i * this.sectionsDistance, 100),
+                    size: { cols: 5, rows: 30 },
                     scene: this.scene,
                 });
-                this.scene.addEntity(
-                    new ControlRod(new Vector2(183 + 50 + i * this.sectionsDistance, -50), this.scene),
-                );
+                // this.scene.addEntity(
+                //     new ControlRod(new Vector2(183 + 50 + i * this.sectionsDistance, -50), this.scene),
+                // );
             }
         }
 
         this.scene.addEntity(
             new Neutron({
-                position: new Vector2(200, 200),
+                position: new Vector2(600, 500),
                 onLostEnergy: (neutron) => this.scene.removeEntity(neutron),
             }),
         );

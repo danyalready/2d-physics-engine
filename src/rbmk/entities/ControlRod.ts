@@ -6,6 +6,8 @@ import { Scene } from '../../core/Scene';
 import { Vector2 } from '../../math/Vector2';
 import { RBMK_LAYERS } from './layers';
 
+const HEIGHT = 500;
+
 export class ControlRod extends Entity {
     static readonly layer: number = RBMK_LAYERS.controlRod;
 
@@ -14,7 +16,7 @@ export class ControlRod extends Entity {
 
         this.addComponent(
             new BoxCollider(
-                { width: 5, height: 300 },
+                { width: 5, height: HEIGHT },
                 {
                     detector: {
                         layer: ControlRod.layer,
@@ -27,7 +29,7 @@ export class ControlRod extends Entity {
                 },
             ),
         );
-        this.addComponent(new BoxDrawer({ size: { width: 5, height: 300 }, fillColor: 'black' }));
+        this.addComponent(new BoxDrawer({ size: { width: 5, height: HEIGHT }, fillColor: 'black' }));
         this.addComponent(new Transform(position));
 
         const collider = this.getComponent(BoxCollider)!;
