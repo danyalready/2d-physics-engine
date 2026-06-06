@@ -22,7 +22,7 @@
         "dev": "vite --open",
         "build": "node scripts/clean-dist.mjs && tsc -p tsconfig.build.json",
         "build:lib": "npm run build",
-        "build:demo": "vite build",
+        "build:demo": "vite build --outDir dist",
         "preview": "vite preview",
         "prepare": "npm run build",
         "prepublishOnly": "npm test",
